@@ -1,0 +1,98 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --nav-item-color: #262a3b;
+}
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+/* Navigation */
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    height: 120px;
+    width: 85%;
+    margin: 0 auto;
+}
+
+.main-nav .main-nav-left, .main-nav-right {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.main-nav {
+    border-bottom: 2px solid black;
+}
+
+.main-nav-right nav{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.main-nav-right nav ul {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+.main-nav-right li {
+    list-style-type: none;
+}
+
+.main-nav a {
+    text-decoration: none;
+    font-size: 18px;
+    color: var(--nav-item-color);
+}
+
+.nav-button {
+    border: 2px solid;
+    color: black;
+    padding: 10px 30px;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+/* Hero section */
+#hero {
+    width: 85%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#hero h1 {
+    font-size: 50px;
+}
+
+#hero h5 {
+    font-size: 18px;
+    font-weight: normal;
+}
+
+#hero button {
+    width: 200px;
+    height: 50px;
+    font-size: 18px;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color:darkturquoise;
+    margin-bottom: 10px;
+}
+
+#hero button:hover {
+    cursor: pointer;
+}
