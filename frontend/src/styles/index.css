@@ -1,0 +1,181 @@
+
+:root {
+    --crono-orange: #FF6733;
+    --dark-raisin: #262A3B;
+    --white: #FFFFFF;
+    --snow-white: #FAFBFF;
+    --floral-white: #FFFCF6;
+    --honey-gold: #FFAD00;
+    --sky-blue: #1CCAD7;
+    --jungle-green: #005C5C;
+    --jade-lake: #44D07B;
+    --lupine-purple: #AE61C2;
+    --fire-weed: #CC45A9;
+    --grey-1: #F0F2FA;
+    --grey-2: #E6E8F0;
+    --grey-3: #C3C6D3;
+    --grey-4: #AFB4C4;
+    --grey-5: #9DA0AD;
+    --grey-6: #777986;
+    --grey-7: #5B5D6B;
+    --grey-8: #404252;
+    --grey-9: #101223;
+    --orange-1: #FFDACE;
+    --orange-2: #FFC4B1;
+    --orange-3: #FFAD93;
+    --orange-4: #FF9775;
+    --orange-5: #FF7E56;
+    --orange-6: #FB521E;
+    --orange-7: #EA3B04;
+    --orange-8: #E32C00;
+    --orange-9: #D80C00;
+    --orange-10: #D80C00;
+    --yellow-1: #FFEAC6;
+    --yellow-2: #FFDFA3;
+    --yellow-3: #FFD27F;
+    --yellow-4: #FFC659;
+    --yellow-5: #FFBA24;
+    --yellow-6: #FF9A00;
+    --yellow-7: #F38D00;
+    --yellow-8: #E58200;
+    --yellow-9: #D67100;
+    --yellow-10: #C96400;
+    --blue-1: #CEF1F5;
+    --blue-2: #B0E9EE;
+    --blue-3: #91E1E9;
+    --blue-4: #6FD8E2;
+    --blue-5: #46D0DC;
+    --blue-6: #00BFC6;
+    --blue-7: #00B2B4;
+    --blue-8: #00A3A1;
+    --blue-9: #008F8A;
+    --blue-10: #007770;
+    --teal-1: #B9D7D6;
+    --teal-2: #8FBEBE;
+    --teal-3: #64A6A6;
+    --teal-4: #328E8E;
+    --teal-5: #007574;
+    --teal-6: #005350;
+    --teal-7: #004541;
+    --teal-8: #003631;
+    --teal-9: #002420;
+    --teal-10: #001713;
+    --green-1: #D5F3DF;
+    --green-2: #BBECCA;
+    --green-3: #A1E6B7;
+    --green-4: #85DEA3;
+    --green-5: #67D68F;
+    --green-6: #3CC26E;
+    --green-7: #14B255;
+    --green-8: #0FA247;
+    --green-9: #038B35;
+    --green-10: #006F24;
+    --purple-1: #F6D9FB;
+    --purple-2: #E8C1F0;
+    --purple-3: #DAA9E4;
+    --purple-4: #CC91D9;
+    --purple-5: #BD79CD;
+    --purple-6: #9F4EB4;
+    --purple-7: #8A399F;
+    --purple-8: #77268D;
+    --purple-9: #68177E;
+    --purple-10: #55066A;
+    --pink-1: #FFD7F1;
+    --pink-2: #F6BBE2;
+    --pink-3: #EDA0D4;
+    --pink-4: #E384C6;
+    --pink-5: #D866B7;
+    --pink-6: #BF359B;
+    --pink-7: #A83189;
+    --pink-8: #912B77;
+    --pink-9: #711B5B;
+    --pink-10: #5F114B;
+    --crono-error: #CD0A01;
+    --raised-container-bg-dark: #272A3A;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--grey-1);
+}
+
+#app {
+    width: 90%;
+    height: 100vh;
+    margin: auto;
+    border: 1px solid black;
+    padding: 5px;
+}
+
+/* DAY */
+.day-container {
+    width: 70%;
+    min-height: 250px;
+    background-color: white;
+    border: 1px solid white;
+    border-radius: 10px;
+}
+
+.day-container .table-meals {
+    width: 100%;
+    border: 2px solid var(--grey-2);
+    border-radius: 10px;
+    border-collapse: separate; /* Keep separate for rounded corners */
+    border-spacing: 0; /* Remove spacing between cells */
+    background-color: var(--grey-2);
+}
+
+.day-container .table-meals:hover {
+    cursor: pointer;
+}
+
+.day-container .table-meals .meal {
+    background-color: var(--grey-2);
+}
+
+.day-container .table-meals .meal td {
+    padding: 5px;
+    border-bottom: 1px solid var(--grey-3);
+    font-weight: bold;
+}
+
+/* Rounded table borders */
+.day-container .table-meals .meal:first-of-type td{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.meal:last-of-type td {
+    border: 0 !important;
+}
+
+.meal-btn {
+    border: 0;
+    width: 40px;
+    background-color: transparent;
+    border-radius: 10px;
+}
+
+.meal-btn:hover {
+    background-color: var(--grey-5);
+}
+
+/* Food table (ingredients) */
+.table-food {
+    width: 100%;
+    font-size: 14px;
+}
+
+.table-food tr td {
+    padding: 5px;
+}
+
+.table-food tr {
+    background-color: white;
+}
+.table-food tr:nth-child(2n) {
+    background-color: var(--grey-1);
+}

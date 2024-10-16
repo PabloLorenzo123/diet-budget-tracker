@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-$%66)d0i0n1zcb^=ai^6k%2@gv8&u+zba10nu#0z$zp)hjecw!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -45,13 +45,15 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT =  {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
 # Application definition
 
 INSTALLED_APPS = [
+    # Local apps.
+    'accounts',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -61,8 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    # Local apps.
-    'accounts',
+    
 ]
 
 MIDDLEWARE = [

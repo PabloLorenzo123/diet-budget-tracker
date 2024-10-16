@@ -5,11 +5,11 @@ const Home = () => {
 
     return(
         <>
-            <div class="main-nav">
-                <div class="main-nav-left">
+            <div className="main-nav">
+                <div className="main-nav-left">
                     <h1>DietBudgeter</h1>
                 </div>
-                <div class="main-nav-right">
+                <div className="main-nav-right">
                     <nav>
                         <ul>
                             <a href="#about-us">
@@ -18,7 +18,7 @@ const Home = () => {
                                 </li>
                             </a>
                             <a href="/login/">
-                                <li class="nav-button">
+                                <li className="nav-button">
                                     LOG IN
                                 </li>
                             </a>

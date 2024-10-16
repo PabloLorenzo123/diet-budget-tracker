@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import IntegrityError
 from django.contrib.auth import authenticate
+from django.views.decorators.csrf import csrf_exempt
 # LOCAL.
 from .models import User
 from .serializers import UserSerializer
@@ -46,8 +47,7 @@ def get_user(request):
     AuthUser.get_user
     pass
 
-@api_view(('POST',))
-@permission_classes([AllowAny])
+@csrf_exempt # If you're using token authentication (e.g., JWT), Django REST framework typically disables CSRF checks because token authentication is stateless.
 def login(request):
     # Ensure the request content type is JSON
     if request.content_type != 'application/json':
@@ -59,7 +59,7 @@ def login(request):
         username = data.get('username')
         password = data.get('password')
     except json.JSONDecodeError:
-        return Response({"error": "Invalid JSON"}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({"error": "Invalid JSON"}, status=status.HTTP_400_BAD_REQUEST)
     
     # Authenticate user.
     user = authenticate(username=username, password=password)
@@ -68,10 +68,10 @@ def login(request):
         # If authentication is successful, generate the JWT tokens.
         refresh = RefreshToken.for_user(user)
         
-        return Response({
+        return JsonResponse({
             'refreshToken': str(refresh),
             'accessToken': str(refresh.access_token)
         }, status=status.HTTP_200_OK)
     else:
         print(user)
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return JsonResponse({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)

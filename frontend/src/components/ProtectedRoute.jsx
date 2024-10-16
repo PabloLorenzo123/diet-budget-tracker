@@ -4,12 +4,12 @@ import api from '../api'
 import { REFRESH_TOKEN, ACCESS_TOKEN } from '../constants';
 import { useState, useEffect } from 'react';
 
-const ProtectedRoute = ({children}) => {
+const ProtectedRoute = () => {
     const [isAuthorized, setIsAuthorized] = useState(null);
 
     useEffect(() => {
         auth().catch(() => setIsAuthorized(false));
-    })
+    }, [])
     
     const refreshToken = async () => {
         const refreshToken = localStorage.getItem(REFRESH_TOKEN);
@@ -46,11 +46,7 @@ const ProtectedRoute = ({children}) => {
         }
     }
 
-    if (isAuthorized == null){
-        return <div>Loading...</div>
-    }
-
-    return isAuthorized ? children: <Navigate to="login" />
+    return isAuthorized
 }
 
 export default ProtectedRoute

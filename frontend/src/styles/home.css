@@ -8,7 +8,7 @@
 
 body {
     margin: 0;
-    font-family: sans-serif;
+    font-family: sans-serif !important;
 }
 
 /* Navigation */
@@ -72,15 +72,18 @@ body {
     width: 85%;
     margin: 0 auto;
     text-align: center;
+    padding: 20px 0px;
 }
 
 #hero h1 {
     font-size: 50px;
+    margin-bottom: 20px;
 }
 
 #hero h5 {
     font-size: 18px;
     font-weight: normal;
+    margin-bottom: 20px;
 }
 
 #hero button {
@@ -89,8 +92,7 @@ body {
     font-size: 18px;
     border-radius: 5px;
     font-weight: bold;
-    background-color:darkturquoise;
-    margin-bottom: 10px;
+    background-color: darkturquoise;
 }
 
 #hero button:hover {

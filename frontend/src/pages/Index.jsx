@@ -1,9 +1,17 @@
+import NavBar from '../components/NavBar';
+import Day from '../components/Day';
+import '../styles/index.css';
 
 const Index = () => {
 
     return(
         <>
-            <h1>Index</h1>
+            <NavBar />
+            <div>
+                <main id="app">
+                    <Day />
+                </main>
+            </div>
         </>
     )
 }
