@@ -1,4 +1,5 @@
 import { useState, useEffect, Fragment } from "react";
+import AddFoodBtn from "./AddFoodBtn";
 
 const Day = () => {
     const [unCategorized, setUnCategorized] = useState([]);
@@ -25,26 +26,27 @@ const Day = () => {
     return (
         <>
             <div className="day-container p-2">
-                <div className="day-options p-1">
-                    <button className="btn btn-secondary">Add Food</button>
-                </div>
-                <div className="day-meals">
+                
+                <AddFoodBtn />
 
+
+
+                <div className="day-meals">
                     <table className="table-meals">
                         <tbody>
                             {meals.map((meal, index) => {
                                 return (
                                 <Fragment key={meal.name}>
-                                    <tr className="meal">
-                                        <td>{meal.name}</td>
+                                    <tr className={`tr-meal${index + 1 == meals.length? ' last': ''}`}>
+                                        <td className="td-meal">{meal.name}</td>
                                         <td className="d-flex justify-content-end">
-                                            <button className="meal-btn" onClick={() => meal.setShow(prev => !prev)}>
+                                            <button className="meal-toggle-btn" onClick={() => meal.setShow(prev => !prev)}>
                                                 {!meal.show?
-                                                <span class="material-symbols-outlined">
+                                                <span className="material-symbols-outlined">
                                                 stat_minus_1
                                                 </span>:
-                                                <span class="material-symbols-outlined">
-                                                keyboard_control_key
+                                                <span className="material-symbols-outlined">
+                                                stat_1
                                                 </span>}
                                             </button>
                                         </td>
@@ -55,8 +57,8 @@ const Day = () => {
                                         <td colSpan="2">
                                             <table className="table-food ">
                                                 <tbody>
-                                                    <tr><td>Rice</td><td></td></tr>
-                                                    <tr><td>Beans</td><td></td></tr>
+                                                    <tr><td>Rice</td></tr>
+                                                    <tr><td>Beans</td></tr>
                                                 </tbody>
                                             </table>
                                         </td>

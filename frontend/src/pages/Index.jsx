@@ -1,5 +1,5 @@
 import NavBar from '../components/NavBar';
-import Day from '../components/Day';
+import Day from '../components/Diary/Day';
 import '../styles/index.css';
 
 const Index = () => {

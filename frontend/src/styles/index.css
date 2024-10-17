@@ -119,7 +119,7 @@ body {
     border-radius: 10px;
 }
 
-.day-container .table-meals {
+.table-meals {
     width: 100%;
     border: 2px solid var(--grey-2);
     border-radius: 10px;
@@ -128,38 +128,37 @@ body {
     background-color: var(--grey-2);
 }
 
-.day-container .table-meals:hover {
+.table-meals:hover {
     cursor: pointer;
 }
 
-.day-container .table-meals .meal {
+.table-meals .tr-meal {
     background-color: var(--grey-2);
 }
 
-.day-container .table-meals .meal td {
+.td-meal, .tr-meal td{
     padding: 5px;
     border-bottom: 1px solid var(--grey-3);
     font-weight: bold;
 }
 
 /* Rounded table borders */
-.day-container .table-meals .meal:first-of-type td{
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+.table-meals .tr-meal:first-of-type td:first-of-type, .table-meals .tr-meal:first-of-type td:last-of-type{
+    border-top: 0;
 }
 
-.meal:last-of-type td {
-    border: 0 !important;
+.tr-meal.last td {
+    border-bottom: 0;
 }
 
-.meal-btn {
+.meal-toggle-btn {
     border: 0;
     width: 40px;
     background-color: transparent;
     border-radius: 10px;
 }
 
-.meal-btn:hover {
+.meal-toggle-btn:hover {
     background-color: var(--grey-5);
 }
 
@@ -176,6 +175,7 @@ body {
 .table-food tr {
     background-color: white;
 }
+
 .table-food tr:nth-child(2n) {
     background-color: var(--grey-1);
 }
