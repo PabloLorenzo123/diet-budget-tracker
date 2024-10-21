@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Modal from "./Modal";
+import Modal from "../Modal";
 
 const AddFoodBtn = () => {
     const [showModal, setShowModal] = useState(false);

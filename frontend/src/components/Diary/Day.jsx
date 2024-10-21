@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from "react";
-import AddFoodBtn from "./AddFoodBtn";
+import AddFoodBtn from "./AddFood/AddFoodBtn";
 
 const Day = () => {
     const [unCategorized, setUnCategorized] = useState([]);
