@@ -2,3 +2,20 @@
 .serving-table th{
     background-color: var(--grey-2);
 }
+
+/* Nutrition Data Form */
+.nutrient-input {
+    min-width: 50px;
+    max-width: 80px;
+    text-align: center;
+    margin-right: 2px;
+    padding: 0;
+    border: 0;
+    appearance: none;
+    -moz-appearance: textfield;
+}
+
+.nutrient-input::-webkit-outer-spin-button, .nutrient-input::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* This removes the up and downt bottom. */
+}
+

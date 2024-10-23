@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import '../../styles/createFoodProduct.css';
 import DetailsForm from "./DetailsForm";
 import NutritionDataForm from "./NutritionDataForm";
-import { nutrients } from "../../lib/nutrients";
+import { nutrientState } from "../../lib/nutrients";
 
 const CreateFoodForm = () => {
     const [foodData, setFoodData] = useState({
@@ -13,14 +13,14 @@ const CreateFoodForm = () => {
         servingSize: 1
     });
 
-    const [nutritionData, setNutritionData] = useState(nutrients)
+    const [nutritionData, setNutritionData] = useState(nutrientState)
 
     return (
         <>
             <hr className="border border-primary border-3 opacity-75"></hr>
             <DetailsForm foodData={foodData} setFoodData={setFoodData}/>
             <hr className="border border-primary border-3 opacity-75"></hr>
-            <NutritionDataForm />
+            <NutritionDataForm nutritionData={nutritionData} setNutritionData={setNutritionData}/>
         </>
     )
 }
