@@ -35,6 +35,11 @@ const DetailsForm = ({foodData, setFoodData}) => {
                     <label htmlFor="servingTable" className="col-sm-2 col-form-label">Serving Sizes</label>
                     <div className="col-sm-6">
                         <table id="servingTable" className="table serving-table">
+                            <colgroup>
+                                <col style={{width: '33%'}}/>
+                                <col style={{width: '33%'}}/>
+                                <col style={{width: '33%'}}/>
+                            </colgroup>
                             <thead>
                                 <tr>
                                     <th># Servings</th>

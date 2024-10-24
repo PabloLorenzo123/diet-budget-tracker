@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
@@ -25,11 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-$%66)d0i0n1zcb^=ai^6k%2@gv8&u+zba10nu#0z$zp)hjecw!'
+USDA_API_KEY = os.environ.get('USDA_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -54,6 +56,7 @@ SIMPLE_JWT =  {
 INSTALLED_APPS = [
     # Local apps.
     'accounts',
+    'diet',
     
     'django.contrib.admin',
     'django.contrib.auth',
