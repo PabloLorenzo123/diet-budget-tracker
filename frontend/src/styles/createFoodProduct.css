@@ -3,6 +3,18 @@
     background-color: var(--grey-2);
 }
 
+/* Search form */
+.search-container {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.search-container button[type="button"] {
+    width: 100px;
+    display: block;
+    margin: auto;
+}
 /* Nutrition Data Form */
 .nutrient-input {
     min-width: 50px;

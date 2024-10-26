@@ -2,12 +2,11 @@ import { useState, useEffect } from "react";
 import { nutrients } from "../../lib/nutrients.js";
 import { titleCase, removeTrailingZeros } from "../../lib/functions.js";
 
-import api from '../../api.js';
+
+import ManualOrSearchFood from "./ManualOrSearchFood.jsx";
 
 const NutritionDataForm = ({ nutritionData, setNutritionData }) => {
-  const [isManual, setIsManual] = useState(false);
-  const [searchInput, setSearchInput] = useState('');
-
+  
   const handleChange = (dv, e) => {
     const { name, value } = e.target;
     setNutritionData((prev) => ({
@@ -31,73 +30,11 @@ const NutritionDataForm = ({ nutritionData, setNutritionData }) => {
     }));
   };
 
-  const searchFoodInDB = () => {
-    if (!searchInput) {
-        return;
-    }
-    api.get(`diet/search_foods/?query=${searchInput}`);
-  }
-
   return (
     <>
       <div className="create-food-form">
-        <p className="fw-bold h4">Nutrition Info</p>
-        <p className="form-text">
-          Would you like to enter the nutritional information manually?
-        </p>
-        <div className="mb-3">
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="isManual"
-              id="manualYes"
-              value="yes"
-              checked={isManual}
-              onChange={() => setIsManual(true)}
-            />
-            <label className="form-check-label" htmlFor="manualYes">
-              Yes
-            </label>
-          </div>
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="isManual"
-              id="manualNo"
-              value="no"
-              checked={!isManual}
-              onChange={() => setIsManual(false)}
-            />
-            <label className="form-check-label" htmlFor="manualNo">
-              No
-            </label>
-          </div>
-        </div>
 
-        <div className="row mt-2 mb-3">
-          <div className="col-12 col-sm-7">
-            <input
-              type="text"
-              disabled={isManual}
-              className="form-control"
-              placeholder="Search our sources for nutritional information about this food, what's this? ex: beef, sardines, eggs, etc."
-              value={searchInput}
-              onChange={e => setSearchInput(e.target.value)}
-            />
-          </div>
-          <div className="col-12 col-sm-2">
-            <button
-              type="button"
-              disabled={isManual}
-              className="btn btn-secondary w-100"
-              onClick={searchFoodInDB}
-            >
-              Search
-            </button>
-          </div>
-        </div>
+        <ManualOrSearchFood nutritionData={nutritionData} setNutritionData={setNutritionData}/>
 
         <div className="nutrient-data mb-2">
           <p className="fw-bold h5">Nutrition Overview</p>
