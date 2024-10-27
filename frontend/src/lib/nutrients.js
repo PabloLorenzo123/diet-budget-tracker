@@ -237,19 +237,19 @@ export const nutrientState = {
         amount: 0,
         dv: 0
     },
-    "monounsaturated": {
+    "monounsaturatedFat": {
         amount: 0,
         dv: null
     },
-    "polyunsaturated": {
+    "polyunsaturatedFat": {
         amount: 0,
         dv: null
     },
-    "saturated": {
+    "saturatedFat": {
         amount: 0,
         dv: 0
     },
-    "trans": {
+    "transFat": {
         amount: 0,
         dv: null
     },

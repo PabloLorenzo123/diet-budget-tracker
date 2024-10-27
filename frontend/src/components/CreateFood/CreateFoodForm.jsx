@@ -8,9 +8,9 @@ const CreateFoodForm = () => {
     const [foodData, setFoodData] = useState({
         productName: '',
         productLink: '',
-        servings: 1,
-        servingUnit: 'Grams', // Grams or mililiters.
-        servingSize: 1
+        servings: 1,    // How many servings are in the product.
+        measure: 'serving', // It could be a serving, a tbspoon, an egg.
+        grams: ''            // How many grams is a serving, this is optional. n/a for eggs for instance, grams or mililtes.
     });
 
     const [nutritionData, setNutritionData] = useState(nutrientState)

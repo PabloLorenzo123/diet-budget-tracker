@@ -3,12 +3,13 @@ import { useState, useEffect } from "react";
 const DetailsForm = ({foodData, setFoodData}) => {
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        let { name, value } = e.target;
         setFoodData(prevData => ({
             ...prevData,
             [name]: value
         }));
     };
+
 
     return (
         <>
@@ -43,8 +44,8 @@ const DetailsForm = ({foodData, setFoodData}) => {
                             <thead>
                                 <tr>
                                     <th># Servings</th>
-                                    <th>Serving Unit</th>
-                                    <th>Serving Size</th>
+                                    <th>Measure</th>
+                                    <th>Grams</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -54,14 +55,16 @@ const DetailsForm = ({foodData, setFoodData}) => {
                                         name="servings" value={foodData.servings}/>
                                     </td>
                                     <td>
-                                        <select onChange={handleChange} className="form-select" name="servingUnit" value={foodData.servingUnit} >
-                                            <option value="g">Grams</option>
-                                            <option value="ml">Mililiters</option>
-                                        </select>
+                                        <input type="text" onChange={handleChange} className="form-control" name="measure" value={foodData.measure}/>
                                     </td>
                                     <td>
-                                        <input type="number" min="1" onChange={handleChange} className="form-control"
-                                        name="servingSize" value={foodData.servingSize} />
+                                        <input type='number'
+                                        min='1'
+                                        placeholder="n/a"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        name="grams"
+                                        value={foodData.grams} />
                                     </td>
                                 </tr>
                             </tbody>

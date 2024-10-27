@@ -53,6 +53,7 @@ const ManualOrSearchFood = ({nutritionData, setNutritionData}) => {
             </div>
 
             <div className="search-container">
+                <h6 className="fw-bold">Search Form</h6>
                 <div className="row mt-3 mb-4">
                     <div className="col-10 col-sm-8">
                         <input
@@ -69,9 +70,10 @@ const ManualOrSearchFood = ({nutritionData, setNutritionData}) => {
                 </div>
 
                 <div className="row mb-3">
+                    
                     <p className="form-text">
                     Is this an unbranded minimally processed food (e.g., eggs, vegetables) or a
-                    processed item?
+                    processed an labeled item?
                     </p>
                     <div className="col d-flex align-items-center">
                         <label className="form-check-label me-3">
@@ -100,9 +102,13 @@ const ManualOrSearchFood = ({nutritionData, setNutritionData}) => {
                 </div>
 
                 
-                <button type="button" disabled={isManual} className="btn btn-secondary" onClick={searchFoodInDB}>
+                <button type="button" disabled={isManual} className="btn btn-secondary mb-2" onClick={searchFoodInDB}>
                     Search
                 </button>
+
+                <div className="search-results">
+                    <h6 className="fw-bold">Search Results</h6>
+                </div>
                 
             </div>
         </>

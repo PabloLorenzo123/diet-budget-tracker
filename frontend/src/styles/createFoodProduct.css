@@ -1,6 +1,14 @@
-
+/* Details Form */
 .serving-table th{
     background-color: var(--grey-2);
+}
+
+.na {
+    border: 1px solid;
+    margin: auto;
+    height: 100%;
+    text-align: center;
+    display: block;
 }
 
 /* Search form */
@@ -16,6 +24,7 @@
     margin: auto;
 }
 /* Nutrition Data Form */
+
 .nutrient-input {
     min-width: 50px;
     max-width: 80px;
@@ -32,6 +41,7 @@
 }
 
 /* Nutrition Data Form tables*/
+
 
 .nutrient-table th {
     background-color: var(--grey-2);

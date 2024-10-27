@@ -7,6 +7,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 import requests
 import json
+
+from .nutrients import NUTRIENTS
 # Create your views here.
 
 @api_view(('GET',))
@@ -14,42 +16,59 @@ import json
 def search_foods(request):
     """Makes an API Call to the USDA API FOOD API and retrieves a list of food products (description, ingredients, id)."""
     query = request.GET.get('query')
-    branded = request.GET.get('branded') or False
-    
-    data_types = ['Branded', 'Foundation' , 'Survey (FNDDS)', 'SR Legacy'] # https://fdc.nal.usda.gov/data-documentation.html
-    
     if not query:
         return JsonResponse({
             'error': 'query parameter missing.'
         }, status=400)
-    url = 'https://api.nal.usda.gov/fdc/v1/foods/search'
-    params = {
+        
+    branded = request.GET.get('branded').lower() == 'true'
+
+    data_types = ['Branded', 'Foundation' , 'Survey (FNDDS)', 'SR Legacy'] # https://fdc.nal.usda.gov/data-documentation.html
+    
+    search_url = 'https://api.nal.usda.gov/fdc/v1/foods/search'
+    
+    search_params = {
         'query': query,
-        'dataType': data_types if branded else ['Foundation', 'Survey (FNDSS)'], # If the food is unbranded then exclude the branded datatype.
+        'dataType': data_types if branded else ['Foundation', 'Survey (FNDDS)', 'SR Legacy'], # If the food is unbranded then exclude the branded datatype.
         'pageSize': 50,
         'pageNumber': 1,
+        'sortBy': 'dataType.keyword',
+        'sortOrder': 'asc',
         'api_key': USDA_API_KEY
         # The other fields are optional
     }
-    print(params)
+    
+    search_results = requests.get(url=search_url, params=search_params).json()
+    
+    # Now call to v1/foods/search.
+    foods_url = 'https://api.nal.usda.gov/fdc/v1/foods'
+    foods_params = {
+        'fdcIds': [f['fdcId'] for f in search_results['foods']],
+        'format': 'full',
+        'api_key': USDA_API_KEY
+    }
+    
+    foods = requests.get(url=foods_url, params=foods_params).json()
+    
     res = []
-    
-    foods = requests.get(url=url, params=params).json()
-    
-    for food in foods["foods"]:
-        try:
-            f = {
-                "description": food["description"],
-                "brandOwner": food["brandOwner"] if "brandOwner" in food else None,
-                "brandName": food["brandName"] if "brandName" in food else None,
-                "ingredients": food["ingredients"] if "ingredients" in food else None,
-                "marketCountry": food["marketCountry"] if "marketCountry" in food else None,
-                "servingSizeUnit": food["servingSizeUnit"] if "servingSizeUnit" in food else None,
-                "servingSize": food["servingSize"] if "servingSize" in food else 1   
-            }
-        except KeyError:
-            print(json.dumps(food, indent=2))
-            continue
+   
+    for food in foods:
+        f = {
+            "description": food.get('description', ''),
+            "brandOwner": food.get('brandOwner', None),
+            "brandName": food.get('brandName', None),
+            "ingredients": food.get('ingredients', None),
+            "marketCountry": food.get('marketCountry', None),
+            "servingSizeUnit": food.get('servingSizeUnit', 'g'),
+            "servingSize": food.get('servingSize', '100')   
+        }
+        #f["foodNutrients"] = {nutrients[nutrient['nutrientId']]: nutrient['value'] for nutrient in food.get('foodNutrients', []) if nutrient['nutrientId'] in nutrients}
+        f["foodNutrients"] = {}
+        for nutrient in food.get('foodNutrients', []):
+            id = str(nutrient['nutrient']['id'])
+            value = nutrient.get('amount', 0)
+            if id in NUTRIENTS:
+                f["foodNutrients"][NUTRIENTS[id]] = value
         res.append(f)
     return JsonResponse({
         'foods': res
