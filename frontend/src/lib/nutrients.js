@@ -40,22 +40,22 @@ export const nutrients = {
         }
     },
     "fat": {
-        "monounsaturated": {
+        "monounsaturatedFat": {
             "amount": 0,
             "unit": "g",
             "dv": null
         },
-        "polyunsaturated": {
+        "polyunsaturatedFat": {
             "amount": 0,
             "unit": "g",
             "dv": null
         },
-        "saturated": {
+        "saturatedFat": {
             "amount": 0,
             "unit": "g",
             "dv": 20
         },
-        "trans": {
+        "transFat": {
             "amount": 0,
             "unit": "g",
             "dv": null
