@@ -3,7 +3,7 @@ NUTRIENTS = {
   "1003": "protein",
   "1103": "selenium",
   "1004": "totalFat",
-  "1062": "energy", #kj.
+  # "1062": "energy", #kj.
   "1008": "energy", #kcal.
   "1005": "netCarbs",
   "1165": "B1",

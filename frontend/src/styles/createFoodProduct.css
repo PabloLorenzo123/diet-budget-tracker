@@ -40,6 +40,15 @@
     -webkit-appearance: none; /* This removes the up and downt bottom. */
 }
 
+.search-results .results {
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+.search-results table .selected td{
+    background-color: aquamarine;
+}
+
 /* Nutrition Data Form tables*/
 
 

@@ -7,12 +7,20 @@ const ManualOrSearchFood = ({nutritionData, setNutritionData}) => {
         query: '',
         branded: false
     });
+    const [searchResults, setSearchResults] = useState([]);
+    const [selectedSearchResult, setSelectedSearchResult] = useState(''); // fdcid of the result selected.
 
     const searchFoodInDB = async () => {
         if (!searchInput) {
             return;
         }
-        const res = await api.get(`diet/search_foods?query=${searchInput.query}&branded=${searchInput.branded}`);
+        const res = await api.get(`diet/search_foods/?query=${searchInput.query}&branded=${searchInput.branded}`);
+        const data = res.data;
+        setSearchResults(data.foods);
+    }
+
+    const selectSearchResult = (fdcid) => {
+        setSelectedSearchResult(fdcid);
     }
     
     return (
@@ -108,6 +116,35 @@ const ManualOrSearchFood = ({nutritionData, setNutritionData}) => {
 
                 <div className="search-results">
                     <h6 className="fw-bold">Search Results</h6>
+
+                    <div className="results">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Serving Size</th>
+                                    <th>Energy (kcal)</th>
+                                    <th>Protein</th>
+                                    <th>Carbs</th>
+                                    <th>Fat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {searchResults.map(result => {
+                                    return (
+                                        <tr key={result.fdcid} onClick={() => selectSearchResult(result.fdcid)} className={result.fdcid == selectSearchResult? 'selected': ''}>
+                                            <td>{result.description}</td>
+                                            <td>{result.servingSize}{result.servingSizeUnit}</td>
+                                            <td>{result.foodNutrients.energy}</td>
+                                            <td>{result.foodNutrients.protein}</td>
+                                            <td>{result.foodNutrients.netCarbs}</td>
+                                            <td>{result.foodNutrients.totalFat}</td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 
             </div>

@@ -37,23 +37,13 @@ def search_foods(request):
         'api_key': USDA_API_KEY
         # The other fields are optional
     }
-    
-    search_results = requests.get(url=search_url, params=search_params).json()
-    
-    # Now call to v1/foods/search.
-    foods_url = 'https://api.nal.usda.gov/fdc/v1/foods'
-    foods_params = {
-        'fdcIds': [f['fdcId'] for f in search_results['foods']],
-        'format': 'full',
-        'api_key': USDA_API_KEY
-    }
-    
-    foods = requests.get(url=foods_url, params=foods_params).json()
+    foods = requests.get(url=search_url, params=search_params).json()
     
     res = []
    
-    for food in foods:
+    for food in foods['foods']:
         f = {
+            "fdcId": food['fdcId'],
             "description": food.get('description', ''),
             "brandOwner": food.get('brandOwner', None),
             "brandName": food.get('brandName', None),
@@ -65,12 +55,57 @@ def search_foods(request):
         #f["foodNutrients"] = {nutrients[nutrient['nutrientId']]: nutrient['value'] for nutrient in food.get('foodNutrients', []) if nutrient['nutrientId'] in nutrients}
         f["foodNutrients"] = {}
         for nutrient in food.get('foodNutrients', []):
-            id = str(nutrient['nutrient']['id'])
-            value = nutrient.get('amount', 0)
+            id = str(nutrient['nutrientId'])
+            value = nutrient.get('value', 0)
             if id in NUTRIENTS:
                 f["foodNutrients"][NUTRIENTS[id]] = value
         res.append(f)
     return JsonResponse({
         'foods': res
     })
+
+
+@api_view(('GET',))
+@permission_classes([AllowAny])
+def search_food(request):
+    """Returns the details of a food using their FDCID in the USDA Database."""
+    fdcid = request.GET.get('fdcid')
+    if not fdcid:
+        return JsonResponse({
+            'error': 'fdcid missing.'
+        }, status=400)
         
+    foods_url = 'https://api.nal.usda.gov/fdc/v1/foods'
+    foods_params = {
+        'fdcIds': [fdcid],
+        'format': 'full',
+        'api_key': USDA_API_KEY
+    }
+    
+    food = requests.get(url=foods_url, params=foods_params).json()[0]
+    # https://api.nal.usda.gov/fdc/v1/food/748967?format=full&api_key=ajv5DZ2hmSj6yeMu1mYunKVzhq38JlJHPEQDejGJ an egg.
+    res = {
+        "description": food.get('description', ''),
+        "brandOwner": food.get('brandOwner', None),
+        "brandName": food.get('brandName', None),
+        "ingredients": food.get('ingredients', None),
+        "marketCountry": food.get('marketCountry', None),
+        "servingSizeUnit": food.get('servingSizeUnit', 'g'),
+        "servingSize": food.get('servingSize', '100')   
+    }
+    
+    res["foodNutrients"] = {}
+    for nutrient in food.get('foodNutrients', []):
+        id = str(nutrient['nutrient']['id'])
+        value = nutrient.get('amount', 0)
+        if id in NUTRIENTS:
+            res["foodNutrients"][NUTRIENTS[id]] = value
+    
+    res["foodPortions"] = []
+    for portion in food.get('foodPortions', []):
+        res["foodPortions"].append({
+            'measureUnit': portion['measureUnit'].get('name', ''),
+            'amount': portion.get('amount', ''),
+            'gramWeight': portion.get('gramWeight', '')
+        })            
+    return JsonResponse(res)
