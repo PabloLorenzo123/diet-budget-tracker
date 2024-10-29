@@ -10,7 +10,7 @@ const CreateFoodForm = () => {
         productLink: '',
         servings: 1,    // How many servings are in the product.
         measure: 'serving', // It could be a serving, a tbspoon, an egg.
-        grams: ''            // How many grams is a serving, this is optional. n/a for eggs for instance, grams or mililtes.
+        gramWeight: ''            // How many grams is a serving, this is optional. n/a for eggs for instance, grams or mililtes.
     });
 
     const [nutritionData, setNutritionData] = useState(nutrientState)
@@ -18,9 +18,9 @@ const CreateFoodForm = () => {
     return (
         <>
             <hr className="border border-primary border-3 opacity-75"></hr>
-            <DetailsForm foodData={foodData} setFoodData={setFoodData}/>
+            <DetailsForm foodData={foodData} setFoodData={setFoodData} nutritionData={nutritionData} setNutritionData={setNutritionData}/>
             <hr className="border border-primary border-3 opacity-75"></hr>
-            <NutritionDataForm nutritionData={nutritionData} setNutritionData={setNutritionData}/>
+            <NutritionDataForm foodData={foodData} setFoodData={setFoodData} nutritionData={nutritionData} setNutritionData={setNutritionData}/>
         </>
     )
 }

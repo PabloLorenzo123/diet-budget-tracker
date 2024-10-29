@@ -1,7 +1,9 @@
 import { useState } from "react";
 import api from '../../api.js';
+import { dailyValues, nutrientState } from "../../lib/nutrients.js";
+import { roundTo } from "../../lib/functions.js";
 
-const ManualOrSearchFood = ({nutritionData, setNutritionData}) => {
+const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionData}) => {
     const [isManual, setIsManual] = useState(false);
     const [searchInput, setSearchInput] = useState({
         query: '',
@@ -19,8 +21,67 @@ const ManualOrSearchFood = ({nutritionData, setNutritionData}) => {
         setSearchResults(data.foods);
     }
 
-    const selectSearchResult = (fdcid) => {
-        setSelectedSearchResult(fdcid);
+    const selectSearchResult = async (fdcId) => {
+        if (selectedSearchResult == fdcId) return;
+
+        setSelectedSearchResult(fdcId);
+
+        // Check if this search result has already been selected before.
+        const searchResultsCopy = [...searchResults];
+        const resultSelected = searchResultsCopy.find(el => el.fdcId == fdcId);
+
+        let data;
+
+        if (!resultSelected.fullfoodNutrients) {
+            if (!searchInput.branded){
+                try {
+                    const res = await api.get(`diet/search_food/?fdcId=${fdcId}`);
+                    data = res.data.foodNutrients;
+    
+                    // If the food is not branded we want to show the different serving sizes.
+                    resultSelected.foodPortions = res.data.foodPortions;  
+                } catch (error) {
+                    data = {...resultSelected.foodNutrients}; // If the food is not found then get the foodNutrients retrieved from search_foods/.
+                }
+            } else {
+                data = {...resultSelected.foodNutrients}; // If the food is branded don't need to fetch for more information.
+            }
+
+            // If the user didn't input grams in the NutritionDataForm then.
+            if (!foodData.gramWeight){
+                await setFoodData(prev => ({...prev, gramWeight: resultSelected.servingSize}));
+            }
+            
+            // Transform the response so each key is a dictionary with amount and dv keys justs as the nutritionData state.
+            Object.keys(data).forEach(nutrient => {
+                const amount = roundTo(foodData.gramWeight * data[nutrient] / resultSelected.servingSize, 2) || 0;
+                const dv = roundTo(foodData.gramWeight / dailyValues[nutrient] * 100, 2);
+
+                data[nutrient] = {amount, dv}
+            })
+            resultSelected.fullfoodNutrients = data; // To avoid making the same api call twice.
+            
+            setSearchResults(searchResultsCopy);
+        } else {
+            data = resultSelected.fullfoodNutrients;
+        }
+        console.log(data);
+        setNutritionData(prev => ({...prev, ...data})) // Update nutritionData state. Update nutritionData state so nutrition tables update.
+    }
+
+    
+    const updateServingSize = (food, grams) => {
+        
+        setFoodData(prev => ({...prev, gramWeight: grams})); // Update gram weight.
+
+        const nutritionDataCopy = {...nutritionData};
+        Object.keys(nutritionDataCopy).forEach(nutrient => {
+            const amount = roundTo(grams * food.fullfoodNutrients[nutrient]?.amount / food.servingSize, 2) || 0;
+            const dv = roundTo(amount / dailyValues[nutrient] * 100, 2);
+            nutritionDataCopy[nutrient] = {amount, dv};
+        });
+        
+        setNutritionData(prev => ({...prev, ...nutritionDataCopy}));
     }
     
     return (
@@ -114,7 +175,7 @@ const ManualOrSearchFood = ({nutritionData, setNutritionData}) => {
                     Search
                 </button>
 
-                <div className="search-results">
+                <div className="cf-search-results">
                     <h6 className="fw-bold">Search Results</h6>
 
                     <div className="results">
@@ -132,9 +193,27 @@ const ManualOrSearchFood = ({nutritionData, setNutritionData}) => {
                             <tbody>
                                 {searchResults.map(result => {
                                     return (
-                                        <tr key={result.fdcid} onClick={() => selectSearchResult(result.fdcid)} className={result.fdcid == selectSearchResult? 'selected': ''}>
+                                        <tr key={result.fdcId} onClick={() => selectSearchResult(result.fdcId)} className={result.fdcId == selectedSearchResult? 'selected': ''}>
                                             <td>{result.description}</td>
-                                            <td>{result.servingSize}{result.servingSizeUnit}</td>
+                                            <td>
+                                                {result.foodPortions && result.fdcId == selectedSearchResult?
+                                                <select onChange={e => updateServingSize(result, e.target.value)} defaultValue={100}>
+                                                    <option value={100}>
+                                                        (100g)
+                                                    </option>
+                                                    {result.foodPortions.map((portion, idx) => {
+                                                        return (
+                                                            <option key={idx} value={portion.gramWeight}>
+                                                                {portion.amount} {portion.measureUnit} ({portion.gramWeight}g)
+                                                            </option>
+                                                        )
+                                                    })}
+                                                </select>
+                                                :
+                                                `${result.servingSize}${result.servingSizeUnit}`
+                                                }
+                                                
+                                            </td>
                                             <td>{result.foodNutrients.energy}</td>
                                             <td>{result.foodNutrients.protein}</td>
                                             <td>{result.foodNutrients.netCarbs}</td>

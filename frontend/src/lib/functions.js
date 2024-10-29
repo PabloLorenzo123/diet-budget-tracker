@@ -9,3 +9,7 @@ export const titleCase = (str) => {
 export const removeTrailingZeros = (e) => {
   e.target.value = e.target.value.replace(/^0+(?=\d)/, '');
 }
+
+export const roundTo = (num, decimalPlaces) => {
+  return Number(Math.round(num + 'e' + decimalPlaces) + 'e-' + decimalPlaces);
+}

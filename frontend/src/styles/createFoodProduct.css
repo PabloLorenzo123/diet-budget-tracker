@@ -40,13 +40,33 @@
     -webkit-appearance: none; /* This removes the up and downt bottom. */
 }
 
-.search-results .results {
+/* Search results */
+.cf-search-results .results {
+    width: 90%;
+    margin: auto;
     max-height: 300px;
     overflow-y: scroll;
 }
 
-.search-results table .selected td{
-    background-color: aquamarine;
+.cf-search-results table thead th {
+    background-color: var(--grey-2);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.cf-search-results table {
+    border-collapse: collapse;
+}
+
+.cf-search-results table tbody tr:nth-of-type(2n) td{
+    background-color: var(--grey-1);
+}
+
+
+
+.cf-search-results table .selected td{
+    background-color: aquamarine !important;
 }
 
 /* Nutrition Data Form tables*/

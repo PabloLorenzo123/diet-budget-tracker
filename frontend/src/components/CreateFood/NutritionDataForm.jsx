@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { nutrients } from "../../lib/nutrients.js";
-import { titleCase, removeTrailingZeros } from "../../lib/functions.js";
+import { titleCase, removeTrailingZeros, roundTo } from "../../lib/functions.js";
 
 
 import ManualOrSearchFood from "./ManualOrSearchFood.jsx";
 
-const NutritionDataForm = ({ nutritionData, setNutritionData }) => {
+const NutritionDataForm = ({foodData, setFoodData, nutritionData, setNutritionData }) => {
   
   const handleChange = (dv, e) => {
     const { name, value } = e.target;
@@ -13,7 +13,7 @@ const NutritionDataForm = ({ nutritionData, setNutritionData }) => {
       ...prev,
       [name]: {
         amount: value || 0,
-        dv: (value / dv) * 100
+        dv: roundTo(value / dv * 100, 2)
       }
     }));
   };
@@ -25,7 +25,7 @@ const NutritionDataForm = ({ nutritionData, setNutritionData }) => {
       ...prev,
       [nutrient]: {
         amount: newAmount,
-        dv: e.target.value
+        dv: roundTo(percentage * 100, 2)
       }
     }));
   };
@@ -34,7 +34,7 @@ const NutritionDataForm = ({ nutritionData, setNutritionData }) => {
     <>
       <div className="create-food-form">
 
-        <ManualOrSearchFood nutritionData={nutritionData} setNutritionData={setNutritionData}/>
+        <ManualOrSearchFood foodData={foodData} setFoodData={setFoodData} nutritionData={nutritionData} setNutritionData={setNutritionData}/>
 
         <div className="nutrient-data mb-2">
           <p className="fw-bold h5">Nutrition Overview</p>
@@ -43,17 +43,7 @@ const NutritionDataForm = ({ nutritionData, setNutritionData }) => {
             daily values may be higher or lower depending on your targets.
           </p>
           <div className="d-flex align-items-center">
-            <label htmlFor="servingInput" className="me-2">
-              Nutrients in:{" "}
-            </label>
-            <input
-              type="number"
-              id="servingInput"
-              className="form-control me-4"
-              min="1"
-              style={{ width: "70px" }}
-            />
-            <p className="mb-0">Servings</p>
+            <p>Nutrients in <span className="fw-bold"> one serving{foodData.gramWeight? ` ${foodData.gramWeight}g`: ''}</span></p>
           </div>
         </div>
 

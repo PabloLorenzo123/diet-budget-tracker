@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { roundTo } from "../../lib/functions";
+import { dailyValues } from "../../lib/nutrients";
 
-const DetailsForm = ({foodData, setFoodData}) => {
+const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) => {
 
     const handleChange = (e) => {
         let { name, value } = e.target;
@@ -9,6 +11,20 @@ const DetailsForm = ({foodData, setFoodData}) => {
             [name]: value
         }));
     };
+
+    const handleGramWeightChange = (e) => {
+        const newGramWeight = e.target.value;
+        const prevGramWeight = foodData.gramWeight;
+        setFoodData(prev => ({...prev, gramWeight: newGramWeight}));
+        // Update nutrition tables.
+        let nutritionDataCopy = {...nutritionData};
+        Object.keys(nutritionDataCopy).forEach(nutrient => {
+            const amount = roundTo(newGramWeight * nutritionDataCopy[nutrient] / prevGramWeight, 2);
+            const dv = roundTo(amount / dailyValues[nutrient] * 100, 2);
+            nutritionData[nutrient] = {amount, dv}
+        })
+        setNutritionData(nutritionDataCopy);
+    }
 
 
     return (
@@ -61,10 +77,10 @@ const DetailsForm = ({foodData, setFoodData}) => {
                                         <input type='number'
                                         min='1'
                                         placeholder="n/a"
-                                        onChange={handleChange}
+                                        onChange={handleGramWeightChange}
                                         className="form-control"
-                                        name="grams"
-                                        value={foodData.grams} />
+                                        name="gramWeight"
+                                        value={foodData.gramWeight} />
                                     </td>
                                 </tr>
                             </tbody>

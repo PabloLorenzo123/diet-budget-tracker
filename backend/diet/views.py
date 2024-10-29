@@ -49,7 +49,7 @@ def search_foods(request):
             "brandName": food.get('brandName', None),
             "ingredients": food.get('ingredients', None),
             "marketCountry": food.get('marketCountry', None),
-            "servingSizeUnit": food.get('servingSizeUnit', 'g'),
+            "servingSizeUnit": 'g', # is always grams.
             "servingSize": food.get('servingSize', '100')   
         }
         #f["foodNutrients"] = {nutrients[nutrient['nutrientId']]: nutrient['value'] for nutrient in food.get('foodNutrients', []) if nutrient['nutrientId'] in nutrients}
@@ -68,11 +68,13 @@ def search_foods(request):
 @api_view(('GET',))
 @permission_classes([AllowAny])
 def search_food(request):
-    """Returns the details of a food using their FDCID in the USDA Database."""
-    fdcid = request.GET.get('fdcid')
+    """Returns the details of a food using their FDCID in the USDA Database.
+    Should be use for not branded foods because these don't have portionSizes included in search_foods/."""
+    fdcid = request.GET.get('fdcId')
+    
     if not fdcid:
         return JsonResponse({
-            'error': 'fdcid missing.'
+            'error': 'fdcId missing.'
         }, status=400)
         
     foods_url = 'https://api.nal.usda.gov/fdc/v1/foods'
@@ -82,7 +84,13 @@ def search_food(request):
         'api_key': USDA_API_KEY
     }
     
-    food = requests.get(url=foods_url, params=foods_params).json()[0]
+    try:
+        food = requests.get(url=foods_url, params=foods_params).json()[0]
+    except KeyError:
+        return JsonResponse({
+            'error': 'food not found.'
+        }, status=404)
+    
     # https://api.nal.usda.gov/fdc/v1/food/748967?format=full&api_key=ajv5DZ2hmSj6yeMu1mYunKVzhq38JlJHPEQDejGJ an egg.
     res = {
         "description": food.get('description', ''),
