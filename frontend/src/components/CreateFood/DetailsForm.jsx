@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { roundTo } from "../../lib/functions";
+import { roundTo, isNumber } from "../../lib/functions";
 import { dailyValues } from "../../lib/nutrients";
 
 const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) => {
@@ -12,20 +12,22 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
         }));
     };
 
-    const handleGramWeightChange = (e) => {
-        const newGramWeight = e.target.value;
-        const prevGramWeight = foodData.gramWeight;
-        setFoodData(prev => ({...prev, gramWeight: newGramWeight}));
-        // Update nutrition tables.
-        let nutritionDataCopy = {...nutritionData};
-        Object.keys(nutritionDataCopy).forEach(nutrient => {
-            const amount = roundTo(newGramWeight * nutritionDataCopy[nutrient] / prevGramWeight, 2);
-            const dv = roundTo(amount / dailyValues[nutrient] * 100, 2);
-            nutritionData[nutrient] = {amount, dv}
-        })
-        setNutritionData(nutritionDataCopy);
-    }
+    const handleNumberInputChange = (e) => {
+        let {name, value} = e.target;
+        
+        if (/^\d+(\.\d+)?$/.test(value)) {
+            console.log(`${value} passed the test.`)
+            if (value <= 0) return;
+        } 
+        else {
+            return;
+        }
 
+        setFoodData(prevData => ({
+            ...prevData,
+            [name]: value
+        }));
+    }
 
     return (
         <>
@@ -67,17 +69,28 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                             <tbody>
                                 <tr>
                                     <td>
-                                        <input type="number" min="1" onChange={handleChange} className="form-control"
-                                        name="servings" value={foodData.servings}/>
+                                        <input
+                                        type="number"
+                                        min="1"
+                                        onChange={handleNumberInputChange}
+                                        className="form-control"
+                                        name="servings"
+                                        value={foodData.servings}
+                                        defaultValue={1}/>
                                     </td>
                                     <td>
-                                        <input type="text" onChange={handleChange} className="form-control" name="measure" value={foodData.measure}/>
+                                        <input
+                                        type="text"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        name="measure"
+                                        value={foodData.measure}/>
                                     </td>
                                     <td>
                                         <input type='number'
                                         min='1'
                                         placeholder="n/a"
-                                        onChange={handleGramWeightChange}
+                                        onChange={handleNumberInputChange}
                                         className="form-control"
                                         name="gramWeight"
                                         value={foodData.gramWeight} />

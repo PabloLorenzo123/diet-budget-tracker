@@ -1,24 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from '../../api.js';
 import { dailyValues, nutrientState } from "../../lib/nutrients.js";
 import { roundTo } from "../../lib/functions.js";
 
 const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionData}) => {
     const [isManual, setIsManual] = useState(false);
+
     const [searchInput, setSearchInput] = useState({
         query: '',
         branded: false
     });
+
     const [searchResults, setSearchResults] = useState([]);
     const [selectedSearchResult, setSelectedSearchResult] = useState(''); // fdcid of the result selected.
 
+    const [foodPortionsLoading, setFoodPortionsLoading] = useState(false);
+    const [searchResultsLoading, setSearchResultsLoading] = useState(false);
+
     const searchFoodInDB = async () => {
-        if (!searchInput) {
+        if (!searchInput.query) {
             return;
         }
-        const res = await api.get(`diet/search_foods/?query=${searchInput.query}&branded=${searchInput.branded}`);
-        const data = res.data;
-        setSearchResults(data.foods);
+        setSearchResultsLoading(true);
+        try {
+            const res = await api.get(`diet/search_foods/?query=${searchInput.query}&branded=${searchInput.branded}`);
+            const data = res.data;
+            if (res.status == 200) {
+                setSearchResultsLoading(false);
+                setSearchResults(data.foods);
+            }
+        } catch (error) {
+            console.log(error);
+        } 
     }
 
     const selectSearchResult = async (fdcId) => {
@@ -26,47 +39,48 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
 
         setSelectedSearchResult(fdcId);
 
-        // Check if this search result has already been selected before.
+        // Find the result selected.
         const searchResultsCopy = [...searchResults];
         const resultSelected = searchResultsCopy.find(el => el.fdcId == fdcId);
 
-        let data;
-
-        if (!resultSelected.fullfoodNutrients) {
-            if (!searchInput.branded){
-                try {
-                    const res = await api.get(`diet/search_food/?fdcId=${fdcId}`);
-                    data = res.data.foodNutrients;
-    
-                    // If the food is not branded we want to show the different serving sizes.
-                    resultSelected.foodPortions = res.data.foodPortions;  
-                } catch (error) {
-                    data = {...resultSelected.foodNutrients}; // If the food is not found then get the foodNutrients retrieved from search_foods/.
-                }
-            } else {
-                data = {...resultSelected.foodNutrients}; // If the food is branded don't need to fetch for more information.
-            }
-
-            // If the user didn't input grams in the NutritionDataForm then.
-            if (!foodData.gramWeight){
-                await setFoodData(prev => ({...prev, gramWeight: resultSelected.servingSize}));
-            }
-            
-            // Transform the response so each key is a dictionary with amount and dv keys justs as the nutritionData state.
-            Object.keys(data).forEach(nutrient => {
-                const amount = roundTo(foodData.gramWeight * data[nutrient] / resultSelected.servingSize, 2) || 0;
-                const dv = roundTo(foodData.gramWeight / dailyValues[nutrient] * 100, 2);
-
-                data[nutrient] = {amount, dv}
-            })
-            resultSelected.fullfoodNutrients = data; // To avoid making the same api call twice.
-            
-            setSearchResults(searchResultsCopy);
-        } else {
-            data = resultSelected.fullfoodNutrients;
+        // If the user didn't input grams in the DetailsForm then.
+        if (!foodData.gramWeight){
+            await setFoodData(prev => ({...prev, gramWeight: resultSelected.servingSize}));
         }
-        console.log(data);
-        setNutritionData(prev => ({...prev, ...data})) // Update nutritionData state. Update nutritionData state so nutrition tables update.
+
+        // Update the nutrition tables.
+        
+        const nutrients = {...nutrientState};
+        Object.keys(resultSelected.foodNutrients).forEach(nutrient => {
+            
+            const gramWeight = foodData.gramWeight || resultSelected.servingSize; // If n/a then use the serving size of the result selected.
+            const amount = roundTo(gramWeight * resultSelected.foodNutrients[nutrient] / resultSelected.servingSize, 2) || 0;
+            const dv = roundTo(gramWeight / dailyValues[nutrient] * 100, 2);
+
+            nutrients[nutrient] = {amount: amount, dv: dv}; // Differeance between fullFoodN.. and foodNutri.. is the former is a dictionary.
+        })
+        
+        setNutritionData({...nutrientState, ...nutrients}); // Need to add nutrientState because there may be nutrients not defined.
+
+        // If the food selected is not branded then we need its food portions.
+        if ((!resultSelected.brandName || !resultSelected.brandOwner) && !resultSelected.foodPortions){ // If foodPortions is already defined, don't ask again.
+            setFoodPortionsLoading(true);
+            try {
+                const res = await api.get(`diet/search_food/?fdcId=${fdcId}`);
+                // If the food is not branded we want to show the different serving sizes.
+                resultSelected.foodPortions = res.data.foodPortions;
+            } catch (error) {
+                // If not found.
+                resultSelected.foodPortions = [{
+                    'measureUnit': 'g',
+                    'amount': 1.0,
+                    'gramWeight': 100
+                }]
+            }
+            setFoodPortionsLoading(false);
+        }
+
+        setSearchResults(searchResultsCopy);
     }
 
     
@@ -76,13 +90,21 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
 
         const nutritionDataCopy = {...nutritionData};
         Object.keys(nutritionDataCopy).forEach(nutrient => {
-            const amount = roundTo(grams * food.fullfoodNutrients[nutrient]?.amount / food.servingSize, 2) || 0;
+            const amount = roundTo(grams * food.foodNutrients?.[nutrient] / food.servingSize, 2) || 0;
             const dv = roundTo(amount / dailyValues[nutrient] * 100, 2);
             nutritionDataCopy[nutrient] = {amount, dv};
         });
         
-        setNutritionData(prev => ({...prev, ...nutritionDataCopy}));
+        setNutritionData(nutritionDataCopy);
     }
+
+    useEffect(() => {
+        // When user gram weight changes, update the nutrition table accordingly.
+        if (selectedSearchResult){
+            const food = searchResults.find(result => result.fdcId == selectedSearchResult);
+            updateServingSize(food, foodData.gramWeight);
+        }
+    }, [foodData.gramWeight])
     
     return (
         <>
@@ -141,7 +163,7 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
                 <div className="row mb-3">
                     
                     <p className="form-text">
-                    Is this an unbranded minimally processed food (e.g., eggs, vegetables) or a
+                    Is this an unbranded minimally processed food (e.g., eggs, vegbles) or a
                     processed an labeled item?
                     </p>
                     <div className="col d-flex align-items-center">
@@ -170,8 +192,7 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
                     </div>
                 </div>
 
-                
-                <button type="button" disabled={isManual} className="btn btn-secondary mb-2" onClick={searchFoodInDB}>
+                <button type="button" disabled={(isManual || !searchInput.query)? true: false} className="btn btn-secondary mb-2" onClick={searchFoodInDB}>
                     Search
                 </button>
 
@@ -179,15 +200,24 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
                     <h6 className="fw-bold">Search Results</h6>
 
                     <div className="results">
+                    {searchResultsLoading?
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        :
+                        searchResults.length > 0 &&
                         <table className="table">
                             <thead>
                                 <tr>
                                     <th>Description</th>
                                     <th>Serving Size</th>
                                     <th>Energy (kcal)</th>
-                                    <th>Protein</th>
-                                    <th>Carbs</th>
-                                    <th>Fat</th>
+                                    <th>Protein (g)</th>
+                                    <th>Carbs (g)</th>
+                                    <th>Fat (g)</th>
+                                    <th>Ingredients</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -196,19 +226,30 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
                                         <tr key={result.fdcId} onClick={() => selectSearchResult(result.fdcId)} className={result.fdcId == selectedSearchResult? 'selected': ''}>
                                             <td>{result.description}</td>
                                             <td>
-                                                {result.foodPortions && result.fdcId == selectedSearchResult?
-                                                <select onChange={e => updateServingSize(result, e.target.value)} defaultValue={100}>
-                                                    <option value={100}>
-                                                        (100g)
-                                                    </option>
-                                                    {result.foodPortions.map((portion, idx) => {
-                                                        return (
-                                                            <option key={idx} value={portion.gramWeight}>
-                                                                {portion.amount} {portion.measureUnit} ({portion.gramWeight}g)
+                                                
+                                                {result.fdcId == selectedSearchResult?
+                                                    result.foodPortions?
+                                                        <select onChange={e => updateServingSize(result, e.target.value)} defaultValue={100}>
+                                                            <option value={100}>
+                                                                (100g)
                                                             </option>
-                                                        )
-                                                    })}
-                                                </select>
+                                                            {result.foodPortions.map((portion, idx) => {
+                                                                return (
+                                                                    <option key={idx} value={portion.gramWeight}>
+                                                                        {portion.amount} {portion.measureUnit} ({portion.gramWeight}g)
+                                                                    </option>
+                                                                )
+                                                            })}
+                                                        </select>
+                                                        :
+                                                        foodPortionsLoading?
+                                                        <div class="d-flex">
+                                                            <div class="spinner-border" role="status" style={{width: '2rem', height: '2rem'}}>
+                                                                <span class="visually-hidden">Loading...</span>
+                                                            </div>
+                                                        </div>
+                                                        :
+                                                        `${result.servingSize}${result.servingSizeUnit}`
                                                 :
                                                 `${result.servingSize}${result.servingSizeUnit}`
                                                 }
@@ -218,11 +259,13 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
                                             <td>{result.foodNutrients.protein}</td>
                                             <td>{result.foodNutrients.netCarbs}</td>
                                             <td>{result.foodNutrients.totalFat}</td>
+                                            <td>{result.ingredients}</td>
                                         </tr>
                                     )
                                 })}
                             </tbody>
                         </table>
+                    }
                     </div>
                 </div>
                 

@@ -6,6 +6,10 @@ export const titleCase = (str) => {
       .join(' ');
 }
 
+export const isNumber = (value) => {
+  return typeof value === 'number' && !isNaN(value);
+}
+
 export const removeTrailingZeros = (e) => {
   e.target.value = e.target.value.replace(/^0+(?=\d)/, '');
 }

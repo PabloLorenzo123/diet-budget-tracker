@@ -5,8 +5,8 @@ import { titleCase, removeTrailingZeros, roundTo } from "../../lib/functions.js"
 
 import ManualOrSearchFood from "./ManualOrSearchFood.jsx";
 
-const NutritionDataForm = ({foodData, setFoodData, nutritionData, setNutritionData }) => {
-  
+const NutritionDataForm = ({ foodData, setFoodData, nutritionData, setNutritionData }) => {
+
   const handleChange = (dv, e) => {
     const { name, value } = e.target;
     setNutritionData((prev) => ({
@@ -34,7 +34,7 @@ const NutritionDataForm = ({foodData, setFoodData, nutritionData, setNutritionDa
     <>
       <div className="create-food-form">
 
-        <ManualOrSearchFood foodData={foodData} setFoodData={setFoodData} nutritionData={nutritionData} setNutritionData={setNutritionData}/>
+        <ManualOrSearchFood foodData={foodData} setFoodData={setFoodData} nutritionData={nutritionData} setNutritionData={setNutritionData} />
 
         <div className="nutrient-data mb-2">
           <p className="fw-bold h5">Nutrition Overview</p>
@@ -43,7 +43,7 @@ const NutritionDataForm = ({foodData, setFoodData, nutritionData, setNutritionDa
             daily values may be higher or lower depending on your targets.
           </p>
           <div className="d-flex align-items-center">
-            <p>Nutrients in <span className="fw-bold"> one serving{foodData.gramWeight? ` ${foodData.gramWeight}g`: ''}</span></p>
+            <p>Nutrients in <span className="fw-bold"> one {foodData.measure}{foodData.gramWeight ? ` ${foodData.gramWeight}g` : ''}</span></p>
           </div>
         </div>
 
