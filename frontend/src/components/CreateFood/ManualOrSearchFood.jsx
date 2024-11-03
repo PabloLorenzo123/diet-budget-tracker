@@ -26,12 +26,12 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
             const res = await api.get(`diet/search_foods/?query=${searchInput.query}&branded=${searchInput.branded}`);
             const data = res.data;
             if (res.status == 200) {
-                setSearchResultsLoading(false);
                 setSearchResults(data.foods);
             }
         } catch (error) {
             console.log(error);
         } 
+        setSearchResultsLoading(false);
     }
 
     const selectSearchResult = async (fdcId) => {
@@ -243,9 +243,9 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
                                                         </select>
                                                         :
                                                         foodPortionsLoading?
-                                                        <div class="d-flex">
-                                                            <div class="spinner-border" role="status" style={{width: '2rem', height: '2rem'}}>
-                                                                <span class="visually-hidden">Loading...</span>
+                                                        <div className="d-flex">
+                                                            <div className="spinner-border" role="status" style={{width: '2rem', height: '2rem'}}>
+                                                                <span className="visually-hidden">Loading...</span>
                                                             </div>
                                                         </div>
                                                         :

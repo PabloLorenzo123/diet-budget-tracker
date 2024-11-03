@@ -2,8 +2,13 @@ from django.shortcuts import render
 from project.settings import USDA_API_KEY
 from django.http import JsonResponse
 
+from accounts.models import User
+from .models import FoodProduct
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import status
+from rest_framework.response import Response
 
 import requests
 import json
@@ -117,3 +122,92 @@ def search_food(request):
             'gramWeight': portion.get('gramWeight', '')
         })            
     return JsonResponse(res)
+
+
+@api_view(('POST',))
+@permission_classes([IsAuthenticated])
+def save_food_product(request):
+    """Saves a food product."""
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return Response({"error": "Invalid JSON data."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    user = request.user
+    
+    # Validate required fields
+    name = data.get("productName")
+    try:
+        price = int(data.get("productPrice"))
+    except ValueError:
+        return Response({"error": "Price must be a number."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    servings = data.get("servings")
+    
+    if name is None or price is None:
+        return Response({"error": "Missing required fields: 'name' or 'price'."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if price < 0:
+        return Response({"error": "Price cannot be negative."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if servings <= 0:
+        return Response({"error": "Price needs to be greater than 0."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        food_product = FoodProduct(
+            user=user,
+            name=name,
+            product_link= data.get("productLink"),
+            img_url = data.get("imgUrl"),
+            price= price,
+            servings= data.get("servings", 1),
+            serving_measure = data.get("servingMeasure", "serving"),
+            serving_size = data.get("servingSize"),
+            # nutrients.
+            energy = data.get("energy", 0.0),
+            protein = data.get("protein", 0.0),
+            fiber= data.get("fiber", 0.0),
+            starch= data.get("starch", 0.0),
+            sugars = data.get("sugars", 0.0),
+            added_sugars= data.get("addedSugars", 0.0),
+            net_carbs = data.get("netCarbs", 0.0),
+            # Fats.
+            monounsaturated_fat= data.get("monounsaturatedFat", 0.0),
+            polyunsaturated_fat = data.get("polyunsaturatedFat", 0.0),
+            saturated_fat = data.get("saturatedFat", 0.0),
+            trans_fat = data.get("transFat", 0.0),
+            cholesterol = data.get("cholesterol", 0.0),
+            total_fat = data.get("totalFat", 0.0),
+            # Vitamins.
+            b1 = data.get("B1", 0.0),
+            b2 = data.get("B2", 0.0),
+            b3 = data.get("B3", 0.0),
+            b5 = data.get("B5", 0.0),
+            b6 = data.get("B6", 0.0),
+            b12 = data.get("B12", 0.0),
+            choline = data.get("choline", 0.0),
+            folate = data.get("folate", 0.0),
+            a = data.get("A", 0.0),
+            c = data.get("C", 0.0),
+            d = data.get("D", 0.0),
+            e = data.get("E", 0.0),
+            k = data.get("K", 0.0),
+            # Minerals.
+            calcium = data.get("calcium", 0.0),
+            chromium = data.get("chromium", 0.0),
+            copper = data.get("copper", 0.0),
+            iron = data.get("iron", 0.0),
+            magnesium = data.get("magnesium", 0.0),
+            manganese = data.get("manganese", 0.0),
+            molybdenum = data.get("molybdenum", 0.0),
+            phosphorus = data.get("phosphorus", 0.0),
+            potassium = data.get("potassium", 0.0),
+            selenium = data.get("selenium", 0.0),
+            sodium = data.get("sodium", 00.0),
+            zinc = data.get("zinc", 0.0)        
+        )
+    except Exception as e:
+        return Response({"error": f"An unexpected error occurred. {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    finally:
+        food_product.save()
+        return Response({"success": "Food product saved"}, status=200)

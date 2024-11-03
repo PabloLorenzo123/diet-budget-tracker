@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { roundTo, isNumber } from "../../lib/functions";
+import { roundTo, isNumber, validateDecimalNumberInput } from "../../lib/functions";
 import { dailyValues } from "../../lib/nutrients";
 
 const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) => {
@@ -11,23 +11,6 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
             [name]: value
         }));
     };
-
-    const handleNumberInputChange = (e) => {
-        let {name, value} = e.target;
-        
-        if (/^\d+(\.\d+)?$/.test(value)) {
-            console.log(`${value} passed the test.`)
-            if (value <= 0) return;
-        } 
-        else {
-            return;
-        }
-
-        setFoodData(prevData => ({
-            ...prevData,
-            [name]: value
-        }));
-    }
 
     return (
         <>
@@ -70,13 +53,15 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                                 <tr>
                                     <td>
                                         <input
-                                        type="number"
-                                        min="1"
-                                        onChange={handleNumberInputChange}
+                                        type="text"
+                                        inputMode="decimal" // Enables numeric keypad on mobile
+                                        step="0.1"
+                                        onChange={handleChange}
+                                        onInput={e => validateDecimalNumberInput(e, 1)}
                                         className="form-control"
                                         name="servings"
                                         value={foodData.servings}
-                                        defaultValue={1}/>
+                                        />
                                     </td>
                                     <td>
                                         <input
@@ -87,10 +72,12 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                                         value={foodData.measure}/>
                                     </td>
                                     <td>
-                                        <input type='number'
-                                        min='1'
+                                        <input
+                                        type='text'
+                                        inputMode="decimal" // Enables numeric keypad on mobile
                                         placeholder="n/a"
-                                        onChange={handleNumberInputChange}
+                                        onChange={handleChange}
+                                        onInput={validateDecimalNumberInput}
                                         className="form-control"
                                         name="gramWeight"
                                         value={foodData.gramWeight} />
@@ -104,7 +91,17 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                 <div className="row mb-3">
                     <label htmlFor="productPrice" className="col-sm-2 col-form-label">Product Price</label>
                     <div className="col-sm-2">
-                        <input type="number" min="1" step="0.01" id="productPrice" placeholder="Product Price" className="form-control"/>
+                        <input
+                        type="text"
+                        inputMode="decimal"
+                        onChange={handleChange}
+                        onInput={validateDecimalNumberInput}
+                        id="productPrice"
+                        placeholder="Product Price"
+                        className="form-control"
+                        name="productPrice"
+                        value={foodData.productPrice}
+                        />
                     </div>
                 </div>
                 
