@@ -124,7 +124,7 @@ def search_food(request):
     return JsonResponse(res)
 
 
-@api_view(('POST',))
+@api_view(('POST', 'PUT'))
 @permission_classes([IsAuthenticated])
 def save_food_product(request):
     """Saves a food product."""
@@ -136,13 +136,16 @@ def save_food_product(request):
     user = request.user
     
     # Validate required fields
+    
     name = data.get("productName")
     try:
-        price = int(data.get("productPrice"))
+        price = float(data.get("productPrice"))
+        servings = float(data.get("servings"))
     except ValueError:
-        return Response({"error": "Price must be a number."}, status=status.HTTP_400_BAD_REQUEST)
+        print(json.dumps(data, indent=2))
+        return Response({"error": "Price and servings must be numbers."}, status=status.HTTP_400_BAD_REQUEST)
     
-    servings = data.get("servings")
+    
     
     if name is None or price is None:
         return Response({"error": "Missing required fields: 'name' or 'price'."}, status=status.HTTP_400_BAD_REQUEST)
@@ -154,60 +157,122 @@ def save_food_product(request):
         return Response({"error": "Price needs to be greater than 0."}, status=status.HTTP_400_BAD_REQUEST)
     
     try:
-        food_product = FoodProduct(
-            user=user,
-            name=name,
-            product_link= data.get("productLink"),
-            img_url = data.get("imgUrl"),
-            price= price,
-            servings= data.get("servings", 1),
-            serving_measure = data.get("servingMeasure", "serving"),
-            serving_size = data.get("servingSize"),
+        food_product_data = {
+            'user': user,
+            'name': name,
+            'product_link': data.get("productLink"),
+            'img_url': data.get("imgUrl"),
+            'price': price,
+            'servings': data.get("servings", 1),
+            'serving_measure': data.get("measure", "serving"),
+            'serving_size': data.get("gramWeight"),
             # nutrients.
-            energy = data.get("energy", 0.0),
-            protein = data.get("protein", 0.0),
-            fiber= data.get("fiber", 0.0),
-            starch= data.get("starch", 0.0),
-            sugars = data.get("sugars", 0.0),
-            added_sugars= data.get("addedSugars", 0.0),
-            net_carbs = data.get("netCarbs", 0.0),
+            'energy': data.get("energy", 0.0),
+            'protein': data.get("protein", 0.0),
+            'fiber': data.get("fiber", 0.0),
+            'starch': data.get("starch", 0.0),
+            'sugars': data.get("sugars", 0.0),
+            'added_sugars': data.get("addedSugars", 0.0),
+            'net_carbs': data.get("netCarbs", 0.0),
             # Fats.
-            monounsaturated_fat= data.get("monounsaturatedFat", 0.0),
-            polyunsaturated_fat = data.get("polyunsaturatedFat", 0.0),
-            saturated_fat = data.get("saturatedFat", 0.0),
-            trans_fat = data.get("transFat", 0.0),
-            cholesterol = data.get("cholesterol", 0.0),
-            total_fat = data.get("totalFat", 0.0),
+            'monounsaturated_fat': data.get("monounsaturatedFat", 0.0),
+            'polyunsaturated_fat': data.get("polyunsaturatedFat", 0.0),
+            'saturated_fat': data.get("saturatedFat", 0.0),
+            'trans_fat': data.get("transFat", 0.0),
+            'cholesterol': data.get("cholesterol", 0.0),
+            'total_fat': data.get("totalFat", 0.0),
             # Vitamins.
-            b1 = data.get("B1", 0.0),
-            b2 = data.get("B2", 0.0),
-            b3 = data.get("B3", 0.0),
-            b5 = data.get("B5", 0.0),
-            b6 = data.get("B6", 0.0),
-            b12 = data.get("B12", 0.0),
-            choline = data.get("choline", 0.0),
-            folate = data.get("folate", 0.0),
-            a = data.get("A", 0.0),
-            c = data.get("C", 0.0),
-            d = data.get("D", 0.0),
-            e = data.get("E", 0.0),
-            k = data.get("K", 0.0),
+            'b1': data.get("B1", 0.0),
+            'b2': data.get("B2", 0.0),
+            'b3': data.get("B3", 0.0),
+            'b5': data.get("B5", 0.0),
+            'b6': data.get("B6", 0.0),
+            'b12': data.get("B12", 0.0),
+            'choline': data.get("choline", 0.0),
+            'folate': data.get("folate", 0.0),
+            'a': data.get("A", 0.0),
+            'c': data.get("C", 0.0),
+            'd': data.get("D", 0.0),
+            'e': data.get("E", 0.0),
+            'k': data.get("K", 0.0),
             # Minerals.
-            calcium = data.get("calcium", 0.0),
-            chromium = data.get("chromium", 0.0),
-            copper = data.get("copper", 0.0),
-            iron = data.get("iron", 0.0),
-            magnesium = data.get("magnesium", 0.0),
-            manganese = data.get("manganese", 0.0),
-            molybdenum = data.get("molybdenum", 0.0),
-            phosphorus = data.get("phosphorus", 0.0),
-            potassium = data.get("potassium", 0.0),
-            selenium = data.get("selenium", 0.0),
-            sodium = data.get("sodium", 00.0),
-            zinc = data.get("zinc", 0.0)        
-        )
+            'calcium': data.get("calcium", 0.0),
+            'chromium': data.get("chromium", 0.0),
+            'copper': data.get("copper", 0.0),
+            'iron': data.get("iron", 0.0),
+            'magnesium': data.get("magnesium", 0.0),
+            'manganese': data.get("manganese", 0.0),
+            'molybdenum': data.get("molybdenum", 0.0),
+            'phosphorus': data.get("phosphorus", 0.0),
+            'potassium': data.get("potassium", 0.0),
+            'selenium': data.get("selenium", 0.0),
+            'sodium': data.get("sodium", 00.0),
+            'zinc': data.get("zinc", 0.0)
+        }
+        if request.method == 'POST':
+            food_product = FoodProduct(**food_product_data)
+            
+        elif request.method == 'PUT':
+            id = data.get('id')
+            if not id:
+                return JsonResponse({'error': 'Id was not provided'}, status=status.HTTP_400_BAD_REQUEST)
+            food_product = FoodProduct.objects.filter(user=user, id=id)
+            if food_product.exists():
+                food_product = food_product.first()
+                for field, value in food_product_data.items():
+                    if hasattr(food_product, field):
+                        setattr(food_product, field, value)
+            else:
+                return JsonResponse({'error': 'Food product not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({"error": f"An unexpected error occurred. {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     finally:
         food_product.save()
-        return Response({"success": "Food product saved"}, status=200)
+        return Response({"success": "Food product saved"}, status=status.HTTP_201_CREATED)
+    
+
+@api_view(('GET',))
+@permission_classes([IsAuthenticated])
+def food_products_list(request):
+    """Returns the food products created by a user."""
+    user = request.user
+    food_products = FoodProduct.objects.filter(user=user).all()
+    
+    res = []
+    
+    for f in food_products:
+        res.append({
+            'id': f.id,
+            'foodData': {
+                'productName': f.name,
+                'productLink': f.product_link,
+                'servings': f.servings,
+                'measure': f.serving_measure,
+                'gramWeight': f.serving_size,
+                'productPrice': f.price,
+            },
+            'nutritionData': f.nutrients_in_json()
+        })
+    
+    return JsonResponse({
+        'foods': res
+    }, status=status.HTTP_200_OK)
+    
+
+@api_view(('DELETE',))
+@permission_classes([IsAuthenticated])
+def food_product(request, id):
+    """Deletes a food product."""
+    user = request.user
+    
+    if not id:
+        return JsonResponse({'error': 'Id was not provided'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    food_product = FoodProduct.objects.filter(user=user, id=id)
+    if request.method == 'DELETE':
+        if food_product.exists():
+            food_product = food_product.first()
+            food_product.delete()
+            return JsonResponse({'success': 'Food product deleted.'}, status=status.HTTP_200_OK)
+        else:
+            return JsonResponse({'error': 'Food product not found'}, status=status.HTTP_404_NOT_FOUND)

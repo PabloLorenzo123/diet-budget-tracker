@@ -1,24 +1,14 @@
 import { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import '../styles/index.css';
-import CreateFoodForm from "../components/CreateFood/CreateFoodForm";
+import CreateFoodForm from "../components/FoodProducts/CreateFood/CreateFoodForm";
+import FoodProducts from "../components/FoodProducts/FoodProducts";
 
 const CreateFood = () => {
     return (
         <>
             <NavBar />
-            <div>
-                <main id="app">
-                    <div id="create-food-container">
-                        <h2 className="fw-bold">Create Food Product</h2>
-                        <p className="text-body-secondary">Create a new food product.</p>
-                        
-                        <CreateFoodForm />
-                        
-
-                    </div>
-                </main>
-            </div>
+            <FoodProducts />
         </>
     )
 }

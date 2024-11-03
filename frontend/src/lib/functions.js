@@ -28,3 +28,7 @@ export const validateDecimalNumberInput = (e, min=0) => {
 export const roundTo = (num, decimalPlaces) => {
   return Number(Math.round(num + 'e' + decimalPlaces) + 'e-' + decimalPlaces);
 }
+
+export const isObjEmpty = (obj) => {
+  return Object.keys(obj).length === 0;
+};

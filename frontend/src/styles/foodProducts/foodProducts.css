@@ -1,0 +1,39 @@
+
+.food-products-container {
+    background-color: var(--snow-white);
+    min-height: 500px;
+    padding: 20px 10px;
+}
+
+.food-products-container table tbody tr:nth-of-type(2) td {
+    background-color: var(--grey-1);
+}
+
+.delete-btn {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: transparent;
+}
+
+.delete-btn:hover {
+    color: red;
+}
+
+/* Navigation buttons */
+.add-food-btn, .back-to-index-btn {
+    display: flex;
+    align-items: center;
+    color: green;
+    font-weight: bold;
+    background: transparent;
+    border: 0;
+    padding: 0;
+}
+
+.add-food-btn .material-symbols-outlined {
+    color: white;
+    background-color: green;
+    border-radius: 100%;
+    margin-right: 5px;
+}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { roundTo, isNumber, validateDecimalNumberInput } from "../../lib/functions";
-import { dailyValues } from "../../lib/nutrients";
+import { roundTo, isNumber, validateDecimalNumberInput } from "../../../lib/functions";
+import { dailyValues } from "../../../lib/nutrients";
 
 const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) => {
 

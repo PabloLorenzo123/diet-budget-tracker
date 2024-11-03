@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { nutrients } from "../../lib/nutrients.js";
+import { nutrients } from "../../../lib/nutrients.js";
 import {
   titleCase,
   removeTrailingZeros,
   roundTo,
   validateDecimalNumberInput
-} from "../../lib/functions.js";
+} from "../../../lib/functions.js";
 
 import ManualOrSearchFood from "./ManualOrSearchFood.jsx";
 

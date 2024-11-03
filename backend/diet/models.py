@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from accounts.models import User
 
@@ -5,6 +7,7 @@ from accounts.models import User
 
 class FoodProduct(models.Model):
     """A Food Product from a supermarket's catalog."""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True)
     
     name = models.CharField(max_length=300) # For instance PACO FISH SARDINES IN WATER.
@@ -63,6 +66,51 @@ class FoodProduct(models.Model):
     sodium = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     zinc = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
+    def __str__(self) -> str:
+        return f"{self.name}"
+    
+    def nutrients_in_json(self) -> dict:
+        """Returns a dictionary with all the nutrients."""
+        return {
+            "energy": self.energy,
+            "protein": self.protein,
+            "fiber": self.fiber,
+            "starch": self.starch,
+            "sugars": self.sugars,
+            "addedSugars": self.added_sugars,
+            "netCarbs": self.net_carbs,
+            "monounsaturatedFat": self.monounsaturated_fat,
+            "polyunsaturatedFat": self.polyunsaturated_fat,
+            "saturatedFat": self.saturated_fat,
+            "transFat": self.trans_fat,
+            "cholestherol": self.cholesterol,
+            "totalFat": self.total_fat,
+            "B1": self.b1,
+            "B2": self.b2,
+            "B3": self.b3,
+            "B5": self.b5,
+            "B6": self.b6,
+            "B12": self.b12,
+            "choline": self.choline,
+            "folate": self.folate,
+            "A": self.a,
+            "C": self.c,
+            "D": self.d,
+            "E": self.e,
+            "K": self.k,
+            "calcium": self.calcium,
+            "chromium": self.chromium,
+            "copper": self.copper,
+            "iron": self.iron,
+            "magnesium": self.magnesium,
+            "manganese": self.manganese,
+            "molybdenum": self.molybdenum,
+            "phosphorus": self.phosphorus,
+            "potassium": self.potassium,
+            "selenium": self.selenium,
+            "sodium": self.sodium,
+            "zinc": self.zinc
+        }
     
 class DietPlan(models.Model):
     """A diet plan has at most 7 different days."""

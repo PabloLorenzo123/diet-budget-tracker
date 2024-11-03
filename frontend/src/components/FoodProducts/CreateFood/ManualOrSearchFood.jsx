@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import api from '../../api.js';
-import { dailyValues, nutrientState } from "../../lib/nutrients.js";
-import { roundTo } from "../../lib/functions.js";
+import api from '../../../api.js';
+import { dailyValues, nutrientState } from "../../../lib/nutrients.js";
+import { roundTo } from "../../../lib/functions.js";
 
 const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionData}) => {
     const [isManual, setIsManual] = useState(false);
@@ -202,8 +202,8 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
                     <div className="results">
                     {searchResultsLoading?
                         <div class="d-flex justify-content-center">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                            <div className="spinner-border" role="status">
+                                <span className="visually-hidden">Loading...</span>
                             </div>
                         </div>
                         :
