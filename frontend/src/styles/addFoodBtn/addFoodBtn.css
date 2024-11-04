@@ -1,0 +1,70 @@
+/* Search tabs */
+.search-tab {
+    padding: 4px 16px 0;
+    border: 0;
+    background: transparent;
+    font-weight: bold;
+    color: var(--blue-8);
+    text-align: center;
+    cursor: pointer;
+}
+
+.search-tab.selected-tab {
+    border-bottom: 2px solid var(--orange-5);
+}
+
+/* Search results */
+.search-results table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.search-results {
+    height: 70%;
+    overflow-y: auto;
+    display: block;
+}
+
+.search-results.shrink {
+    height: 40%;
+}
+
+.search-results table thead th {
+    background-color: var(--grey-2);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.search-results table tbody tr:nth-of-type(2n) td{
+    background-color: var(--grey-1);
+}
+
+.search-results .selected td {
+    background-color: var(--green-4) !important;
+}
+
+/* food details */
+.food-details-container {
+    height: 220px;
+    border: 1px solid;
+}
+
+.food-details-container .header {
+    text-align: center;
+    font-size: 20px;
+}
+
+.food-details-container .body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.food-details-container .block {
+    border: 1px solid var(--grey-4);
+    border-radius: 10px;
+    padding: 10px;
+    width: 400px;
+    height: 150px;
+}

@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Logout from './pages/Logout';
 import Signup from './pages/Signup';
 import CreateFood from './pages/CreateFood';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
@@ -16,10 +17,9 @@ function App() {
           <Route path="/logout" element={<Logout />}/>
           <Route path="/signup" element={<Signup/>}/>
           <Route path="/create-food-product" element={<CreateFood />}/>
-
-          
         </Routes>
-      </BrowserRouter>      
+      </BrowserRouter>    
+      <ToastContainer />  
     </>
   )
 }
