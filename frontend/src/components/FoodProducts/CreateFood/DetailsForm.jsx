@@ -55,7 +55,6 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                                         <input
                                         type="text"
                                         inputMode="decimal" // Enables numeric keypad on mobile
-                                        step="0.1"
                                         onChange={handleChange}
                                         onInput={e => validateDecimalNumberInput(e, 1)}
                                         className="form-control"

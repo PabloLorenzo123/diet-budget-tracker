@@ -12,7 +12,7 @@ const FoodProducts = () => {
     const [showIndex, setShowIndex] = useState(true);
     const [showCreate, setShowCreate] = useState(false);
 
-    const [selectedFood, setSelectedFood] = useState({}); // Use for editing a food.
+    const [selectedFood, setSelectedFood] = useState({}); // Used for editing a food.
 
     const showCreateForm = () => {
         setShowIndex(false);

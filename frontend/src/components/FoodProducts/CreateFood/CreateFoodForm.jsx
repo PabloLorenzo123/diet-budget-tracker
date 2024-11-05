@@ -23,19 +23,21 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
   const [nutritionData, setNutritionData] = useState(nutrientState);
 
   useEffect(() => {
-    if (!isObjEmpty(selectedFood)){
-      const selectedFoodNutritionData = {...selectedFood.nutritionData};
-      // Format the previous dictionary to follow the format in the frontend {amount, dv}.
-      Object.keys(selectedFoodNutritionData).forEach(nutrient => {
-        const amount = selectedFood.nutritionData[nutrient] || 0;
-        const dv = roundTo(amount / dailyValues[nutrient] * 100, 2);
-        selectedFoodNutritionData[nutrient] = {amount: amount, dv: dv};
-        }
-      )
-      // Update states.
-      console.log(selectedFood.foodData);
-      setFoodData(selectedFood.foodData);
-      setNutritionData(selectedFoodNutritionData);
+    if (selectedFood){
+      if (!isObjEmpty(selectedFood)){
+        const selectedFoodNutritionData = {...selectedFood.nutritionData};
+        // Format the previous dictionary to follow the format in the frontend {amount, dv}.
+        Object.keys(selectedFoodNutritionData).forEach(nutrient => {
+          const amount = selectedFood.nutritionData[nutrient] || 0;
+          const dv = roundTo(amount / dailyValues[nutrient] * 100, 2);
+          selectedFoodNutritionData[nutrient] = {amount: amount, dv: dv};
+          }
+        )
+        // Update states.
+        console.log(selectedFood.foodData);
+        setFoodData(selectedFood.foodData);
+        setNutritionData(selectedFoodNutritionData);
+      }
     }
   }, [])
 
@@ -43,6 +45,7 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
     const toIndex = () => {
       setShowCreate(false);
       setShowIndex(true);
+      setSelectedFood({});
     }
     if (foodData != defaultFoodData || nutritionData != nutrientState){
       const leave = confirm("If you leave you will your unsaved changes. Are you sure you want to leave?");
@@ -59,12 +62,15 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
       <div id="create-food-container">
         <h2 className="fw-bold">Create Food Product</h2>
         <p className="text-body-secondary">Create a new food product.</p>
+
+        {setShowIndex &&
         <button type="button" className="back-to-index-btn" onClick={backToIndex}>
           <span className="material-symbols-outlined">
             arrow_back
           </span>
           BACK TO FOOD PRODUCTS LIST
-        </button>
+        </button>}
+        
         <hr className="border border-primary border-3 opacity-75" />
         <DetailsForm
           foodData={foodData}

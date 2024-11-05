@@ -25,27 +25,29 @@ const SaveBtn = ({foodData, setFoodData, nutritionData, setNutritionData, select
         Object.keys(flatNutritionData).forEach(nutrient => {
             flatNutritionData[nutrient] = nutritionData[nutrient].amount;
         })
-        console.log(flatNutritionData);
+        // console.log(flatNutritionData);
 
         try{
-            if (isObjEmpty(selectedFood)){
-                // Create a new food product.
-                const res = await api.post("/diet/save_food/", {
-                    ...foodData,
-                    ...flatNutritionData
-                });
-                if (res.status == 201){
-                    toast.success("Food product saved succesfully.");
-                }
-            } else {
-                // Edit the selected food product.
-                const res = await api.put("/diet/save_food/", {
-                    ...foodData,
-                    ...flatNutritionData,
-                    id: selectedFood.id
-                });
-                if (res.status == 201){
-                    toast.success("Food product updated succesfully.");
+            if (selectedFood){
+                if (isObjEmpty(selectedFood)){
+                    // Create a new food product.
+                    const res = await api.post("/diet/save_food/", {
+                        ...foodData,
+                        ...flatNutritionData
+                    });
+                    if (res.status == 201){
+                        toast.success("Food product saved succesfully.");
+                    }
+                } else {
+                    // Edit the selected food product.
+                    const res = await api.put("/diet/save_food/", {
+                        ...foodData,
+                        ...flatNutritionData,
+                        id: selectedFood.id
+                    });
+                    if (res.status == 201){
+                        toast.success("Food product updated succesfully.");
+                    }
                 }
             }
             // Back to index.
@@ -67,7 +69,7 @@ const SaveBtn = ({foodData, setFoodData, nutritionData, setNutritionData, select
             style={{minWidth: '100px'}}
             onClick={submit}
             >
-            {isObjEmpty(selectedFood)? 'Save': 'Save Changes'}
+            {selectedFood && isObjEmpty(selectedFood)? 'Save': 'Save Changes'}
             </button>
             
         </div>

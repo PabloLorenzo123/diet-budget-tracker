@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import FoodDetails from "./foodDetails";
 import Modal from "../../Modal";
+import CreateFoodForm from "../../FoodProducts/CreateFood/CreateFoodForm";
 
-import { SearchCategories } from "../../../constants";
+import { AddFoodModalTabs } from "../../../constants";
 import api from "../../../api";
 
 import { roundTo } from "../../../lib/functions";
@@ -12,8 +13,8 @@ import { toast } from "react-toastify";
 import '../../../styles/searchBar.css';
 
 
-const AddFoodModal = ({setShowModal}) => {
-    const [searchCategory, setSearchCategory] = useState(SearchCategories[0]);
+const AddFoodModal = ({showModal, setShowModal, meals, setMeals}) => {
+    const [tab, setTab] = useState(AddFoodModalTabs[0]);
 
     const [searchResults, setSearchResults] = useState([]);
 
@@ -65,48 +66,61 @@ const AddFoodModal = ({setShowModal}) => {
             </div>
 
             <div className="d-flex search-tabs mb-2">
-                {SearchCategories.map((item, idx) => {
-                return (
-                <div className={`search-tab${item == searchCategory? ' selected-tab': ''}`} key={item + 'tab'} onClick={() => setSearchCategory(item)}>
-                    {item}
-                </div>
+                {AddFoodModalTabs.map((item, idx) => {
+                    return (
+                    <div className={`search-tab${item == tab? ' selected-tab': ''}`} key={item + 'tab'} onClick={() => setTab(item)}>
+                        {item}
+                    </div>
                 )})}
             </div>
 
-            <div className={`search-results ${showFoodDetails? 'shrink': ''}`}>
-                <p className="">Per serving.</p>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Calories</th>
-                            <th>Protein</th>
-                            <th>Carbs</th>
-                            <th>Fat</th>
-                            <th>Price</th>
-                        </tr>  
-                    </thead>
-                    <tbody>
-                        {foodProducts.map(f => {
-                            return (
-                                <tr key={f.id} onClick={() => selectFood(f)} className={f == selectedFood? 'selected': ''}>
-                                    <td>{f.foodData.productName}</td>
-                                    <td>{f.nutritionData.energy}kcal</td>
-                                    <td>{f.nutritionData.protein}g</td>
-                                    <td>{f.nutritionData.netCarbs}g</td>
-                                    <td>{f.nutritionData.totalFat}g</td>
-                                    <td>${roundTo(f.foodData.productPrice / f.foodData.servings, 2)}</td>
-                                </tr>
-                        )})}
-                    </tbody>
-                </table>
-            </div>
-
-            <FoodDetails
-                showFoodDetails={showFoodDetails}
-                setShowFoodDetails={setShowFoodDetails}
-                selectedFood={selectedFood}
-            />
+            {tab == 'All' &&
+                <>
+                    <div className={`search-results ${showFoodDetails? 'shrink': ''}`}>
+                        <p className="">Per serving.</p>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Calories</th>
+                                    <th>Protein</th>
+                                    <th>Carbs</th>
+                                    <th>Fat</th>
+                                    <th>Price</th>
+                                </tr>  
+                            </thead>
+                            <tbody>
+                                {foodProducts.map(f => {
+                                    return (
+                                        <tr key={f.id} onClick={() => selectFood(f)} className={f == selectedFood? 'selected': ''}>
+                                            <td>{f.foodData.productName}</td>
+                                            <td>{f.nutritionData.energy}kcal</td>
+                                            <td>{f.nutritionData.protein}g</td>
+                                            <td>{f.nutritionData.netCarbs}g</td>
+                                            <td>{f.nutritionData.totalFat}g</td>
+                                            <td>${roundTo(f.foodData.productPrice / f.foodData.servings, 2)}</td>
+                                        </tr>
+                                )})}
+                            </tbody>
+                        </table>
+                    </div>
+                    <FoodDetails
+                        showFoodDetails={showFoodDetails}
+                        setShowFoodDetails={setShowFoodDetails}
+                        showModal={showModal}
+                        setShowModal={setShowModal}
+                        selectedFood={selectedFood}
+                        setSelectedFood={setSelectedFood}
+                        meals={meals}
+                        setMeals={setMeals}
+                    />
+                </>
+            }
+            {tab == 'Create' &&
+                <div style={{height: '80%', width: '100%', padding: '10px', overflowY: 'scroll', overflowX: 'clip'}}>
+                    <CreateFoodForm />
+                </div>
+            }
         </Modal>
     )
 }

@@ -3,7 +3,7 @@ import AddFoodModal from "./AddFoodModal";
 
 import '../../../styles/addFoodBtn/AddFoodBtn.css';
 
-const AddFoodBtn = () => {
+const AddFoodBtn = ({meals, setMeals}) => {
     const [showModal, setShowModal] = useState(false);
 
     return (
@@ -12,7 +12,15 @@ const AddFoodBtn = () => {
                 <button className="btn btn-secondary" onClick={() => setShowModal(true)}>Add Food</button>
             </div>
 
-            {showModal && <AddFoodModal setShowModal={setShowModal} />}
+            {
+                showModal &&
+                <AddFoodModal
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                    meals={meals}
+                    setMeals={setMeals}
+                />
+            }
             
         </>
     )

@@ -248,7 +248,7 @@ def food_products_list(request):
                 'productLink': f.product_link,
                 'servings': f.servings,
                 'measure': f.serving_measure,
-                'gramWeight': f.serving_size,
+                'gramWeight': float(f.serving_size),
                 'productPrice': f.price,
             },
             'nutritionData': f.nutrients_in_json()
