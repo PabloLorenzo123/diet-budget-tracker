@@ -18,11 +18,13 @@ const defaultFoodData = {
   productPrice: 0
 }
 
-const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, selectedFood, setSelectedFood}) => {
+const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, selectedFood, setSelectedFood, afterSubmitFunc}) => {
   const [foodData, setFoodData] = useState(defaultFoodData);
   const [nutritionData, setNutritionData] = useState(nutrientState);
 
   useEffect(() => {
+    // When mounted check if the form has an already selected food (a food created previously) if so update the states.
+    // To have its information.
     if (selectedFood){
       if (!isObjEmpty(selectedFood)){
         const selectedFoodNutritionData = {...selectedFood.nutritionData};
@@ -34,7 +36,6 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
           }
         )
         // Update states.
-        console.log(selectedFood.foodData);
         setFoodData(selectedFood.foodData);
         setNutritionData(selectedFoodNutritionData);
       }
@@ -95,6 +96,7 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
           setSelectedFood={setSelectedFood}
           setShowIndex={setShowIndex}
           setShowCreate={setShowCreate}
+          afterSubmitFunc={afterSubmitFunc}
         /> 
     </div>
   );

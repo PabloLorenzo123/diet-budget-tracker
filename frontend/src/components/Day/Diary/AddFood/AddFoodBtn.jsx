@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import AddFoodModal from "./AddFoodModal";
 
-import '../../../styles/addFoodBtn/AddFoodBtn.css';
+import '../../../../styles/addFoodBtn/AddFoodBtn.css';
 
 const AddFoodBtn = ({meals, setMeals}) => {
     const [showModal, setShowModal] = useState(false);

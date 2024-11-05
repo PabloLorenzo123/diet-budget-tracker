@@ -19,6 +19,13 @@ const FoodProducts = () => {
         setShowCreate(true);
     }
 
+    const afterSubmitFunc = () => {
+        // Function executed after pressing the submit button, and the request beinf succesful.
+        setShowCreate(false);
+        setShowIndex(true);
+        window.scrollTo(0, 0); 
+    }
+
     return (
         <div>
             <main id="app">
@@ -54,6 +61,7 @@ const FoodProducts = () => {
                     setShowCreate={setShowCreate}
                     selectedFood={selectedFood}
                     setSelectedFood={setSelectedFood}
+                    afterSubmitFunc={afterSubmitFunc}
                     />
                 }
             </main>

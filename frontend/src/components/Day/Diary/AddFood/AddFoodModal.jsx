@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import FoodDetails from "./foodDetails";
-import Modal from "../../Modal";
-import CreateFoodForm from "../../FoodProducts/CreateFood/CreateFoodForm";
+import Modal from "../../../Modal";
 
-import { AddFoodModalTabs } from "../../../constants";
-import api from "../../../api";
+import { AddFoodModalTabs } from "../../../../constants";
+import api from "../../../../api";
 
-import { roundTo } from "../../../lib/functions";
+import { roundTo } from "../../../../lib/functions";
 
 import { toast } from "react-toastify";
 
-import '../../../styles/searchBar.css';
+import '../../../../styles/searchBar.css';
+import CreateTab from './CreateTab'
 
 
 const AddFoodModal = ({showModal, setShowModal, meals, setMeals}) => {
@@ -22,19 +22,20 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals}) => {
     const [selectedFood, setSelectedFood] = useState({});
     const [showFoodDetails, setShowFoodDetails] = useState(false);
 
-    
+    const getFoodProducts = async () => {
+        try {
+            const res = await api.get('diet/food_products/');
+            if (res.status == 200){
+                setFoodProducts(res.data.foods);
+                return true; // Indicates succesfull request.
+            }
+        } catch (error) {
+            toast.error(`Could not retrieve your food products ${error}`);
+            return false; // Indicates unsuccesfull request.
+        }
+    }
 
     useEffect(() => {
-        const getFoodProducts = async () => {
-            try {
-                const res = await api.get('diet/food_products/');
-                if (res.status == 200){
-                    setFoodProducts(res.data.foods);
-                }
-            } catch (error) {
-                toast.error(`Could not retrieve your food products ${error}`);
-            }
-        }
         getFoodProducts();
     }, [])
 
@@ -76,8 +77,8 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals}) => {
 
             {tab == 'All' &&
                 <>
+                    <p className="mb-0">Per serving.</p>
                     <div className={`search-results ${showFoodDetails? 'shrink': ''}`}>
-                        <p className="">Per serving.</p>
                         <table className="table">
                             <thead>
                                 <tr>
@@ -117,9 +118,7 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals}) => {
                 </>
             }
             {tab == 'Create' &&
-                <div style={{height: '80%', width: '100%', padding: '10px', overflowY: 'scroll', overflowX: 'clip'}}>
-                    <CreateFoodForm />
-                </div>
+                <CreateTab getFoodProducts={getFoodProducts} tab={tab} setTab={setTab}/>
             }
         </Modal>
     )

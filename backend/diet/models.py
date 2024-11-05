@@ -68,6 +68,55 @@ class FoodProduct(models.Model):
     
     def __str__(self) -> str:
         return f"{self.name}"
+
+class NutritionData(models.model):
+    # Nutrients.
+    energy = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    protein = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    # Carbs.
+    fiber = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    starch = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    sugars = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    added_sugars = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    net_carbs = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    # Fats.
+    monounsaturated_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    polyunsaturated_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    saturated_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    trans_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    cholesterol = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    # Vitamins.
+    b1 = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    b2 = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    b3 = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    b5 = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    b6 = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    b12 = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    choline = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    folate = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    a = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    c = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    d = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    e = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    k = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    # Minerals.
+    calcium = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    chromium = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    copper = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    iron = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    magnesium = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    manganese = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    molybdenum = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    phosphorus = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    potassium = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    selenium = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    sodium = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    zinc = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
     def nutrients_in_json(self) -> dict:
         """Returns a dictionary with all the nutrients."""

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { titleCase, isObjEmpty, validateDecimalNumberInput } from "../../../lib/functions";
+import { titleCase, isObjEmpty, validateDecimalNumberInput } from "../../../../lib/functions";
 
-import { servingMeasures } from "../../../constants";
+import { servingMeasures } from "../../../../constants";
 import AddToDiaryBtn from "./AddToDiaryBtn";
 
 const FoodDetails = ({showModal, setShowModal, showFoodDetails, setShowFoodDetails, selectedFood, setSelectedFood, meals, setMeals}) => {

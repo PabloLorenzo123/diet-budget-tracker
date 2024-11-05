@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import api from "../../../api";
 import { isObjEmpty } from "../../../lib/functions";
 
-const SaveBtn = ({foodData, setFoodData, nutritionData, setNutritionData, selectedFood, setSelectedFood, setShowIndex, setShowCreate}) => {
+const SaveBtn = ({foodData, setFoodData, nutritionData, setNutritionData, selectedFood, setSelectedFood, setShowIndex, setShowCreate, afterSubmitFunc}) => {
     
     const submit = async () => {
         
@@ -28,32 +28,28 @@ const SaveBtn = ({foodData, setFoodData, nutritionData, setNutritionData, select
         // console.log(flatNutritionData);
 
         try{
-            if (selectedFood){
-                if (isObjEmpty(selectedFood)){
-                    // Create a new food product.
-                    const res = await api.post("/diet/save_food/", {
-                        ...foodData,
-                        ...flatNutritionData
-                    });
-                    if (res.status == 201){
-                        toast.success("Food product saved succesfully.");
-                    }
-                } else {
-                    // Edit the selected food product.
-                    const res = await api.put("/diet/save_food/", {
-                        ...foodData,
-                        ...flatNutritionData,
-                        id: selectedFood.id
-                    });
-                    if (res.status == 201){
-                        toast.success("Food product updated succesfully.");
-                    }
+            if (!selectedFood || isObjEmpty(selectedFood)){
+                // Create a new food product.
+                const res = await api.post("/diet/save_food/", {
+                    ...foodData,
+                    ...flatNutritionData
+                });
+                if (res.status == 201){
+                    toast.success("Food product saved succesfully.");
+                    afterSubmitFunc();
                 }
-            }
-            // Back to index.
-            setShowCreate(false);
-            setShowIndex(true);
-            window.scrollTo(0, 0);  
+            } else {
+                // Edit the selected food product.
+                const res = await api.put("/diet/save_food/", {
+                    ...foodData,
+                    ...flatNutritionData,
+                    id: selectedFood.id
+                });
+                if (res.status == 201){
+                    toast.success("Food product updated succesfully.");
+                    afterSubmitFunc();
+                }
+            }            
         } catch (error) {
             toast.error(`There was a problem saving this food product ${error}.`);
         }

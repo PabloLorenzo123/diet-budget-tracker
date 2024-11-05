@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { roundTo } from "../../../lib/functions";
+import { roundTo } from "../../../../lib/functions";
 
 const AddToDiaryBtn = ({meals, setMeals, showModal, setShowModal, selectedFood, setSelectedFood, addToDiaryForm, setAddToDiaryForm}) => {
     const addToDiary = async () => {

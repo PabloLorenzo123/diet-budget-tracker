@@ -63,7 +63,7 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
         setNutritionData({...nutrientState, ...nutrients}); // Need to add nutrientState because there may be nutrients not defined.
 
         // If the food selected is not branded then we need its food portions.
-        if ((!resultSelected.brandName || !resultSelected.brandOwner) && !resultSelected.foodPortions){ // If foodPortions is already defined, don't ask again.
+        if ((!resultSelected.brandName || !resultSelected.brandOwner) && !resultSelected.foodPortions && !searchInput.branded){ // If foodPortions is already defined, don't ask again.
             setFoodPortionsLoading(true);
             try {
                 const res = await api.get(`diet/search_food/?fdcId=${fdcId}`);
@@ -201,7 +201,7 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
 
                     <div className="results">
                     {searchResultsLoading?
-                        <div class="d-flex justify-content-center">
+                        <div className="d-flex justify-content-center">
                             <div className="spinner-border" role="status">
                                 <span className="visually-hidden">Loading...</span>
                             </div>

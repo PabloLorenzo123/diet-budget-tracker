@@ -1,0 +1,17 @@
+
+.goal-setter-container .more-btn {
+    border: 5px solid transparent !important;
+}
+
+.goal-setter-container .more-btn:hover{
+    background-color: var(--grey-3) !important;
+    border-radius: 100%;
+}
+
+.goal-setter-container .save-btn:hover {
+    color:aqua;
+}
+
+.goal-setter-container .form-control {
+    width: 120px;
+}
