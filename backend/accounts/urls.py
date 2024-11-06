@@ -7,5 +7,5 @@ urlpatterns = [
     path("login/", views.login, name='login'),
     path("token/", TokenObtainPairView.as_view(), name="get_token"),   # LOGIN.
     path("token/refresh/", TokenRefreshView.as_view(), name="refresh"), # Expired Login.
-    path('get_user/', views.get_user, name='get_user'),
+    path('nutrition_goals/', views.get_user_nutrition_goals, name='get_user'),
 ]

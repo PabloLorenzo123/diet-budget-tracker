@@ -3,7 +3,7 @@ from project.settings import USDA_API_KEY
 from django.http import JsonResponse
 
 from accounts.models import User
-from .models import FoodProduct
+from .models import FoodProduct, NutritionData
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -165,7 +165,9 @@ def save_food_product(request):
             'price': price,
             'servings': data.get("servings", 1),
             'serving_measure': data.get("measure", "serving"),
-            'serving_size': data.get("gramWeight"),
+            'serving_size': data.get("gramWeight")
+        }
+        nutrition_data = {
             # nutrients.
             'energy': data.get("energy", 0.0),
             'protein': data.get("protein", 0.0),
@@ -209,24 +211,35 @@ def save_food_product(request):
             'sodium': data.get("sodium", 00.0),
             'zinc': data.get("zinc", 0.0)
         }
+        
         if request.method == 'POST':
             food_product = FoodProduct(**food_product_data)
+            nutrition_data = NutritionData(**nutrition_data)
+            food_product.nutrition_data = nutrition_data
             
         elif request.method == 'PUT':
             id = data.get('id')
             if not id:
                 return JsonResponse({'error': 'Id was not provided'}, status=status.HTTP_400_BAD_REQUEST)
             food_product = FoodProduct.objects.filter(user=user, id=id)
-            if food_product.exists():
+            if food_product.exists(): # We can assume nutrition data also exists.
                 food_product = food_product.first()
+                nutrition_data = food_product.nutrition_data
+                # Update food_product fields.
                 for field, value in food_product_data.items():
                     if hasattr(food_product, field):
                         setattr(food_product, field, value)
+                # Update nutritional_data fields.
+                for field, value in nutrition_data.items():
+                    if hasattr(nutrition_data, field):
+                        setattr(nutrition_data, field, value)
+                
             else:
                 return JsonResponse({'error': 'Food product not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({"error": f"An unexpected error occurred. {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     finally:
+        nutrition_data.save()
         food_product.save()
         return Response({"success": "Food product saved"}, status=status.HTTP_201_CREATED)
     
@@ -251,7 +264,7 @@ def food_products_list(request):
                 'gramWeight': float(f.serving_size),
                 'productPrice': f.price,
             },
-            'nutritionData': f.nutrients_in_json()
+            'nutritionData': f.nutrition_data.nutrients_in_json()
         })
     
     return JsonResponse({

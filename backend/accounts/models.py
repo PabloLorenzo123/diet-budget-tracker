@@ -5,11 +5,14 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken
 from rest_framework.exceptions import AuthenticationFailed
 
+from diet.models import NutritionData
+
 # Create your models here.
 
 class User(AbstractUser):
-    pass
     
+    budget = models.DecimalField(max_digits=8, decimal_places=2, default=0.0, null=True)
+    nutrition_goals = models.OneToOneField('diet.NutritionData', on_delete=models.CASCADE, related_name="user", null=True)
     # Maybe add BMI, calories, etc.
     
     @staticmethod
