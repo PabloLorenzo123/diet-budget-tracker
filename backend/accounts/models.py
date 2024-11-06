@@ -11,8 +11,8 @@ from diet.models import NutritionData
 
 class User(AbstractUser):
     
-    budget = models.DecimalField(max_digits=8, decimal_places=2, default=0.0, null=True)
-    nutrition_goals = models.OneToOneField('diet.NutritionData', on_delete=models.CASCADE, related_name="user", null=True)
+    budget = models.DecimalField(max_digits=8, decimal_places=2, default=0, null=True) # Daily.
+    nutrition_goals = models.OneToOneField('diet.NutritionData', on_delete=models.CASCADE, related_name="user", null=True, blank=True) # Daily.
     # Maybe add BMI, calories, etc.
     
     @staticmethod

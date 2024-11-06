@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { nutrients } from "../../../lib/nutrients.js";
+import { nutrientsTable } from "../../../lib/nutrients.js";
 import {
   titleCase,
   removeTrailingZeros,
@@ -9,22 +9,9 @@ import {
 
 import ManualOrSearchFood from "./ManualOrSearchFood.jsx";
 
-const NutritionDataForm = ({
-  foodData,
-  setFoodData,
-  nutritionData,
-  setNutritionData
-}) => {
-  const handleChange = (dv, e) => {
-    const { name, value } = e.target;
-    setNutritionData((prev) => ({
-      ...prev,
-      [name]: {
-        amount: value || 0,
-        dv: roundTo((value / dv) * 100, 2)
-      }
-    }));
-  };
+const NutritionDataForm = ({foodData, setFoodData, nutritionData, setNutritionData, handleChange}) => {
+
+  
 
   const updateDv = (nutrient, dv, e) => {
     const percentage = e.target.value / 100;
@@ -92,7 +79,7 @@ const NutritionDataForm = ({
         </div>
 
         <div className="nutrient-tables-container">
-          {Object.keys(nutrients).map((category) => {
+          {Object.keys(nutrientsTable).map((category) => {
             return (
               <table className="nutrient-table table" key={`${category}-table`}>
                 <colgroup>
@@ -108,7 +95,7 @@ const NutritionDataForm = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.keys(nutrients[category]).map((nutrient) => {
+                  {Object.keys(nutrientsTable[category]).map((nutrient) => {
                     return (
                       <tr key={`${nutrient}-tr`}>
                         <td>{titleCase(nutrient)}</td>
@@ -120,14 +107,14 @@ const NutritionDataForm = ({
                             value={nutritionData[nutrient].amount}
                             name={nutrient}
                             onChange={(e) =>
-                              handleChange(nutrients[category][nutrient]?.dv, e)
+                              handleChange(nutrientsTable[category][nutrient]?.dv, e)
                             }
                             onInput={validateDecimalNumberInput}
                           />
-                          {nutrients[category][nutrient]?.unit}
+                          {nutrientsTable[category][nutrient]?.unit}
                         </td>
                         <td>
-                          {nutrients[category][nutrient]?.dv != null ? (
+                          {nutrientsTable[category][nutrient]?.dv != null ? (
                             <>
                               <input
                                 type="text"
@@ -137,7 +124,7 @@ const NutritionDataForm = ({
                                 onChange={(e) =>
                                   updateDv(
                                     nutrient,
-                                    nutrients[category][nutrient]?.dv,
+                                    nutrientsTable[category][nutrient]?.dv,
                                     e
                                   )
                                 }

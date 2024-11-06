@@ -1,19 +1,74 @@
 import { useState, useEffect } from "react";
-import '../../../styles/dairy/GoalSetter.css';
+
 import GoalModal from "./GoalModal";
-import { validateDecimalNumberInput } from "../../../lib/functions";
+import { dailyValues, nutrientState } from "../../../lib/nutrients";
+import { validateDecimalNumberInput, roundTo } from "../../../lib/functions";
+import { toast } from "react-toastify";
+import api from "../../../api";
+import '../../../styles/dairy/GoalSetter.css';
 
 const GoalSetter = ({dailyTargets, setDailyTargets}) => {
+    const [prevDailyTargets, setPrevDailyTargets] = useState({});
+
     const [showModal, setShowModal] = useState(false);
 
+    const handleBudgetChange = (e) => setDailyTargets(prev => ({...prev, budget: e.target.value}));
+
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setDailyTargets(prev => ({
-            ...prev,
-            [name]: value
+        const { name, value } = e.target;
+        const dv = dailyValues[name];
+        setDailyTargets((prev) => ({
+          ...prev,
+          [name]: {
+            amount: value || 0,
+            dv: roundTo((value / dv) * 100, 2) || 0
+          }
         }));
+    };
+
+    const saveDailyTargets = async () => {
+        if (prevDailyTargets == dailyTargets) return;
+        try {
+            const body = {...dailyTargets}
+            Object.keys(body).forEach(n => {
+                if (nutrientState[n]) {
+                    body[n] = dailyTargets[n].amount;
+                }
+            });
+            const res = api.post('auth/daily_targets/', body);
+        } catch (error) {
+            console.log(error);
+            toast.error("Your daily targets could not be saved, try again later.");
+        }
     }
 
+    useEffect(() => {
+        const getDailyTargets = async () => {
+            try {
+                const res = await api.get('auth/daily_targets/');
+                if (res.status == 200){
+                    const resData = res.data.dailyTargets;
+                    Object.keys(resData).forEach(nutrient => {
+                        if (nutrientState[nutrient]){ // Only budget would fail this if condition.
+                            const value = resData[nutrient];
+                            const dv = dailyValues[nutrient];
+                            resData[nutrient] = {
+                            amount: value,
+                            dv: roundTo((value / dv) * 100, 2) || 0
+                            }
+                        }    
+                    })
+                    setPrevDailyTargets(resData); // This is used to determine if daily targets changes.
+                    setDailyTargets(resData);
+                }
+            } catch (error) {
+                console.log(`Could not retrieve user's daily targets. ${error}`);
+            }
+        }
+        getDailyTargets()
+    }, [])
+
+    const isSaveBtnDisabled = prevDailyTargets == dailyTargets;
 
     return (
         <>
@@ -34,7 +89,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
                     placeholder="Budget"
                     name="budget"
                     value={dailyTargets.budget}
-                    onChange={handleChange}
+                    onChange={handleBudgetChange}
                     onInput={validateDecimalNumberInput}
                 />
             </div>
@@ -42,7 +97,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
             <div className="d-flex align-items-center me-2">
                 <label htmlFor="calories" className="d-flex align-items-center">
                     <span className="me-1">Calories</span>
-                    <span class="material-symbols-outlined">
+                    <span className="material-symbols-outlined">
                         bolt
                     </span>
                 </label>
@@ -53,7 +108,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
                     className="form-control"
                     placeholder="kcal"
                     name="energy"
-                    value={dailyTargets.energy}
+                    value={dailyTargets.energy.amount}
                     onChange={handleChange}
                     onInput={validateDecimalNumberInput}
                 />
@@ -62,7 +117,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
             <div className="d-flex align-items-center me-2">
                 <label htmlFor="protein" className="d-flex align-items-center">
                     <span className="me-1">Protein</span>
-                    <span class="material-symbols-outlined">
+                    <span className="material-symbols-outlined">
                         fitness_center
                     </span>
                 </label>
@@ -73,7 +128,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
                     className="form-control"
                     placeholder="g"
                     name="protein"
-                    value={dailyTargets.protein}
+                    value={dailyTargets.protein.amount}
                     onChange={handleChange}
                     onInput={validateDecimalNumberInput}
                 />
@@ -82,7 +137,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
             <div className="d-flex align-items-center me-2">
                 <label htmlFor="carbs" className="d-flex align-items-center">
                     <span className="me-1">Carbs</span>
-                    <span class="material-symbols-outlined">
+                    <span className="material-symbols-outlined">
                         sprint
                     </span>
                 </label>
@@ -93,7 +148,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
                     className="form-control"
                     placeholder="g"
                     name="netCarbs"
-                    value={dailyTargets.netCarbs}
+                    value={dailyTargets.netCarbs.amount}
                     onChange={handleChange}
                     onInput={validateDecimalNumberInput}
                 />
@@ -102,7 +157,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
             <div className="d-flex align-items-center me-2">
                 <label htmlFor="fat" className="d-flex align-items-center">
                     <span className="me-1">Fat</span>
-                    <span class="material-symbols-outlined">
+                    <span className="material-symbols-outlined">
                         egg_alt
                     </span>
                 </label>
@@ -113,7 +168,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
                     className="form-control"
                     placeholder="g"
                     name="totalFat"
-                    value={dailyTargets.totalFat}
+                    value={dailyTargets.totalFat.amount}
                     onChange={handleChange}
                     onInput={validateDecimalNumberInput}
                 />
@@ -124,13 +179,18 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
             type="button"
             onClick={() => setShowModal(true)}
             >
-                <span class="material-symbols-outlined">
+                <span className="material-symbols-outlined">
                     more_horiz
                 </span>
             </button>
             {/* Save button */}
-            <button type="button me-2" className="save-btn d-flex align-items-center bg-transparent border-0 p-0 m-0 me-2">
-                <span class="material-symbols-outlined">
+            <button 
+            type="button me-2"
+            className="save-btn d-flex align-items-center bg-transparent border-0 p-0 m-0 me-2"
+            onClick={saveDailyTargets}
+            disabled={isSaveBtnDisabled}
+            >
+                <span className="material-symbols-outlined">
                     save
                 </span>
             </button>
@@ -138,11 +198,14 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
         
         {showModal && 
             <GoalModal
-            showModal={showModal}
-            setShowModal={setShowModal}
-            dailyTargets={dailyTargets}
-            setDailyTargets={setDailyTargets}
-            handleChange={handleChange}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                dailyTargets={dailyTargets}
+                setDailyTargets={setDailyTargets}
+                handleBudgetChange={handleBudgetChange}
+                handleChange={handleChange}
+                saveDailyTargets={saveDailyTargets}
+                isSaveBtnDisabled={isSaveBtnDisabled}
             />
         }
         </>

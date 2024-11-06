@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import User
 from .serializers import UserSerializer
 from diet.models import NutritionData
+from project.lib import format_nutrients_from_request_body
 
 # REST FRAMEWORK.
 from rest_framework import generics
@@ -28,7 +29,7 @@ def sign_up(request):
     # print(data)
     try:
         user = User.objects.create_user(**data)
-        user.nutrition_data = NutritionData()
+        user.nutrition_data = NutritionData.create_object_rdi()
         user.save()
         refresh = RefreshToken.for_user(user=user)
         return JsonResponse({
@@ -42,20 +43,39 @@ def sign_up(request):
         }, status=status.HTTP_409_CONFLICT)
     except Exception as e:
         return JsonResponse({
-            'error': 'There was an error {e}',
+            'error': f'There was an error {e}',
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@api_view(('GET',))
+@api_view(('GET', 'POST'))
 @permission_classes([AllowAny])
-def get_user_nutrition_goals(request):
+def user_nutrition_goals(request):
     user = request.user
+    if request.method == 'POST':
+        user_nutrition_goals = user.nutrition_goals
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return Response({"error": "Invalid JSON data."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user.budget = data.get('budget', user.budget)
+        nutrition_goals = format_nutrients_from_request_body(data)
+        
+        for field, value in nutrition_goals.items():
+            if hasattr(user_nutrition_goals, field):
+                setattr(user_nutrition_goals, field, value)
+        
+        user_nutrition_goals.save()
+        user.save()
+        return Response({"success": "User daily targets have been saved."}, status=status.HTTP_200_OK)
+    
+    # GET request.
     if user.nutrition_goals is None:
-        user.nutrition_goals = NutritionData()
+        user.nutrition_goals = NutritionData.create_object_rdi()
         user.save()
         
     return JsonResponse({
-        "nutritionGoals": {'budget': user.budget, **user.nutrition_goals.nutrients_in_json()}
+        "dailyTargets": {'budget': float(user.budget), **user.nutrition_goals.nutrients_in_json()}
     })
 
 

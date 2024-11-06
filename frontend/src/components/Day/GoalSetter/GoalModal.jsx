@@ -1,11 +1,23 @@
 import { useState, useEffect } from "react";
 import { titleCase, validateDecimalNumberInput } from "../../../lib/functions";
-import { dailyValues, nutrients } from "../../../lib/nutrients";
+import { dailyValues, nutrientsTable } from "../../../lib/nutrients";
+import { roundTo } from "../../../lib/functions";
 import Modal from "../../Modal";
 
-const GoalModal = ({showModal, setShowModal, dailyTargets, setDailyTargets, handleChange}) => {
+const GoalModal = ({showModal, setShowModal, dailyTargets, setDailyTargets, handleBudgetChange, handleChange, saveDailyTargets, isSaveBtnDisabled}) => {
 
     const unitSpanStyle = {width: '25px'};
+
+    const updateDv = (e) => {
+        const {name, value} = e.target;
+        const nutrient = name.match(/^(\w+)-dv$/)[1]; // From calories-dv extract 'calories'.
+        const dv = value / 100;
+        const amount = roundTo(dailyValues[nutrient] * dv, 2);
+        setDailyTargets(prev => ({
+            ...prev,
+            [nutrient]: {amount, dv: value}
+        }))
+    }
 
     return (
         <Modal showModal={showModal} setShow={setShowModal}>
@@ -32,7 +44,7 @@ const GoalModal = ({showModal, setShowModal, dailyTargets, setDailyTargets, hand
                                         className="nutrient-input ms-auto"
                                         value={dailyTargets.budget}
                                         name='budget'
-                                        onChange={handleChange}
+                                        onChange={handleBudgetChange}
                                         onInput={validateDecimalNumberInput}
                                     />
                                     <span className="text-center" style={unitSpanStyle}>
@@ -43,36 +55,62 @@ const GoalModal = ({showModal, setShowModal, dailyTargets, setDailyTargets, hand
                         </tr>
                     </tbody>
                 </table>
-                {Object.keys(nutrients).map(category => {
+                {Object.keys(nutrientsTable).map(category => {
                     return (
                         <table key={category} className="nutrient-table table">
+                                <colgroup>
+                                    <col style={{ width: "40%" }} />
+                                    <col style={{ width: "40%" }} />
+                                    <col style={{ width: "20%" }} />
+                                </colgroup>
                             <thead>
                                 <tr>
                                     <th>{titleCase(category)}</th>
-                                    <th></th>
+                                    <th><span className="ms-4">Amount</span></th>
+                                    <th>DV</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {Object.keys(nutrients[category]).map(nutrient => {
+                                {nutrientsTable[category].map(nutrientObj => {
                                     return (
-                                        <tr>
-                                            <td>{titleCase(nutrient)}</td>
+                                        <tr key={nutrientObj}>
+                                            <td>{titleCase(nutrientObj.altName)}</td>
+                                            {/* Amount input */}
                                             <td>
                                                 <div className="d-flex">
                                                     <input
                                                         type="text"
                                                         inputMode="decimal" // Enables numeric keypad on mobile
-                                                        className="nutrient-input ms-auto"
-                                                        value={dailyTargets[nutrient]}
-                                                        name={nutrient}
+                                                        className="nutrient-input"
+                                                        value={dailyTargets[nutrientObj.name].amount}
+                                                        name={nutrientObj.name}
                                                         onChange={handleChange}
                                                         onInput={validateDecimalNumberInput}
                                                     />
                                                     <span className="text-center" style={unitSpanStyle}>
-                                                        {nutrients[category][nutrient].unit}
-                                                    </span>
-                                                    
+                                                        {nutrientObj.unit}
+                                                    </span>  
                                                 </div>
+                                            </td>
+                                            {/* DV Input */}
+                                            <td>
+                                                {nutrientObj.dv != null && 
+                                                    <>
+                                                    {/* If this nutrient has a daily recomendation intake then make it an input */}
+                                                    <div className="d-flex justify-content-end">
+                                                            <input
+                                                            type="text"
+                                                            inputMode="decimal" // Enables numeric keypad on mobile
+                                                            className="nutrient-input"
+                                                            name={`${nutrientObj.name}-dv`}
+                                                            value={dailyTargets[nutrientObj.name].dv}
+                                                            onChange={updateDv}
+                                                            onInput={validateDecimalNumberInput}
+                                                            />
+                                                            <span>%</span>
+                                                    </div>
+                                                    </>
+                                                    }
                                             </td>
                                         </tr>
                                     )
@@ -83,7 +121,7 @@ const GoalModal = ({showModal, setShowModal, dailyTargets, setDailyTargets, hand
                 })}        
             </div>
             <div className="d-flex justify-content-center">
-                <button type="button" className="btn btn-primary">
+                <button type="button" className="btn btn-primary" onClick={saveDailyTargets} disabled={isSaveBtnDisabled}>
                     Save Changes
                 </button>
             </div>

@@ -1,5 +1,6 @@
 import uuid
 
+from project.settings import RDI
 from django.db import models
 
 # Create your models here.
@@ -20,7 +21,7 @@ class NutritionData(models.Model):
     polyunsaturated_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     saturated_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     trans_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    cholesterol = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    cholestherol = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
     # Vitamins.
@@ -52,47 +53,54 @@ class NutritionData(models.Model):
     sodium = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     zinc = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
+    @staticmethod
+    def create_object_rdi() -> models.Model:
+        """Creates a NutritionData object with its fields set to the recommended daily intake."""
+        nd = NutritionData(**RDI)
+        nd.save()
+        return nd
+    
     def nutrients_in_json(self) -> dict:
         """Returns a dictionary with all the nutrients."""
         return {
-            "energy": self.energy,
-            "protein": self.protein,
-            "fiber": self.fiber,
-            "starch": self.starch,
-            "sugars": self.sugars,
-            "addedSugars": self.added_sugars,
-            "netCarbs": self.net_carbs,
-            "monounsaturatedFat": self.monounsaturated_fat,
-            "polyunsaturatedFat": self.polyunsaturated_fat,
-            "saturatedFat": self.saturated_fat,
-            "transFat": self.trans_fat,
-            "cholestherol": self.cholesterol,
-            "totalFat": self.total_fat,
-            "B1": self.b1,
-            "B2": self.b2,
-            "B3": self.b3,
-            "B5": self.b5,
-            "B6": self.b6,
-            "B12": self.b12,
-            "choline": self.choline,
-            "folate": self.folate,
-            "A": self.a,
-            "C": self.c,
-            "D": self.d,
-            "E": self.e,
-            "K": self.k,
-            "calcium": self.calcium,
-            "chromium": self.chromium,
-            "copper": self.copper,
-            "iron": self.iron,
-            "magnesium": self.magnesium,
-            "manganese": self.manganese,
-            "molybdenum": self.molybdenum,
-            "phosphorus": self.phosphorus,
-            "potassium": self.potassium,
-            "selenium": self.selenium,
-            "sodium": self.sodium,
-            "zinc": self.zinc
+            "energy": float(self.energy),
+            "protein": float(self.protein),
+            "fiber": float(self.fiber),
+            "starch": float(self.starch),
+            "sugars": float(self.sugars),
+            "addedSugars": float(self.added_sugars),
+            "netCarbs": float(self.net_carbs),
+            "monounsaturatedFat": float(self.monounsaturated_fat),
+            "polyunsaturatedFat": float(self.polyunsaturated_fat),
+            "saturatedFat": float(self.saturated_fat),
+            "transFat": float(self.trans_fat),
+            "cholestherol": float(self.cholestherol),
+            "totalFat": float(self.total_fat),
+            "B1": float(self.b1),
+            "B2": float(self.b2),
+            "B3": float(self.b3),
+            "B5": float(self.b5),
+            "B6": float(self.b6),
+            "B12": float(self.b12),
+            "choline": float(self.choline),
+            "folate": float(self.folate),
+            "A": float(self.a),
+            "C": float(self.c),
+            "D": float(self.d),
+            "E": float(self.e),
+            "K": float(self.k),
+            "calcium": float(self.calcium),
+            "chromium": float(self.chromium),
+            "copper": float(self.copper),
+            "iron": float(self.iron),
+            "magnesium": float(self.magnesium),
+            "manganese": float(self.manganese),
+            "molybdenum": float(self.molybdenum),
+            "phosphorus": float(self.phosphorus),
+            "potassium": float(self.potassium),
+            "selenium": float(self.selenium),
+            "sodium": float(self.sodium),
+            "zinc": float(self.zinc)
         }
 
 

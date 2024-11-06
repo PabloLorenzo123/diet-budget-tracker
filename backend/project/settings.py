@@ -158,3 +158,44 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True
 # This configuration opens your API to cross-site request forgery (CSRF) attacks because any domain can access your API with user credentials. 
+
+RDI = {
+    "energy": 2000.0,             # Calories (kcal)
+    "protein": 50.0,              # grams
+    "fiber": 25.0,                # grams
+    "starch": 130.0,              # grams
+    "sugars": 36.0,               # grams
+    "added_sugars": 24.0,          # grams
+    "net_carbs": 225.0,            # grams
+    "monounsaturated_fat": 25.0,   # grams
+    "polyunsaturated_fat": 11.0,   # grams
+    "saturated_fat": 20.0,         # grams
+    "trans_fat": 0.0,              # grams (should be minimized)
+    "cholestherol": 300.0,        # milligrams
+    "total_fat": 70.0,             # grams
+    "b1": 1.2,                    # mg (Thiamine)
+    "b2": 1.3,                    # mg (Riboflavin)
+    "b3": 16.0,                   # mg (Niacin)
+    "b5": 5.0,                    # mg (Pantothenic Acid)
+    "b6": 1.7,                    # mg
+    "b12": 2.4,                   # mcg
+    "choline": 425.0,             # mg
+    "folate": 400.0,              # mcg
+    "a": 900.0,                   # mcg (RAE - Retinol Activity Equivalents)
+    "c": 90.0,                    # mg
+    "d": 20.0,                    # mcg
+    "e": 15.0,                    # mg
+    "k": 120.0,                   # mcg
+    "calcium": 1300.0,            # mg
+    "chromium": 35.0,             # mcg
+    "copper": 0.9,                # mg
+    "iron": 18.0,                 # mg
+    "magnesium": 400.0,           # mg
+    "manganese": 2.3,             # mg
+    "molybdenum": 45.0,           # mcg
+    "phosphorus": 700.0,          # mg
+    "potassium": 4700.0,          # mg
+    "selenium": 55.0,             # mcg
+    "sodium": 2300.0,             # mg
+    "zinc": 11.0                  # mg
+}
