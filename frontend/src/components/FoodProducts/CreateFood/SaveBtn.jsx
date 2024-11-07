@@ -14,11 +14,10 @@ const SaveBtn = ({foodData, setFoodData, nutritionData, setNutritionData, select
         if (foodData.productName == '') {
             errMsgs.push('Product name is missing.');
         }
-        if (!foodData.productPrice) {
-            errMsgs.push('Product price is missing.');
-        }
+
         if (errMsgs.length > 0) {
             errMsgs.forEach(err => toast.error(err));
+            return;
         }
 
         const flatNutritionData = {...nutritionData}

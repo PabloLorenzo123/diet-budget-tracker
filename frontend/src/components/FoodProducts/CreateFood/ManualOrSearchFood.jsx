@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from '../../../api.js';
-import { dailyValues, nutrientState } from "../../../lib/nutrients.js";
+import { nutrientsInformation, nutrientState } from "../../../lib/nutrients.js";
 import { roundTo } from "../../../lib/functions.js";
 
 const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionData}) => {
@@ -51,13 +51,16 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
         // Update the nutrition tables.
         
         const nutrients = {...nutrientState};
+        console.log(resultSelected.foodNutrients);
         Object.keys(resultSelected.foodNutrients).forEach(nutrient => {
             
-            const gramWeight = foodData.gramWeight || resultSelected.servingSize; // If n/a then use the serving size of the result selected.
-            const amount = roundTo(gramWeight * resultSelected.foodNutrients[nutrient] / resultSelected.servingSize, 2) || 0;
-            const dv = roundTo(gramWeight / dailyValues[nutrient] * 100, 2);
-
-            nutrients[nutrient] = {amount: amount, dv: dv}; // Differeance between fullFoodN.. and foodNutri.. is the former is a dictionary.
+            if (nutrientsInformation[nutrient]){
+                const gramWeight = foodData.gramWeight || resultSelected.servingSize; // If n/a then use the serving size of the result selected.
+                const amount = roundTo(gramWeight * resultSelected.foodNutrients[nutrient] / resultSelected.servingSize, 2) || 0;
+                const dv = roundTo(gramWeight / nutrientsInformation[nutrient].dv * 100, 2);
+                nutrients[nutrient] = {amount: amount, dv: dv}; // Differeance between fullFoodN.. and foodNutri.. is the former is a dictionary.
+            }
+            
         })
         
         setNutritionData({...nutrientState, ...nutrients}); // Need to add nutrientState because there may be nutrients not defined.
@@ -91,7 +94,7 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
         const nutritionDataCopy = {...nutritionData};
         Object.keys(nutritionDataCopy).forEach(nutrient => {
             const amount = roundTo(grams * food.foodNutrients?.[nutrient] / food.servingSize, 2) || 0;
-            const dv = roundTo(amount / dailyValues[nutrient] * 100, 2);
+            const dv = roundTo(amount / nutrientsInformation[nutrient].dv * 100, 2);
             nutritionDataCopy[nutrient] = {amount, dv};
         });
         

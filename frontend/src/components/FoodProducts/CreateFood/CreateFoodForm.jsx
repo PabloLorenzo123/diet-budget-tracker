@@ -4,7 +4,7 @@ import DetailsForm from "./DetailsForm";
 import NutritionDataForm from "./NutritionDataForm";
 import SaveBtn from "./SaveBtn";
 
-import { nutrientState, dailyValues } from "../../../lib/nutrients";
+import { nutrientState, nutrientsInformation } from "../../../lib/nutrients";
 import { roundTo, isObjEmpty } from "../../../lib/functions";
 
 import "../../../styles/foodProducts/createFoodProduct.css";
@@ -31,7 +31,7 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
         // Format the previous dictionary to follow the format in the frontend {amount, dv}.
         Object.keys(selectedFoodNutritionData).forEach(nutrient => {
           const amount = selectedFood.nutritionData[nutrient] || 0;
-          const dv = roundTo(amount / dailyValues[nutrient] * 100, 2);
+          const dv = roundTo(amount / nutrientsInformation[nutrient].dv * 100, 2);
           selectedFoodNutritionData[nutrient] = {amount: amount, dv: dv};
           }
         )

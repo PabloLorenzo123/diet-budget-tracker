@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import GoalModal from "./GoalModal";
-import { dailyValues, nutrientState } from "../../../lib/nutrients";
+import { nutrientsInformation } from "../../../lib/nutrients";
 import { validateDecimalNumberInput, roundTo } from "../../../lib/functions";
 import { toast } from "react-toastify";
 import api from "../../../api";
@@ -10,13 +10,16 @@ import '../../../styles/dairy/GoalSetter.css';
 const GoalSetter = ({dailyTargets, setDailyTargets}) => {
     const [prevDailyTargets, setPrevDailyTargets] = useState({});
 
+    const [isLoading, setIsLoading] = useState(false); // Use for the spinning wheel in the save btn.
+    const [isLoadingSuccesful, setIsLoadingSuccesfull] = useState(false); // Use for the check mark in the save btn.
+
     const [showModal, setShowModal] = useState(false);
 
     const handleBudgetChange = (e) => setDailyTargets(prev => ({...prev, budget: e.target.value}));
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        const dv = dailyValues[name];
+        const dv = nutrientsInformation[name]?.dv;
         setDailyTargets((prev) => ({
           ...prev,
           [name]: {
@@ -28,18 +31,27 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
 
     const saveDailyTargets = async () => {
         if (prevDailyTargets == dailyTargets) return;
+        setIsLoading(true);
         try {
             const body = {...dailyTargets}
             Object.keys(body).forEach(n => {
-                if (nutrientState[n]) {
+                if (nutrientsInformation[n]) {
                     body[n] = dailyTargets[n].amount;
                 }
             });
-            const res = api.post('auth/daily_targets/', body);
+            const res = await api.post('auth/daily_targets/', body);
+            if (res.status == 200){
+                setPrevDailyTargets(dailyTargets); // So the save btn becomes disabled.
+                setIsLoading(false);
+                setIsLoadingSuccesfull(true);
+                setTimeout(() => setIsLoadingSuccesfull(false), 1000);
+                return
+            }
         } catch (error) {
             console.log(error);
             toast.error("Your daily targets could not be saved, try again later.");
         }
+        setIsLoading(false);
     }
 
     useEffect(() => {
@@ -49,12 +61,12 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
                 if (res.status == 200){
                     const resData = res.data.dailyTargets;
                     Object.keys(resData).forEach(nutrient => {
-                        if (nutrientState[nutrient]){ // Only budget would fail this if condition.
+                        if (nutrientsInformation[nutrient]){ // Only budget would fail this if condition.
                             const value = resData[nutrient];
-                            const dv = dailyValues[nutrient];
+                            const dv = nutrientsInformation[nutrient]?.dv;
                             resData[nutrient] = {
-                            amount: value,
-                            dv: roundTo((value / dv) * 100, 2) || 0
+                                amount: value,
+                                dv: roundTo((value / dv) * 100, 2) || 0
                             }
                         }    
                     })
@@ -190,9 +202,19 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
             onClick={saveDailyTargets}
             disabled={isSaveBtnDisabled}
             >
-                <span className="material-symbols-outlined">
-                    save
-                </span>
+                {isLoading? 
+                    <div className="spinner-border spinner-border-sm" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>:
+                    isLoadingSuccesful?
+                        <span className="material-symbols-outlined text-dark" style={{color: 'green'}}>
+                            check_circle
+                        </span>:
+                        <span className="material-symbols-outlined">
+                            save
+                        </span>
+                }
+                
             </button>
         </div>
         
@@ -203,9 +225,10 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
                 dailyTargets={dailyTargets}
                 setDailyTargets={setDailyTargets}
                 handleBudgetChange={handleBudgetChange}
-                handleChange={handleChange}
                 saveDailyTargets={saveDailyTargets}
                 isSaveBtnDisabled={isSaveBtnDisabled}
+                isLoading={isLoading}
+                isLoadingSuccesful={isLoadingSuccesful}
             />
         }
         </>

@@ -1,55 +1,21 @@
 import { useState, useEffect } from "react";
 import { nutrientsTable } from "../../../lib/nutrients.js";
-import {
-  titleCase,
-  removeTrailingZeros,
-  roundTo,
-  validateDecimalNumberInput
-} from "../../../lib/functions.js";
+import {validateDecimalNumberInput} from "../../../lib/functions.js";
 
 import ManualOrSearchFood from "./ManualOrSearchFood.jsx";
+import NutrientsTable from "../../NutrientsTable.jsx";
 
 const NutritionDataForm = ({foodData, setFoodData, nutritionData, setNutritionData, handleChange}) => {
-
   
-
-  const updateDv = (nutrient, dv, e) => {
-    const percentage = e.target.value / 100;
-    const newAmount = dv * percentage || 0;
-    setNutritionData((prev) => ({
-      ...prev,
-      [nutrient]: {
-        amount: newAmount,
-        dv: roundTo(percentage * 100, 2)
-      }
-    }));
-  };
-
-  const gramWeightInput = () => {
-    return (
-      <input
-        type="text"
-        inputMode="decimal" // Enables numeric keypad on mobile
-        placeholder="n/a"
-        onChange={handleChange}
-        onInput={validateDecimalNumberInput}
-        className="form-control"
-        name="gramWeight"
-        value={foodData.gramWeight}
-      />
-    );
-  };
-
   return (
     <>
       <div className="create-food-form">
         <ManualOrSearchFood
-          foodData={foodData}
-          setFoodData={setFoodData}
-          nutritionData={nutritionData}
-          setNutritionData={setNutritionData}
+        foodData={foodData}
+        setFoodData={setFoodData}
+        nutritionData={nutritionData}
+        setNutritionData={setNutritionData}
         />
-
         <div className="nutrient-data mb-2">
           <p className="fw-bold h5">Nutrition Overview</p>
           <p className="text-muted">
@@ -58,10 +24,10 @@ const NutritionDataForm = ({foodData, setFoodData, nutritionData, setNutritionDa
           </p>
           <div className="d-flex align-items-center">
             <h6>
-              Nutrients in <span className="fw-bold">one {foodData.measure}</span>
+            Nutrients in <span className="fw-bold">one {foodData.measure}</span>
             </h6>
-            {
-              <input
+              {
+                <input
                 type="text"
                 inputMode="decimal" // Enables numeric keypad on mobile
                 placeholder="n/a"
@@ -71,82 +37,21 @@ const NutritionDataForm = ({foodData, setFoodData, nutritionData, setNutritionDa
                 name="gramWeight"
                 value={foodData.gramWeight}
                 style={{width: '100px'}}
-              />
-            }
-            <span>g</span>
-            
+                />
+              }
+            <span>g</span>    
           </div>
         </div>
 
         <div className="nutrient-tables-container">
-          {Object.keys(nutrientsTable).map((category) => {
-            return (
-              <table className="nutrient-table table" key={`${category}-table`}>
-                <colgroup>
-                  <col style={{ width: "50%" }} />
-                  <col style={{ width: "40%" }} />
-                  <col style={{ width: "10%" }} />
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th>{titleCase(category)}</th>
-                    <th>Amount</th>
-                    <th>% DV</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.keys(nutrientsTable[category]).map((nutrient) => {
-                    return (
-                      <tr key={`${nutrient}-tr`}>
-                        <td>{titleCase(nutrient)}</td>
-                        <td>
-                          <input
-                            type="text"
-                            inputMode="decimal" // Enables numeric keypad on mobile
-                            className="nutrient-input"
-                            value={nutritionData[nutrient].amount}
-                            name={nutrient}
-                            onChange={(e) =>
-                              handleChange(nutrientsTable[category][nutrient]?.dv, e)
-                            }
-                            onInput={validateDecimalNumberInput}
-                          />
-                          {nutrientsTable[category][nutrient]?.unit}
-                        </td>
-                        <td>
-                          {nutrientsTable[category][nutrient]?.dv != null ? (
-                            <>
-                              <input
-                                type="text"
-                                inputMode="decimal" // Enables numeric keypad on mobile
-                                className="nutrient-input"
-                                value={nutritionData[nutrient].dv}
-                                onChange={(e) =>
-                                  updateDv(
-                                    nutrient,
-                                    nutrientsTable[category][nutrient]?.dv,
-                                    e
-                                  )
-                                }
-                                onInput={validateDecimalNumberInput}
-                              />
-                              <span>%</span>
-                            </>
-                          ) : (
-                            ""
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            );
-          })}
+          <NutrientsTable
+            nutritionData={nutritionData}
+            setNutritionData={setNutritionData}
+          />
         </div>
       </div>
     </>
-  );
-};
+    );
+  };
 
 export default NutritionDataForm;

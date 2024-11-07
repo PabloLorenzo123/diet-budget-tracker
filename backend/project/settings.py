@@ -171,7 +171,7 @@ RDI = {
     "polyunsaturated_fat": 11.0,   # grams
     "saturated_fat": 20.0,         # grams
     "trans_fat": 0.0,              # grams (should be minimized)
-    "cholestherol": 300.0,        # milligrams
+    "cholesterol": 300.0,        # milligrams
     "total_fat": 70.0,             # grams
     "b1": 1.2,                    # mg (Thiamine)
     "b2": 1.3,                    # mg (Riboflavin)

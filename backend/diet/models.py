@@ -21,7 +21,7 @@ class NutritionData(models.Model):
     polyunsaturated_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     saturated_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     trans_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    cholestherol = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    cholesterol = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total_fat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
     # Vitamins.
@@ -74,7 +74,7 @@ class NutritionData(models.Model):
             "polyunsaturatedFat": float(self.polyunsaturated_fat),
             "saturatedFat": float(self.saturated_fat),
             "transFat": float(self.trans_fat),
-            "cholestherol": float(self.cholestherol),
+            "cholesterol": float(self.cholesterol),
             "totalFat": float(self.total_fat),
             "B1": float(self.b1),
             "B2": float(self.b2),

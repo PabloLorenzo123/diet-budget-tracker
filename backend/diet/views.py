@@ -214,8 +214,11 @@ def save_food_product(request):
         
         if request.method == 'POST':
             food_product = FoodProduct(**food_product_data)
-            nutrition_data = NutritionData(**nutrition_data)
-            food_product.nutrition_data = nutrition_data
+            fp_nutrition_data = NutritionData(**nutrition_data)
+            food_product.nutrition_data = fp_nutrition_data
+            fp_nutrition_data.save()
+            food_product.save()
+            return Response({"success": "Food product saved"}, status=status.HTTP_201_CREATED)
             
         elif request.method == 'PUT':
             id = data.get('id')
@@ -224,24 +227,23 @@ def save_food_product(request):
             food_product = FoodProduct.objects.filter(user=user, id=id)
             if food_product.exists(): # We can assume nutrition data also exists.
                 food_product = food_product.first()
-                nutrition_data = food_product.nutrition_data
+                fp_nutrition_data = food_product.nutrition_data
                 # Update food_product fields.
                 for field, value in food_product_data.items():
                     if hasattr(food_product, field):
                         setattr(food_product, field, value)
                 # Update nutritional_data fields.
                 for field, value in nutrition_data.items():
-                    if hasattr(nutrition_data, field):
-                        setattr(nutrition_data, field, value)
-                
+                    if hasattr(fp_nutrition_data, field):
+                        setattr(fp_nutrition_data, field, value) 
+                fp_nutrition_data.save()
+                food_product.save()
+                return Response({"success": "Food product saved"}, status=status.HTTP_201_CREATED)   
             else:
                 return JsonResponse({'error': 'Food product not found'}, status=status.HTTP_404_NOT_FOUND)
+    
     except Exception as e:
         return Response({"error": f"An unexpected error occurred. {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    finally:
-        nutrition_data.save()
-        food_product.save()
-        return Response({"success": "Food product saved"}, status=status.HTTP_201_CREATED)
     
 
 @api_view(('GET',))
