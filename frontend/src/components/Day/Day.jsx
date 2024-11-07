@@ -53,7 +53,7 @@ const Day = () => {
                         </div>
 
                         <div className="food-summary-container app-container">
-                            <FoodSummary />
+                            <FoodSummary meals={meals} dailyTargets={dailyTargets}/>
                         </div>
                     </div>
 

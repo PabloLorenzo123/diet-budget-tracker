@@ -1,10 +1,10 @@
 import { useState, useEffect, Fragment } from "react";
 import AddFoodBtn from "./AddFood/AddFoodBtn";
-import { titleCase } from "../../../lib/functions";
+import { titleCase, roundTo } from "../../../lib/functions";
 
 const MealsTable = ({meals, setMeals}) => {
 
-    const getTotalNutrients = (foods, nutrient) => foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0);
+    const getTotalNutrients = (foods, nutrient) => roundTo(foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 2);
 
     const setShow = (meal) => {
         const mealsCopy = {...meals};

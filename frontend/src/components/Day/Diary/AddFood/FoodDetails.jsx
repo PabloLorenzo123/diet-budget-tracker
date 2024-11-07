@@ -51,7 +51,9 @@ const FoodDetails = ({showModal, setShowModal, showFoodDetails, setShowFoodDetai
                     {selectedFood.foodData.productName}
                 </div>
                 <div className="body d-flex mb-2">
+                    {/* Left block calories, protein, carbs, fat */}
                     <div className="block">
+                        <p><span className="fw-bold">Calories:</span> {selectedFood.nutritionData.energy}kcal</p>
                         <p><span className="fw-bold">Protein:</span> {selectedFood.nutritionData.protein}g</p>
                         <p><span className="fw-bold">Net Carbs:</span> {selectedFood.nutritionData.netCarbs}g</p>
                         <p><span className="fw-bold">Fat:</span> {selectedFood.nutritionData.totalFat}g</p>
