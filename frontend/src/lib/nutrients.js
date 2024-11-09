@@ -1,18 +1,22 @@
 
 export const nutrientsInformation = {
+    // General.
     energy: { name: "energy", altName: "Energy", unit: "kcal", dv: 2000 },
     protein: { name: "protein", altName: "Protein", unit: "g", dv: 50 },
+    // Carbs.
     fiber: { name: "fiber", altName: "Dietary Fiber", unit: "g", dv: 28 },
     starch: { name: "starch", altName: "Starch", unit: "g", dv: null },
     sugars: { name: "sugars", altName: "Sugars", unit: "g", dv: 50 },
     addedSugars: { name: "addedSugars", altName: "Added Sugars", unit: "g", dv: 50 },
     netCarbs: { name: "netCarbs", altName: "Net Carbohydrates", unit: "g", dv: 275 },
     monounsaturatedFat: { name: "monounsaturatedFat", altName: "Monounsaturated Fat", unit: "g", dv: null },
+    // Fat.
     polyunsaturatedFat: { name: "polyunsaturatedFat", altName: "Polyunsaturated Fat", unit: "g", dv: null },
     saturatedFat: { name: "saturatedFat", altName: "Saturated Fat", unit: "g", dv: 20 },
     transFat: { name: "transFat", altName: "Trans Fat", unit: "g", dv: null },
     cholesterol: { name: "cholesterol", altName: "Cholesterol", unit: "mg", dv: 300 },
     totalFat: { name: "totalFat", altName: "Total Fat", unit: "g", dv: 78 },
+    // Vitamins.
     B1: { name: "B1", altName: "Thiamine (B1)", unit: "mg", dv: 1.2 },
     B2: { name: "B2", altName: "Riboflavin (B2)", unit: "mg", dv: 1.3 },
     B3: { name: "B3", altName: "Niacin (B3)", unit: "mg", dv: 16 },
@@ -26,6 +30,7 @@ export const nutrientsInformation = {
     D: { name: "D", altName: "Vitamin D", unit: "IU", dv: 800 },
     E: { name: "E", altName: "Vitamin E", unit: "mg", dv: 15 },
     K: { name: "K", altName: "Vitamin K", unit: "mcg", dv: 120 },
+    // Minerals.
     calcium: { name: "calcium", altName: "Calcium", unit: "mg", dv: 1300 },
     chromium: { name: "chromium", altName: "Chromium", unit: "mcg", dv: 35 },
     copper: { name: "copper", altName: "Copper", unit: "mg", dv: 0.9 },

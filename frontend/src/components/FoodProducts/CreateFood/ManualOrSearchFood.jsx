@@ -57,7 +57,7 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
             if (nutrientsInformation[nutrient]){
                 const gramWeight = foodData.gramWeight || resultSelected.servingSize; // If n/a then use the serving size of the result selected.
                 const amount = roundTo(gramWeight * resultSelected.foodNutrients[nutrient] / resultSelected.servingSize, 2) || 0;
-                const dv = roundTo(gramWeight / nutrientsInformation[nutrient].dv * 100, 2);
+                const dv = roundTo(amount / nutrientsInformation[nutrient].dv * 100, 2);
                 nutrients[nutrient] = {amount: amount, dv: dv}; // Differeance between fullFoodN.. and foodNutri.. is the former is a dictionary.
             }
             

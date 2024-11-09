@@ -16,8 +16,8 @@ const DoughnutChart = ({labels, datasetLabel, emptyDatasetLabel, data, backgroun
                 datasets: [
                     {
                         label: isDataEmpty? emptyDatasetLabel: datasetLabel,
-                        data: isDataEmpty? [1]: data,
-                        backgroundColor : backgroundColor,
+                        data: isDataEmpty? [0.00001]: data,
+                        backgroundColor : isDataEmpty? ['grey']: backgroundColor,
                         borderWidth: 0,
                     }
                 ],

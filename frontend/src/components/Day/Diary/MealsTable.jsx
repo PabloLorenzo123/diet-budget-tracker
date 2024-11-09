@@ -4,7 +4,7 @@ import { titleCase, roundTo } from "../../../lib/functions";
 
 const MealsTable = ({meals, setMeals}) => {
 
-    const getTotalNutrients = (foods, nutrient) => roundTo(foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 2);
+    const getTotalNutrientsInMeal = (foods, nutrient) => roundTo(foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 2);
 
     const setShow = (meal) => {
         const mealsCopy = {...meals};
@@ -33,10 +33,10 @@ const MealsTable = ({meals, setMeals}) => {
                                     <td className="td-dairy-data">
                                         {meals[meal].foods.length > 0 && 
                                         <>
-                                        <span>{getTotalNutrients(meals[meal].foods, 'energy')} kcal - </span>
-                                        <span>{getTotalNutrients(meals[meal].foods, 'protein')} g protein - </span>
-                                        <span>{getTotalNutrients(meals[meal].foods, 'netCarbs')} g carbs - </span>
-                                        <span>{getTotalNutrients(meals[meal].foods, 'totalFat')} g fat - </span>
+                                        <span>{getTotalNutrientsInMeal(meals[meal].foods, 'energy')} kcal - </span>
+                                        <span>{getTotalNutrientsInMeal(meals[meal].foods, 'protein')} g protein - </span>
+                                        <span>{getTotalNutrientsInMeal(meals[meal].foods, 'netCarbs')} g carbs - </span>
+                                        <span>{getTotalNutrientsInMeal(meals[meal].foods, 'totalFat')} g fat - </span>
                                         <span>${meals[meal].foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0)}</span>
                                         </>
                                         }
