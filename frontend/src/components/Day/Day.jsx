@@ -34,7 +34,8 @@ const dayState = {
 const Day = () => {
     const [dailyTargets, setDailyTargets] = useState(dailyTargetState)
     const [meals, setMeals] = useState(dayState);
-    const [selectedMeal, setSelectedMeal] = useState({});
+    const [selectedMeal, setSelectedMeal] = useState('');
+    const [selectedFoodObj, setSelectedFoodObj] = useState(null);
 
     return (
         <>
@@ -49,11 +50,23 @@ const Day = () => {
                             <GoalSetter dailyTargets={dailyTargets} setDailyTargets={setDailyTargets}/>
                         </div>
                         <div className="day-container app-container mb-4">
-                            <MealsTable meals={meals} setMeals={setMeals}/>
+                            <MealsTable
+                                meals={meals}
+                                setMeals={setMeals}
+                                selectedMeal={selectedMeal}
+                                setSelectedMeal={setSelectedMeal}
+                                selectedFoodObj={selectedFoodObj}
+                                setSelectedFoodObj={setSelectedFoodObj}
+                            />
                         </div>
 
                         <div className="food-summary-container app-container">
-                            <FoodSummary meals={meals} dailyTargets={dailyTargets}/>
+                            <FoodSummary
+                                meals={meals}
+                                dailyTargets={dailyTargets}
+                                selectedMeal={selectedMeal}
+                                selectedFoodObj={selectedFoodObj}
+                            />
                         </div>
                     </div>
 
