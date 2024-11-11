@@ -1,8 +1,8 @@
 import { useState, useEffect, Fragment } from "react";
-import AddFoodBtn from "./AddFood/AddFoodBtn";
-import { titleCase, roundTo } from "../../../lib/functions";
+import { titleCase, roundTo } from "../../../../lib/functions";
 
-import "../../../styles/dairy/MealsTable.css";
+import "../../../../styles/dairy/MealsTable.css";
+import FoodsSubTable from "./FoodsSubTable";
 
 const MealsTable = ({meals, setMeals, selectedMeal, setSelectedMeal, selectedFoodObj, setSelectedFoodObj}) => {
 
@@ -36,20 +36,12 @@ const MealsTable = ({meals, setMeals, selectedMeal, setSelectedMeal, selectedFoo
             // Unselect.
             setSelectedFoodObj(null);
         }
-        setSelectedMeal('');
-    }
-
-    const handleFoodChange = (e, food) => {
-        const {name, value} = e.target.value;
-        setMeals(prev => ({
-            ...prev,
-            
-        }))
+        if (selectedMeal) setSelectedMeal('');
+        console.log(food);
     }
 
     return (
         <>
-            <AddFoodBtn meals={meals} setMeals={setMeals}/>
             <div className="day-meals">
                 <table className="table-meals">
                     <thead>
@@ -95,46 +87,15 @@ const MealsTable = ({meals, setMeals, selectedMeal, setSelectedMeal, selectedFoo
                                 </tr>
                                 
                                 {/* Foods in the meal */}
-                                {mealObj.foods.length > 0 &&
-                                <tr style={{display: mealObj.show? 'table-row': 'none'}} className={`tr-food ${isMealSelected}`}>
-                                    <td colSpan="3">
-                                        <table className="table-food">
-                                            <tbody>
-                                                {meals[meal].foods.map((f, idx) => {
-                                                    return (
-                                                        <tr key={`${f.id}-${idx}`}
-                                                        className={selectedFoodObj == f? 'selected': ''}
-                                                        onClick={() => handleOnClickFood(f)}>
-                                                            <td>{f.foodData.productName}</td>
-                                                            <td>
-                                                                {selectedFoodObj == f?
-                                                                    <input
-                                                                    type="text"
-                                                                    keypad="decimal"
-                                                                    className="form-control"
-                                                                    inputMode="decimal" // Enables numeric keypad on mobile
-                                                                    style={{width: '50px'}}
-                                                                    name="servings"
-                                                                    value={f.diaryData.servings}
-                                                                    onChange={e => handleFoodChange(e, f)}
-                                                                    />:
-                                                                    `${f.diaryData.servings}`
-                                                                }
-                                                            </td>
-                                                            <td>{f.diaryData.servingMeasure.unit}{f.diaryData.servings > 1? 's': ''}</td>
-                                                            <td>{f.nutritionalContribution.energy}kcal</td>
-                                                            <td>{f.nutritionalContribution.protein}g</td>
-                                                            <td>{f.nutritionalContribution.netCarbs}g</td>
-                                                            <td>{f.nutritionalContribution.totalFat}g</td>
-                                                            <td>${f.diaryData.totalCost}</td>
-                                                        </tr>
-                                                    )
-                                                })}
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                                }
+                                <FoodsSubTable
+                                    meals={meals}
+                                    setMeals={setMeals}
+                                    mealObj={mealObj}
+                                    selectedFoodObj={selectedFoodObj}
+                                    setSelectedFoodObj={setSelectedFoodObj}
+                                    isMealSelected={isMealSelected}
+                                    handleOnClickFood={handleOnClickFood}
+                                />
                             </Fragment>)
                         })}
                     </tbody>

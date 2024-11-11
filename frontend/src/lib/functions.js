@@ -23,6 +23,12 @@ export const validateDecimalNumberInput = (e, min=0) => {
   if (!isNaN(e.target.value) && e.target.value < min){
     e.target.value = '';
   }
+  // If it is not a number or it's empty then set its value to the minimum. This way the input is never left undefined.
+  if (isNaN(e.target.value) || !e.target.value){
+    console.log("is not a number.")
+    e.target.value = min;
+  }
+  // console.log(e.target.value);
 }
 
 export const roundTo = (num, decimalPlaces) => {

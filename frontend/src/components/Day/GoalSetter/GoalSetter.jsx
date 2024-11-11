@@ -197,7 +197,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
             </button>
             {/* Save button */}
             <button 
-            type="button me-2"
+            type="button"
             className="save-btn d-flex align-items-center bg-transparent border-0 p-0 m-0 me-2"
             onClick={saveDailyTargets}
             disabled={isSaveBtnDisabled}

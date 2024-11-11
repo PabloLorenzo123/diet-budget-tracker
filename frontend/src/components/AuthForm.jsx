@@ -24,11 +24,15 @@ const AuthForm = ({action, title, btnText}) => {
             if (action == 'signup'){
                 if (error.status == 409){
                     updatedErrors.push("A user with that username already exists.");
+                } else {
+                    updatedErrors.push(error.message);
                 }
             }
             if (action == 'login'){
                 if (error.status == 401){
                     updatedErrors.push("Wrong credentials.");
+                } else {
+                    updatedErrors.push(error.message);
                 }
             }
             

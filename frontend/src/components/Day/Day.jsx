@@ -1,14 +1,16 @@
 import { useState, useEffect, Fragment } from "react";
 
-import MealsTable from "./Diary/MealsTable";
-import FoodSummary from "./Summary/FoodSummary";
 import GoalSetter from "./GoalSetter/GoalSetter";
+import Diary from "./Diary/Diary";
+import FoodSummary from "./Summary/FoodSummary";
+
 
 import { dailyTargetState } from "../../lib/nutrients";
 
 import '../../styles/dairy/day.css';
+import NutrientTargets from "./NutrientTargets/NutrientTargets";
 
-const dayState = {
+const mealsState = {
     uncategorized: {
         foods: [],
         show: false,
@@ -33,15 +35,13 @@ const dayState = {
 
 const Day = () => {
     const [dailyTargets, setDailyTargets] = useState(dailyTargetState)
-    const [meals, setMeals] = useState(dayState);
+    const [meals, setMeals] = useState(mealsState);
     const [selectedMeal, setSelectedMeal] = useState('');
     const [selectedFoodObj, setSelectedFoodObj] = useState(null);
 
     return (
         <>
             <main id="app">
-
-            
                 <div className="main-container row">
 
                     {/* Left side when in a large screen. */}
@@ -50,7 +50,7 @@ const Day = () => {
                             <GoalSetter dailyTargets={dailyTargets} setDailyTargets={setDailyTargets}/>
                         </div>
                         <div className="day-container app-container mb-4">
-                            <MealsTable
+                            <Diary
                                 meals={meals}
                                 setMeals={setMeals}
                                 selectedMeal={selectedMeal}
@@ -60,13 +60,17 @@ const Day = () => {
                             />
                         </div>
 
-                        <div className="food-summary-container app-container">
+                        <div className="food-summary-container app-container mb-4">
                             <FoodSummary
                                 meals={meals}
                                 dailyTargets={dailyTargets}
                                 selectedMeal={selectedMeal}
                                 selectedFoodObj={selectedFoodObj}
                             />
+                        </div>
+
+                        <div className="nutrient-targets-container app-container">
+                            <NutrientTargets />
                         </div>
                     </div>
 

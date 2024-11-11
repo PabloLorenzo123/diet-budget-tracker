@@ -261,10 +261,10 @@ def food_products_list(request):
             'foodData': {
                 'productName': f.name,
                 'productLink': f.product_link,
-                'servings': f.servings,
+                'servings': float(f.servings),
                 'measure': f.serving_measure,
                 'gramWeight': float(f.serving_size),
-                'productPrice': f.price,
+                'productPrice': float(f.price),
             },
             'nutritionData': f.nutrition_data.nutrients_in_json()
         })

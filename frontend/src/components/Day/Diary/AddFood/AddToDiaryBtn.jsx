@@ -2,17 +2,18 @@ import { useState, useEffect } from "react";
 import { roundTo } from "../../../../lib/functions";
 
 const AddToDiaryBtn = ({meals, setMeals, showModal, setShowModal, selectedFood, setSelectedFood, addToDiaryForm, setAddToDiaryForm}) => {
+    
     const addToDiary = async () => {
         const meal = addToDiaryForm.diaryGroup;
         const servings = parseFloat(addToDiaryForm.servings);
         const servingMeasure = addToDiaryForm.servingMeasure;
         const portionSize = servings * servingMeasure.valueInGrams;
-        const nutritionalContribution = {...selectedFood.nutritionData};
         const totalCost = roundTo((selectedFood.foodData.productPrice / selectedFood.foodData.servings) * servings, 2);
-        
-        // Update the nutrition data.
+
+        const nutritionalContribution = {...selectedFood.nutritionData};
+        // Update the nutritional contribution data.
         Object.keys(nutritionalContribution).map(nutrient => {
-            console.log(portionSize, selectedFood.nutritionData[nutrient], selectedFood.foodData.servingSize);
+            // console.log(portionSize, selectedFood.nutritionData[nutrient], selectedFood.foodData.servingSize);
             nutritionalContribution[nutrient] = roundTo(portionSize * selectedFood.nutritionData[nutrient] / selectedFood.foodData.gramWeight, 2);
         })
         // Add this food to the foods array of the corresponding meal.
@@ -23,7 +24,8 @@ const AddToDiaryBtn = ({meals, setMeals, showModal, setShowModal, selectedFood, 
                 servings,
                 servingMeasure,
                 portionSize,
-                totalCost
+                totalCost,
+                meal
             }
         }
         
@@ -32,7 +34,7 @@ const AddToDiaryBtn = ({meals, setMeals, showModal, setShowModal, selectedFood, 
             [meal]: {
                 ...meals[meal],
                 foods: [...meals[meal].foods, food],
-                show: true
+                show: true // To show when the modal closes.
             }
         }))
         
