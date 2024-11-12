@@ -1,7 +1,7 @@
 import { useState, useEffect, Fragment } from "react";
 import { titleCase, roundTo } from "../../../../lib/functions";
 
-import "../../../../styles/dairy/MealsTable.css";
+import "../../../../styles/diary/MealsTable.css";
 import FoodsSubTable from "./FoodsSubTable";
 
 const MealsTable = ({meals, setMeals, selectedMeal, setSelectedMeal, selectedFoodObj, setSelectedFoodObj}) => {
@@ -59,10 +59,10 @@ const MealsTable = ({meals, setMeals, selectedMeal, setSelectedMeal, selectedFoo
                             return (
                             <Fragment key={meal}>
                                 {/* Tr meal, meal name and summary */}
-                                <tr className={`tr-meal${index + 1 == meals.length? ' last': ''}${isMealSelected}`}
+                                <tr className={`tr-meal ${isMealSelected}`}
                                 onClick={() => handleOnClickMeal(meal)}>
                                     <td className="td-meal">{titleCase(meal)}</td>
-                                    <td className="td-dairy-data">
+                                    <td className="td-diary-data">
                                         {meals[meal].foods.length > 0 && 
                                         <>
                                             <span>{getTotalNutrientsInMeal(mealObj.foods, 'energy')} kcal - </span>
@@ -73,16 +73,18 @@ const MealsTable = ({meals, setMeals, selectedMeal, setSelectedMeal, selectedFoo
                                         </>
                                         }
                                     </td>
-                                    <td className="d-flex justify-content-end">
-                                        <button className="meal-toggle-btn" onClick={(e) => setShow(e, meal)}>
-                                            {!mealObj.show?
-                                            <span className="material-symbols-outlined">
-                                                stat_minus_1
-                                            </span>:
-                                            <span className="material-symbols-outlined">
-                                                stat_1
-                                            </span>}
-                                        </button>
+                                    <td>
+                                        <div className="d-flex justify-content-end">
+                                            <button className="meal-toggle-btn" onClick={(e) => setShow(e, meal)}>
+                                                {!mealObj.show?
+                                                <span className="material-symbols-outlined">
+                                                    stat_minus_1
+                                                </span>:
+                                                <span className="material-symbols-outlined">
+                                                    stat_1
+                                                </span>}
+                                            </button>
+                                        </div>    
                                     </td>
                                 </tr>
                                 

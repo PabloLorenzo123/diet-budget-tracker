@@ -179,7 +179,7 @@ const FoodsSubTable = ({meals, setMeals, selectedFoodObj, setSelectedFoodObj, me
                                                         className="d-flex align-items-center bg-transparent border-0 p-0 m-0 me-2"
                                                         onClick={() => removeFood(f, idx)}
                                                         >
-                                                            <span class="material-symbols-outlined">
+                                                            <span className="material-symbols-outlined">
                                                                 close
                                                             </span>
                                                         </button>

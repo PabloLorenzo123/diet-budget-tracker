@@ -7,7 +7,7 @@ import FoodSummary from "./Summary/FoodSummary";
 
 import { dailyTargetState } from "../../lib/nutrients";
 
-import '../../styles/dairy/day.css';
+import '../../styles/diary/day.css';
 import NutrientTargets from "./NutrientTargets/NutrientTargets";
 
 const mealsState = {
@@ -70,7 +70,12 @@ const Day = () => {
                         </div>
 
                         <div className="nutrient-targets-container app-container">
-                            <NutrientTargets />
+                            <NutrientTargets
+                                meals={meals}
+                                dailyTargets={dailyTargets}
+                                selectedMeal={selectedMeal}
+                                selectedFoodObj={selectedFoodObj}
+                            />
                         </div>
                     </div>
 

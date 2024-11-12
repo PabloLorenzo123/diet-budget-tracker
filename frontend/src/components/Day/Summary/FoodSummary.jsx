@@ -1,33 +1,13 @@
 import { useState, useEffect } from "react";
 import {nutrientsTable} from "../../../lib/nutrients";
 
-import {roundTo} from "../../../lib/functions";
+import {getTotalNutrients} from "../../../lib/functions";
 import Charts from "./Charts";
 
 
 
-const FoodSummary = ({meals, dailyTargets, selectedMeal, selectedFoodObj}) => {
-    
-    const getTotalNutrients = (nutrient) => {
-        let totalNutrients;
-        if (selectedMeal){
-            // Sum all the nutrients of the foods in this meal.
-            totalNutrients = meals[selectedMeal].foods.reduce((acc, meal) => acc + meal.nutritionalContribution[nutrient], 0);
-        } 
-        else if (selectedFoodObj) {
-            totalNutrients = selectedFoodObj.nutritionalContribution[nutrient];
-        } else {
-            // Sum all the nutrients of all the foods in the dairy.
-            totalNutrients = Object.keys(meals).reduce((acc, meal) => {
-                return acc + meals[meal].foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0)
-            }, 0)
-        }
-        return roundTo(totalNutrients, 2);
-    }
 
-    const getTotalNutrientsPercentage = (nutrient) => {
-        return roundTo(getTotalNutrients(nutrient) / dailyTargets[nutrient].amount * 100, 2);
-    }
+const FoodSummary = ({meals, dailyTargets, selectedMeal, selectedFoodObj}) => {
 
     return (
         <>
@@ -52,8 +32,7 @@ const FoodSummary = ({meals, dailyTargets, selectedMeal, selectedFoodObj}) => {
                             {/* Progress bar */}
                             <div className="col-12 col-sm-6 ">
                                 {(() => {
-                                    const totalNutrients = getTotalNutrients(macronutrient.name);
-                                    const totalNutrientsPercentage = getTotalNutrientsPercentage(macronutrient.name);
+                                    const [totalNutrients, totalNutrientsPercentage] = getTotalNutrients(macronutrient.name, meals, dailyTargets, selectedMeal, selectedFoodObj);
                                     return (
                                         <>
                                             {/* Progress bar details on top of the bar */}

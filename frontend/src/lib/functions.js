@@ -38,3 +38,29 @@ export const roundTo = (num, decimalPlaces) => {
 export const isObjEmpty = (obj) => {
   return Object.keys(obj).length === 0;
 };
+
+export const splitArray = (arr) => {
+  const middleIndex = Math.ceil(arr.length / 2);
+  const firstHalf = arr.slice(0, middleIndex);
+  const secondHalf = arr.slice(middleIndex);
+  return [firstHalf, secondHalf];
+}
+
+export const getTotalNutrients = (nutrient, meals, dailyTargets, selectedMeal, selectedFoodObj) => {
+  let totalNutrients;
+  if (selectedMeal){
+      // Sum all the nutrients of the foods in this meal.
+      totalNutrients = meals[selectedMeal].foods.reduce((acc, meal) => acc + meal.nutritionalContribution[nutrient], 0);
+  } 
+  else if (selectedFoodObj) {
+      totalNutrients = selectedFoodObj.nutritionalContribution[nutrient];
+  } else {
+      // Sum all the nutrients of all the foods in the dairy.
+      totalNutrients = Object.keys(meals).reduce((acc, meal) => {
+          return acc + meals[meal].foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0)
+      }, 0)
+  }
+  totalNutrients = roundTo(totalNutrients, 2);
+  const percentage = roundTo(totalNutrients / dailyTargets[nutrient].amount * 100, 2) ;
+  return [totalNutrients, percentage];
+}

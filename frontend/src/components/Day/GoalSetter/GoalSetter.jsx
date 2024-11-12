@@ -5,7 +5,9 @@ import { nutrientsInformation } from "../../../lib/nutrients";
 import { validateDecimalNumberInput, roundTo } from "../../../lib/functions";
 import { toast } from "react-toastify";
 import api from "../../../api";
-import '../../../styles/dairy/GoalSetter.css';
+
+import '../../../styles/diary/GoalSetter.css';
+import '../../../styles/nutrientTableForm.css';
 
 const GoalSetter = ({dailyTargets, setDailyTargets}) => {
     const [prevDailyTargets, setPrevDailyTargets] = useState({});
@@ -85,7 +87,8 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
     return (
         <>
         { /* <p className="fw-bold m-0 me-2">Set your daily goals</p> */}
-        <div className="goal-setter-container d-flex flex-wrap align-items-center justify-content-between"> 
+      
+        <div className="goal-setter-container d-flex flex-wrap align-items-center justify-content-between">
             {/* Budget Input */}
             <div className="d-flex align-items-center me-2">
                 <label htmlFor="budget" className="d-flex align-items-center">
@@ -145,6 +148,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
                     onInput={validateDecimalNumberInput}
                 />
             </div>
+
             {/* Carbohydrates Input */}
             <div className="d-flex align-items-center me-2">
                 <label htmlFor="carbs" className="d-flex align-items-center">
@@ -216,7 +220,9 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
                 }
                 
             </button>
+            
         </div>
+      
         
         {showModal && 
             <GoalModal
@@ -231,6 +237,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
                 isLoadingSuccesful={isLoadingSuccesful}
             />
         }
+        
         </>
     )
 }

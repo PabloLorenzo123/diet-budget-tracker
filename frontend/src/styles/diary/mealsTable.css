@@ -1,18 +1,30 @@
+/* Rounded corners */
 .table-meals {
     width: 100%;
     border: 2px solid var(--grey-2);
     border-radius: 10px;
     border-collapse: separate; /* Keep separate for rounded corners */
     border-spacing: 0; /* Remove spacing between cells */
+    overflow: hidden;
     background-color: var(--grey-2);
 }
 
-.table-meals .td-dairy-data {
+/* Remove bottom border from last row and first row */
+.table-meals .tr-meal:last-of-type {
+    border-bottom: none;
+}
+
+/* Remvoe top border from first row.*/
+.table-meals .tr-meal:first-of-type {
+    border-top: none;
+}
+
+.table-meals .td-diary-data {
     text-align: right;
     font-weight: normal;
 }
 
-.td-meal, .td-dairy-data {
+.td-meal, .td-diary-data {
     font-size: 14px;
 }
 
@@ -31,13 +43,6 @@
 }
 
 /* Rounded table borders */
-.table-meals .tr-meal:first-of-type td:first-of-type, .table-meals .tr-meal:first-of-type td:last-of-type{
-    border-top: 0;
-}
-
-.tr-meal.last td {
-    border-bottom: 0;
-}
 
 .meal-toggle-btn {
     border: 0;

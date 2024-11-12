@@ -69,12 +69,3 @@
     background-color: aquamarine !important;
 }
 
-/* Nutrition Data Form tables*/
-
-
-.nutrient-table th {
-    background-color: var(--grey-2);
-}
-.nutrient-table th:nth-of-type(3), .nutrient-table td:nth-of-type(3) {
-    text-align: right;
-}
