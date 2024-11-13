@@ -52,7 +52,7 @@ const MealsTable = ({meals, setMeals, selectedMeal, setSelectedMeal, selectedFoo
                         </tr>
                     </thead>
                     <tbody>
-                        {Object.keys(meals).map((meal, index) => {
+                        {Object.keys(meals).map(meal => {
                             const isMealSelected = selectedMeal == meal && !selectedFoodObj? ' selected': '';
                             const mealObj = meals[meal];
 
@@ -63,7 +63,7 @@ const MealsTable = ({meals, setMeals, selectedMeal, setSelectedMeal, selectedFoo
                                 onClick={() => handleOnClickMeal(meal)}>
                                     <td className="td-meal">{titleCase(meal)}</td>
                                     <td className="td-diary-data">
-                                        {meals[meal].foods.length > 0 && 
+                                        {mealObj.foods.length > 0 && 
                                         <>
                                             <span>{getTotalNutrientsInMeal(mealObj.foods, 'energy')} kcal - </span>
                                             <span>{getTotalNutrientsInMeal(mealObj.foods, 'protein')} g protein - </span>

@@ -25,9 +25,9 @@ const FoodSummary = ({meals, dailyTargets, selectedMeal, selectedFoodObj}) => {
                 <h5 className="fw-bold">Targets</h5>
                 {nutrientsTable.general.map(macronutrient => {
                     return (
-                        <div className="row d-flex align-items-end mb-sm-2 mb-5" key={macronutrient.altName} style={{height: '40px'}}>
+                        <div className="row align-items-end mb-sm-2 mb-5" key={macronutrient.altName} style={{height: '40px'}}>
                             <div className="col-12 col-sm-6 ">
-                                <p className="fw-bold m-0">{macronutrient.altName}</p>
+                                <span className="fw-bold m-0">{macronutrient.altName}</span>
                             </div>
                             {/* Progress bar */}
                             <div className="col-12 col-sm-6 ">

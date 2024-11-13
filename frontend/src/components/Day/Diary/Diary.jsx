@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import AddFoodBtn from "./AddFood/AddFoodBtn";
 import MealsTable from "./MealsTable/MealsTable";
 
-const Diary = ({meals, setMeals, selectedMeal, setSelectedMeal, selectedFoodObj, setSelectedFoodObj}) => {
+const Diary = ({meals, dailyTargets, setMeals, selectedMeal, setSelectedMeal, selectedFoodObj, setSelectedFoodObj}) => {
 
     return (
         <>
             <AddFoodBtn
                 meals={meals}
                 setMeals={setMeals}
+                dailyTargets={dailyTargets}
             />
             <MealsTable
                 meals={meals}

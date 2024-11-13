@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import FoodDetails from "./foodDetails";
+import FoodDetails from "./FoodDetails/FoodDetails";
 import Modal from "../../../Modal";
 
 import { AddFoodModalTabs } from "../../../../constants";
@@ -13,7 +13,7 @@ import '../../../../styles/searchBar.css';
 import CreateTab from './CreateTab'
 
 
-const AddFoodModal = ({showModal, setShowModal, meals, setMeals}) => {
+const AddFoodModal = ({showModal, setShowModal, meals, setMeals, dailyTargets}) => {
     const [tab, setTab] = useState(AddFoodModalTabs[0]);
 
     const [searchResults, setSearchResults] = useState([]);
@@ -114,6 +114,7 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals}) => {
                         setSelectedFood={setSelectedFood}
                         meals={meals}
                         setMeals={setMeals}
+                        dailyTargets={dailyTargets}
                     />
                 </>
             }

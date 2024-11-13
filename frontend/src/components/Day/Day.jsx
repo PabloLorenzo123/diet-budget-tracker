@@ -53,6 +53,7 @@ const Day = () => {
                             <Diary
                                 meals={meals}
                                 setMeals={setMeals}
+                                dailyTargets={dailyTargets}
                                 selectedMeal={selectedMeal}
                                 setSelectedMeal={setSelectedMeal}
                                 selectedFoodObj={selectedFoodObj}
