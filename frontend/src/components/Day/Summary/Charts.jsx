@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { diaryGroups } from "../../../constants";
-import { titleCase } from "../../../lib/functions";
+import { titleCase, roundTo} from "../../../lib/functions";
 import DoughnutChart from "../../DoughnutChart";
 
 const Charts = ({dailyTargets, meals, selectedMeal, selectedFoodObj}) => {
-    const mealsCosts = Object.keys(meals).map(meal => meals[meal].foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0));
-    const totalMoneySpent = Object.keys(meals).reduce((acc, meal) => acc + meals[meal].foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 0);
+    const mealsCosts = Object.keys(meals).map(meal => roundTo(meals[meal].foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 2));
+    const totalMoneySpent = roundTo(Object.keys(meals).reduce((acc, meal) => acc + meals[meal].foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 0), 2);
     const budgetRemainning = dailyTargets.budget - totalMoneySpent;
 
     const backgroundColors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];

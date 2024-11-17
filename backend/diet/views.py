@@ -251,23 +251,9 @@ def save_food_product(request):
 def food_products_list(request):
     """Returns the food products created by a user."""
     user = request.user
-    food_products = FoodProduct.objects.filter(user=user).all()
+    food_products = user.food_products.all()
     
-    res = []
-    
-    for f in food_products:
-        res.append({
-            'id': f.id,
-            'foodData': {
-                'productName': f.name,
-                'productLink': f.product_link,
-                'servings': float(f.servings),
-                'measure': f.serving_measure,
-                'gramWeight': float(f.serving_size),
-                'productPrice': float(f.price),
-            },
-            'nutritionData': f.nutrition_data.nutrients_in_json()
-        })
+    res = [f.in_json() for f in food_products]
     
     return JsonResponse({
         'foods': res
@@ -291,3 +277,19 @@ def food_product(request, id):
             return JsonResponse({'success': 'Food product deleted.'}, status=status.HTTP_200_OK)
         else:
             return JsonResponse({'error': 'Food product not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+
+@api_view(('GET',))
+@permission_classes([IsAuthenticated])
+def search_food_products(request):
+    """Returns a list of food that match a search query."""
+    user = request.user
+    search_q = request.GET.get('q')
+    if not search_q:
+        return JsonResponse({'error': 'A search query needs to be provided.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    food_products = user.food_products.filter(name__icontains=search_q).all()
+    
+    return JsonResponse({
+        'foods': [f.in_json() for f in food_products]
+    }, status=status.HTTP_200_OK)

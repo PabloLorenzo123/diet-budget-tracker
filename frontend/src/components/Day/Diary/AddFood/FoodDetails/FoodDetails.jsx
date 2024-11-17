@@ -50,23 +50,23 @@ const FoodDetails = ({showModal, setShowModal, showFoodDetails, setShowFoodDetai
 
     return (
         <>
-        {showFoodDetails &&
-            <div className="container-fluid py-2 mt-2">
-                <div className="mb-1 text-center fw-bold">
-                    {selectedFood.foodData.productName}
+        <div className="container-fluid py-2 mt-2">
+            <div className="mb-1 text-center fw-bold">
+                {selectedFood.foodData.productName}
+            </div>
+            <div className="row mb-2 d-flex justify-content-around">
+                {/* Left block calories, protein, carbs, fat */}
+                <div className="col-sm-6 p-2 border">
+                    <FoodDetailsTargets 
+                        meals={meals}
+                        dailyTargets={dailyTargets}
+                        selectedFood={selectedFood}
+                        addToDiaryForm={addToDiaryForm}
+                    />
                 </div>
-                <div className="row mb-2 d-flex justify-content-around">
-                    {/* Left block calories, protein, carbs, fat */}
-                    <div className="col-sm-6 p-2 border">
-                        <FoodDetailsTargets 
-                            meals={meals}
-                            dailyTargets={dailyTargets}
-                            selectedFood={selectedFood}
-                            addToDiaryForm={addToDiaryForm}
-                        />
-                    </div>
-                    {/* Right block (form) */}
-                    <div className="col-sm-5 p-2 border">
+                {/* Right block (form) */}
+                <div className="col-sm-5 p-2 border">
+                    <div className="mt-4">
                         <div className="row mt-2">
                             <label htmlFor="diaryGroup" className="col-sm-4 col-form-label fw-bold">Diary Group</label>
                             <div className="col-sm-8">
@@ -113,21 +113,21 @@ const FoodDetails = ({showModal, setShowModal, showFoodDetails, setShowFoodDetai
                         </div>
                     </div>
                 </div>
-                <div className="row">
-                    <AddToDiaryBtn
-                        meals={meals}
-                        setMeals={setMeals}
-                        showModal={showModal}
-                        setShowModal={setShowModal}
-                        selectedFood={selectedFood}
-                        setSelectedFood={setSelectedFood}
-                        addToDiaryForm={addToDiaryForm}
-                        setAddToDiaryForm={setAddToDairyForm}
-                    />
-                </div>
-                
             </div>
-        }
+            <div className="row">
+                <AddToDiaryBtn
+                    meals={meals}
+                    setMeals={setMeals}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                    selectedFood={selectedFood}
+                    setSelectedFood={setSelectedFood}
+                    addToDiaryForm={addToDiaryForm}
+                    setAddToDiaryForm={setAddToDairyForm}
+                />
+            </div>
+            
+        </div>
         </>
     )
 }

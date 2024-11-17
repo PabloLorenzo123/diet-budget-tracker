@@ -13,14 +13,11 @@ const FoodDetailsTargets = ({meals, dailyTargets, selectedFood, addToDiaryForm})
     }
 
     const getTotalSpent = () => {
-        const pricePerGram = selectedFood.foodData.productPrice / selectedFood.foodData.gramWeight;
+        const pricePerGram = selectedFood.foodData.productPrice / (selectedFood.foodData.gramWeight * selectedFood.foodData.servings);
         const totalSpent = roundTo(pricePerGram * (addToDiaryForm.servingMeasure.valueInGrams * addToDiaryForm.servings), 2);
         const percentage = roundTo(totalSpent / dailyTargets.budget * 100, 2);
         return [totalSpent, percentage];
     }
-
-    const [leftSide, RightSide] = splitArray(nutrientsTable.general);
-
 
     return (
         <>

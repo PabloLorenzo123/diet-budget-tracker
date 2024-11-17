@@ -6,11 +6,19 @@ const Diary = ({meals, dailyTargets, setMeals, selectedMeal, setSelectedMeal, se
 
     return (
         <>
-            <AddFoodBtn
-                meals={meals}
-                setMeals={setMeals}
-                dailyTargets={dailyTargets}
-            />
+            <div className="d-flex align-items-center justify-content-between">
+                <AddFoodBtn
+                    meals={meals}
+                    setMeals={setMeals}
+                    dailyTargets={dailyTargets}
+                />
+                <button className="bg-transparent border-0 p-0">
+                    <span className="material-symbols-outlined">
+                        settings
+                    </span>
+                </button>
+                
+            </div>
             <MealsTable
                 meals={meals}
                 setMeals={setMeals}

@@ -11,18 +11,20 @@ import { toast } from "react-toastify";
 
 import '../../../../styles/searchBar.css';
 import CreateTab from './CreateTab'
+import SearchBar from "./SearchBar";
+import FoodsTable from "./FoodsTable";
 
 
 const AddFoodModal = ({showModal, setShowModal, meals, setMeals, dailyTargets}) => {
     const [tab, setTab] = useState(AddFoodModalTabs[0]);
 
-    const [searchResults, setSearchResults] = useState([]);
-
+    const [foodProductsLoading, setFoodProductsLoading] = useState(false);
     const [foodProducts, setFoodProducts] = useState([]);
+
     const [selectedFood, setSelectedFood] = useState({});
     const [showFoodDetails, setShowFoodDetails] = useState(false);
 
-    const getFoodProducts = async () => {
+    const getAllFoodProducts = async () => {
         try {
             const res = await api.get('diet/food_products/');
             if (res.status == 200){
@@ -35,10 +37,6 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, dailyTargets}) 
         }
     }
 
-    useEffect(() => {
-        getFoodProducts();
-    }, [])
-
     const selectFood = (food) => {
         if (food == selectedFood){
             setShowFoodDetails(false);
@@ -46,25 +44,37 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, dailyTargets}) 
         } else {
             setSelectedFood(food);
             setShowFoodDetails(true);
-        }
-        
+        } 
     }
+
+    useEffect(() => {
+        // When first mounted return all the food products created by the user.
+        const getAllFP = async () => {
+            setFoodProductsLoading(true);
+            await getAllFoodProducts();
+            setFoodProductsLoading(false);
+        }
+        getAllFP();
+    }, [])
 
     return (
         <Modal setShow={setShowModal}>
             <div className="custom-modal-header mb-4">
-                <h4>Add Food to Diary</h4>
+                <h4 className="fw-bold">Add Food to Diary</h4>
             </div>
 
-            <div className="search-bar-container mb-2">
-                <div className="search-bar">
-                <span className="material-symbols-outlined search-icon">
-                    search
-                </span>
-                <input type="search" placeholder="Search food" autoFocus/>
-                </div>
-                <button type="button" className="btn btn-primary">Search</button>
+            <div>
+                <SearchBar
+                    setFoodProducts={setFoodProducts}
+                    tab={tab}
+                    setTab={setTab}
+                    showFoodDetails={showFoodDetails}
+                    setShowFoodDetails={setShowFoodDetails}
+                    getAllFoodProducts={getAllFoodProducts}
+                    setFoodProductsLoading={setFoodProductsLoading}
+                />
             </div>
+            
 
             <div className="d-flex search-tabs mb-2">
                 {AddFoodModalTabs.map((item, idx) => {
@@ -76,50 +86,41 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, dailyTargets}) 
             </div>
 
             {tab == 'All' &&
-                <>
-                    <p className="mb-0">Per serving.</p>
-                    <div className={`search-results ${showFoodDetails? 'shrink': ''}`}>
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>Description</th>
-                                    <th>Calories</th>
-                                    <th>Protein</th>
-                                    <th>Carbs</th>
-                                    <th>Fat</th>
-                                    <th>Price</th>
-                                </tr>  
-                            </thead>
-                            <tbody>
-                                {foodProducts.map(f => {
-                                    return (
-                                        <tr key={f.id} onClick={() => selectFood(f)} className={f == selectedFood? 'selected': ''}>
-                                            <td>{f.foodData.productName}</td>
-                                            <td>{f.nutritionData.energy}kcal</td>
-                                            <td>{f.nutritionData.protein}g</td>
-                                            <td>{f.nutritionData.netCarbs}g</td>
-                                            <td>{f.nutritionData.totalFat}g</td>
-                                            <td>${roundTo(f.foodData.productPrice / f.foodData.servings, 2)}</td>
-                                        </tr>
-                                )})}
-                            </tbody>
-                        </table>
-                    </div>
-                    <FoodDetails
-                        showFoodDetails={showFoodDetails}
-                        setShowFoodDetails={setShowFoodDetails}
-                        showModal={showModal}
-                        setShowModal={setShowModal}
-                        selectedFood={selectedFood}
-                        setSelectedFood={setSelectedFood}
-                        meals={meals}
-                        setMeals={setMeals}
-                        dailyTargets={dailyTargets}
-                    />
-                </>
+                <div>
+                {(() => {
+                    const searchResultsHeight = showFoodDetails? '200px': '400px';
+                    const foodDetailsHeight = '250px';
+                    return (
+                        <>
+                        <FoodsTable
+                            foodProducts={foodProducts}
+                            selectFood={selectFood}
+                            selectedFood={selectedFood}
+                            searchResultsHeight={searchResultsHeight}
+                            foodProductsLoading={foodProductsLoading}
+                        />
+                        {showFoodDetails &&
+                            <div style={{height: foodDetailsHeight}}>
+                                <FoodDetails
+                                    showFoodDetails={showFoodDetails}
+                                    setShowFoodDetails={setShowFoodDetails}
+                                    showModal={showModal}
+                                    setShowModal={setShowModal}
+                                    selectedFood={selectedFood}
+                                    setSelectedFood={setSelectedFood}
+                                    meals={meals}
+                                    setMeals={setMeals}
+                                    dailyTargets={dailyTargets}
+                                />
+                            </div>
+                        }
+                    </>
+                    ) 
+                })()}
+                </div>
             }
             {tab == 'Create' &&
-                <CreateTab getFoodProducts={getFoodProducts} tab={tab} setTab={setTab}/>
+                <CreateTab getFoodProducts={getAllFoodProducts} tab={tab} setTab={setTab}/>
             }
         </Modal>
     )

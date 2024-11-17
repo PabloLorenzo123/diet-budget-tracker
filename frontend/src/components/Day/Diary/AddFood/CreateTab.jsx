@@ -9,7 +9,7 @@ const CreateTab = ({getFoodProducts, tab, setTab}) => {
     }
 
     return (
-        <div style={{height: '80%', width: '100%', padding: '10px', overflowY: 'scroll', overflowX: 'clip'}}>
+        <div style={{height: '75%', width: '100%', padding: '10px', overflowY: 'scroll', overflowX: 'clip'}}>
             <CreateFoodForm afterSubmitFunc={afterSubmitFnc}/>
         </div>
     )

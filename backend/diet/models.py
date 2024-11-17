@@ -107,7 +107,7 @@ class NutritionData(models.Model):
 class FoodProduct(models.Model):
     """A Food Product from a supermarket's catalog."""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    user = models.ForeignKey('accounts.User', on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey('accounts.User', on_delete=models.SET_NULL, related_name='food_products', null=True, blank=True)
     
     name = models.CharField(max_length=300) # For instance PACO FISH SARDINES IN WATER.
     product_link = models.URLField(null=True)
@@ -119,6 +119,21 @@ class FoodProduct(models.Model):
     
     nutrition_data = models.OneToOneField(NutritionData, on_delete=models.CASCADE, related_name='food_product', null=False)
     
+    def in_json(self) -> dict:
+        """Returns the food product details in the format {id, foodData, nutritionData}."""
+        return {
+            'id': self.id,
+            'foodData': {
+                'productName': self.name,
+                'productLink': self.product_link,
+                'servings': float(self.servings),
+                'measure': self.serving_measure,
+                'gramWeight': float(self.serving_size),
+                'productPrice': float(self.price),
+            },
+            'nutritionData': self.nutrition_data.nutrients_in_json()
+        }
+        
     def __str__(self) -> str:
         return f"{self.name}"
 
