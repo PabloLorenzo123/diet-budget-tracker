@@ -4,7 +4,7 @@ import { titleCase, roundTo } from "../../../../lib/functions";
 import "../../../../styles/diary/MealsTable.css";
 import FoodsSubTable from "./FoodsSubTable";
 
-const MealsTable = ({meals, setMeals, selectedMeal, setSelectedMeal, selectedFoodObj, setSelectedFoodObj}) => {
+const MealsTable = ({meals, setMeals, mealNames, selectedMeal, setSelectedMeal, selectedFoodObj, setSelectedFoodObj}) => {
 
     const getTotalNutrientsInMeal = (foods, nutrient) => roundTo(foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 2);
 

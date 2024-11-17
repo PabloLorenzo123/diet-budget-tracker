@@ -58,10 +58,7 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, dailyTargets}) 
     }, [])
 
     return (
-        <Modal setShow={setShowModal}>
-            <div className="custom-modal-header mb-4">
-                <h4 className="fw-bold">Add Food to Diary</h4>
-            </div>
+        <Modal setShow={setShowModal} header={'Add Food to Diary'}>
 
             <div>
                 <SearchBar

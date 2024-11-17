@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import AddFoodBtn from "./AddFood/AddFoodBtn";
 import MealsTable from "./MealsTable/MealsTable";
+import MealsSettingsBtn from "./MealsTable/MealsSettings/MealsSettingsBtn";
 
 const Diary = ({meals, dailyTargets, setMeals, selectedMeal, setSelectedMeal, selectedFoodObj, setSelectedFoodObj}) => {
 
@@ -12,11 +13,8 @@ const Diary = ({meals, dailyTargets, setMeals, selectedMeal, setSelectedMeal, se
                     setMeals={setMeals}
                     dailyTargets={dailyTargets}
                 />
-                <button className="bg-transparent border-0 p-0">
-                    <span className="material-symbols-outlined">
-                        settings
-                    </span>
-                </button>
+                <MealsSettingsBtn />
+                
                 
             </div>
             <MealsTable

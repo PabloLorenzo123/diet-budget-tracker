@@ -9,8 +9,6 @@
 }
 
 .custom-modal {
-    width: 70%;
-    height: 95%;
     background-color: white;
     position: absolute;
     top: 50%;
@@ -18,7 +16,6 @@
     transform: translate(-50%, -50%);
     border-radius: 10px;
     padding: 20px;
-    overflow-y: scroll;
 }
 
 .custom-modal-header {

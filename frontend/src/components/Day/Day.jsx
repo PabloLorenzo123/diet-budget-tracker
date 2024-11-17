@@ -9,35 +9,42 @@ import { dailyTargetState } from "../../lib/nutrients";
 
 import '../../styles/diary/day.css';
 import NutrientTargets from "./NutrientTargets/NutrientTargets";
+import { defaultDiaryGroups, mealObjectState } from "../../constants";
 
-const mealsState = {
-    uncategorized: {
-        foods: [],
-        show: false,
-    },
-    breakfast: {
-        foods: [],
-        show: false,
-    },
-    lunch: {
-        foods: [],
-        show: false,
-    },
-    dinner: {
-        foods: [],
-        show: false,
-    },
-    snacks: {
-        foods: [],
-        show: false,
-    },
-}
 
 const Day = () => {
     const [dailyTargets, setDailyTargets] = useState(dailyTargetState)
-    const [meals, setMeals] = useState(mealsState);
+    
+    const [mealNames, setMealNames] = useState(defaultDiaryGroups); // Ex: [breakfast, lunch, dinner].
+    const [meals, setMeals] = useState([]); // A list of objects {foods, show}.
+
+
     const [selectedMeal, setSelectedMeal] = useState('');
     const [selectedFoodObj, setSelectedFoodObj] = useState(null);
+
+    useEffect(() => {
+        const updateMealsObject = () => {
+            // Set the meals state according to the mealNames state.
+            if (mealNames.length > meals.length) {
+                const differeance = mealNames.length - meals.length;
+                // If there were 3 meals and now a new meal name was added, add those empty arrays to the meals state.
+                setMeals(prev => [...prev, ...Array.from({length: differeance}, () => {mealObjectState})])  
+            } else if (mealNames.length < meals.length) {
+                // Remove the excess meals.
+                setMeals(prev => prev.slice(mealNames.length));
+            }
+        }
+        updateMealsObject();
+    }, [mealNames])
+
+    useEffect(() => {
+        const createMealState = () => {
+            // Fetches the user custom meal names, then updates de meal state object.
+            setMeals(Array.from({length: mealNames.length}, () => {mealObjectState}));
+        }
+        createMealState();
+        console.log(meals);
+    }, [])
 
     return (
         <>

@@ -4,6 +4,13 @@ export const ACCESS_TOKEN = "accessToken";
 export const AddFoodModalTabs = ['All', 'Create'];
 
 export const diaryGroups = ['uncategorized', 'breakfast', 'lunch', 'dinner', 'snacks'];
+export const defaultDiaryGroups = ['uncategorized', 'breakfast', 'lunch', 'dinner', 'snacks'];
+export const maxNumberOfMeals = 8;
+export const mealObjectState = {foods: [], show: false};
+
+export const defaultModalWidth = '70%';
+export const defaultModalHeight = '95%';
+
 
 export const servingMeasures = [
     {unit: 'g', valueInGrams: 1},

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import '../styles/modal.css';
+import { defaultModalHeight, defaultModalWidth } from "../constants";
 
-const Modal = ({setShow, children}) => {
+const Modal = ({setShow, scroll=true, width=defaultModalWidth, height=defaultModalHeight, header, children}) => {
 
   useEffect(() => {
       document.body.style.overflow = 'hidden';
@@ -14,8 +15,14 @@ const Modal = ({setShow, children}) => {
   return(
       <>
         
-          <div className="modal-backdrop" onClick={() => setShow(false)}>
-              <div className="custom-modal" onClick={e => e.stopPropagation()}>
+          <div
+          className={`modal-backdrop ${scroll? 'overflow-y-auto': 'overflow-y-hidden'}`}
+          onClick={() => setShow(false)}
+          >
+              <div className="custom-modal" style={{width, height}} onClick={e => e.stopPropagation()}>
+                <div className="custom-modal-header mb-4">
+                  <h4 className="fw-bold">{header}</h4>
+                </div>
                 {children}
               </div>
           </div>
