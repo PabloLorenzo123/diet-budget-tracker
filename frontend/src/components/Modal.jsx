@@ -15,11 +15,8 @@ const Modal = ({setShow, scroll=true, width=defaultModalWidth, height=defaultMod
   return(
       <>
         
-          <div
-          className={`modal-backdrop ${scroll? 'overflow-y-auto': 'overflow-y-hidden'}`}
-          onClick={() => setShow(false)}
-          >
-              <div className="custom-modal" style={{width, height}} onClick={e => e.stopPropagation()}>
+          <div className="modal-backdrop" onClick={() => setShow(false)}>
+              <div className={`custom-modal ${scroll? 'overflow-y-scroll': 'overflow-y-hidden'}`} style={{width, height}} onClick={e => e.stopPropagation()}>
                 <div className="custom-modal-header mb-4">
                   <h4 className="fw-bold">{header}</h4>
                 </div>

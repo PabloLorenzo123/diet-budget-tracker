@@ -7,7 +7,7 @@ import FoodDetailsTargets from "./FoodDetailsTargets";
 
 const FoodDetails = ({showModal, setShowModal, showFoodDetails, setShowFoodDetails, selectedFood, setSelectedFood, meals, setMeals, dailyTargets}) => {
     const [addToDiaryForm, setAddToDairyForm] = useState({
-        diaryGroup: Object.keys(meals)[0],
+        diaryGroup: 0,
         servings: 1,
         servingMeasure: {},
         servingMeasures: servingMeasures,
@@ -23,7 +23,7 @@ const FoodDetails = ({showModal, setShowModal, showFoodDetails, setShowFoodDetai
 
     const handleChangeSM = (e) => {
         // Handle change for the serving measure field.
-        const {name, value} = e.target;
+        const value = e.target.value;
         const sm = addToDiaryForm.servingMeasures.find(item => item.unit == value);
         setAddToDairyForm(prev => ({
             ...prev,
@@ -45,15 +45,16 @@ const FoodDetails = ({showModal, setShowModal, showFoodDetails, setShowFoodDetai
                 servingMeasures: newServingMeasures
             }))
         }
-        
     }, [selectedFood])
 
     return (
         <>
         <div className="container-fluid py-2 mt-2">
+            {/* Header product name */}
             <div className="mb-1 text-center fw-bold">
                 {selectedFood.foodData.productName}
             </div>
+            {/* Blocks */}
             <div className="row mb-2 d-flex justify-content-around">
                 {/* Left block calories, protein, carbs, fat */}
                 <div className="col-sm-6 p-2 border">
@@ -64,21 +65,22 @@ const FoodDetails = ({showModal, setShowModal, showFoodDetails, setShowFoodDetai
                         addToDiaryForm={addToDiaryForm}
                     />
                 </div>
-                {/* Right block (form) */}
+                {/* Right block (Add to Diary form) */}
                 <div className="col-sm-5 p-2 border">
                     <div className="mt-4">
                         <div className="row mt-2">
                             <label htmlFor="diaryGroup" className="col-sm-4 col-form-label fw-bold">Diary Group</label>
                             <div className="col-sm-8">
+                                {/* Select meal */}
                                 <select
-                                id="diaryGroup"
-                                className="form-control"
-                                onChange={handleChange}
-                                name="diaryGroup"
-                                value={addToDiaryForm.diaryGroup}
+                                    id="diaryGroup"
+                                    className="form-control"
+                                    onChange={handleChange}
+                                    name="diaryGroup"
+                                    value={addToDiaryForm.diaryGroup}
                                 >
-                                    {Object.keys(meals).map(meal => {
-                                        return <option key={meal} value={meal}>{titleCase(meal)}</option>
+                                    {meals.map((meal, idx) => {
+                                        return <option key={meal.name} value={idx}>{titleCase(meal.name)}</option>
                                     })}
                                 </select>
                             </div>
@@ -86,6 +88,7 @@ const FoodDetails = ({showModal, setShowModal, showFoodDetails, setShowFoodDetai
                         <div className="row mt-4">
                             <p className="col-sm-4 col-form-label fw-bold">Serving Size</p>
                             <div className="col-sm-2">
+                                {/* Number of servings */}
                                 <input
                                 type="text"
                                 className="form-control"
@@ -97,6 +100,7 @@ const FoodDetails = ({showModal, setShowModal, showFoodDetails, setShowFoodDetai
                                 />
                             </div>
                             <div className="col-sm-6">
+                                {/* Serving measures */}
                                 <select
                                 className="form-control"
                                 value={addToDiaryForm.servingMeasure.unit}

@@ -4,27 +4,30 @@ import { titleCase, roundTo } from "../../../../lib/functions";
 import "../../../../styles/diary/MealsTable.css";
 import FoodsSubTable from "./FoodsSubTable";
 
-const MealsTable = ({meals, setMeals, mealNames, selectedMeal, setSelectedMeal, selectedFoodObj, setSelectedFoodObj}) => {
+const MealsTable = ({meals, setMeals, mealNames, selectedMealIdx, setSelectedMealIdx, selectedFoodObj, setSelectedFoodObj}) => {
 
     const getTotalNutrientsInMeal = (foods, nutrient) => roundTo(foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 2);
 
-    const setShow = (e, meal) => {
+    const setShow = (e, mealIdx) => {
+        // Toggles the show property of a meal.
         e.stopPropagation(); // To avoid evocating handleOnClickMeal().
-        setMeals(prev => ({
-            ...prev,
-            [meal]: {
-                ...meals[meal],
-                show: !meals[meal].show,
-            }
-        }))
+        setMeals(prev => {
+            // Create a new array with updated objects
+            const newArray = prev.map((meal, idx) =>
+                idx === mealIdx
+                    ? { ...meal, show: !meal.show } // Create a new object for the updated meal
+                    : meal
+            );
+            return newArray;
+        });
     }
 
-    const handleOnClickMeal = (meal) => {
-        if (selectedMeal != meal) {
-            setSelectedMeal(meal);
+    const handleOnClickMeal = (mealIdx) => {
+        if (selectedMealIdx != mealIdx) {
+            setSelectedMealIdx(mealIdx);
         } else {
             // Unselect.
-            setSelectedMeal('');
+            setSelectedMealIdx(null);
         }
         setSelectedFoodObj(null);
     }
@@ -36,7 +39,7 @@ const MealsTable = ({meals, setMeals, mealNames, selectedMeal, setSelectedMeal, 
             // Unselect.
             setSelectedFoodObj(null);
         }
-        if (selectedMeal) setSelectedMeal('');
+        if (selectedMealIdx != null) setSelectedMealIdx(null);
         console.log(food);
     }
 
@@ -52,16 +55,16 @@ const MealsTable = ({meals, setMeals, mealNames, selectedMeal, setSelectedMeal, 
                         </tr>
                     </thead>
                     <tbody>
-                        {Object.keys(meals).map(meal => {
-                            const isMealSelected = selectedMeal == meal && !selectedFoodObj? ' selected': '';
-                            const mealObj = meals[meal];
+                        {meals.map((meal, idx) => {
+                            const mealName = meal.name;
+                            const isMealSelected = selectedMealIdx == idx && !selectedFoodObj? ' selected': '';
+                            const mealObj = meal;
 
                             return (
-                            <Fragment key={meal}>
+                            <Fragment key={mealName}>
                                 {/* Tr meal, meal name and summary */}
-                                <tr className={`tr-meal ${isMealSelected}`}
-                                onClick={() => handleOnClickMeal(meal)}>
-                                    <td className="td-meal">{titleCase(meal)}</td>
+                                <tr className={`tr-meal ${isMealSelected}`} onClick={() => handleOnClickMeal(idx)}>
+                                    <td className="td-meal">{titleCase(mealName)}</td>
                                     <td className="td-diary-data">
                                         {mealObj.foods.length > 0 && 
                                         <>
@@ -75,14 +78,15 @@ const MealsTable = ({meals, setMeals, mealNames, selectedMeal, setSelectedMeal, 
                                     </td>
                                     <td>
                                         <div className="d-flex justify-content-end">
-                                            <button className="meal-toggle-btn" onClick={(e) => setShow(e, meal)}>
-                                                {!mealObj.show?
-                                                <span className="material-symbols-outlined">
-                                                    stat_minus_1
-                                                </span>:
+                                            <button className="meal-toggle-btn" onClick={(e) => setShow(e, idx)}>
+                                                {mealObj.show?
                                                 <span className="material-symbols-outlined">
                                                     stat_1
-                                                </span>}
+                                                </span>:
+                                                <span className="material-symbols-outlined">
+                                                    stat_minus_1
+                                                </span>
+                                                }
                                             </button>
                                         </div>    
                                     </td>

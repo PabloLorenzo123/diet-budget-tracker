@@ -4,7 +4,8 @@ import { roundTo } from "../../../../lib/functions";
 const AddToDiaryBtn = ({meals, setMeals, showModal, setShowModal, selectedFood, setSelectedFood, addToDiaryForm, setAddToDiaryForm}) => {
     
     const addToDiary = async () => {
-        const meal = addToDiaryForm.diaryGroup;
+        const mealIdx = addToDiaryForm.diaryGroup;
+        const mealName = meals[mealIdx].name;
         const servings = parseFloat(addToDiaryForm.servings);
         const servingMeasure = addToDiaryForm.servingMeasure;
         const portionSize = servings * servingMeasure.valueInGrams;
@@ -25,19 +26,25 @@ const AddToDiaryBtn = ({meals, setMeals, showModal, setShowModal, selectedFood, 
                 servingMeasure,
                 portionSize,
                 totalCost,
-                meal
+                mealIdx
             }
         }
         
-        await setMeals(prev => ({
-            ...prev,
-            [meal]: {
-                ...meals[meal],
-                foods: [...meals[meal].foods, food],
-                show: true // To show when the modal closes.
-            }
-        }))
-        
+        await setMeals(prev => {
+            // Create a new array with updated objects
+            const newArray = prev.map((m, idx) => {
+                return idx == mealIdx?
+                    {
+                        ...m,
+                        foods: [...m.foods, food],
+                        show: true
+                    }
+                    : m
+            });
+            console.log(newArray);
+            return newArray;
+        })
+    
         setShowModal(false);
     }
 

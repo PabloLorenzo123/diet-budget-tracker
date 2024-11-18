@@ -9,8 +9,8 @@ const FoodsSubTable = ({meals, setMeals, selectedFoodObj, setSelectedFoodObj, me
         if (isNaN(value)){
             return;
         }
-        const mealName = food.diaryData.meal; 
-        const mealObj = meals[mealName];
+        const mealObj = meals[food.diaryData.mealIdx]
+        const mealIdx = food.diaryData.mealIdx;
 
         let updatedFoods = mealObj.foods;
         let updatedFood = {...food};
@@ -32,13 +32,14 @@ const FoodsSubTable = ({meals, setMeals, selectedFoodObj, setSelectedFoodObj, me
 
         updatedFoods[idx] = updatedFood;
 
-        setMeals(prev => ({
-            ...prev,
-            [mealName]: {
-                ...mealObj,
-                foods: updatedFoods
-            }
-        }))
+        setMeals(prev => {
+            const newArray = prev.map((m, idx) => {
+                return idx == mealIdx?
+                {...m, foods: updatedFoods}
+                : m
+            })
+            return newArray;
+        })
         setSelectedFoodObj(updatedFood);
        // Food wont unselect because the food state only updates when onBlur and not when onChange.
     }
@@ -47,10 +48,9 @@ const FoodsSubTable = ({meals, setMeals, selectedFoodObj, setSelectedFoodObj, me
         const value = e.target.value;
         const sm = sms.find(item => item.unit == value);
         // Because the serving measure changed, the portion size too and so did the cost and nutritional contributions.
-        console.log(sm);
 
-        const mealName = food.diaryData.meal; 
-        const mealObj = meals[mealName];
+        const mealObj = meals[food.diaryData.mealIdx]
+        const mealIdx = food.diaryData.mealIdx;
 
         let updatedFoods = mealObj.foods;
         let updatedFood = {...food};
@@ -68,33 +68,33 @@ const FoodsSubTable = ({meals, setMeals, selectedFoodObj, setSelectedFoodObj, me
         Object.keys(updatedFoodNutritionalContribution).forEach(nutrient => {
             updatedFoodNutritionalContribution[nutrient] = roundTo(newGramWeight * food.nutritionData[nutrient] / prevGramWeight, 2);
         })
-
         updatedFoods[idx] = updatedFood;
-        console.log(updatedFood);
-        setMeals(prev => ({
-            ...prev,
-            [mealName]: {
-                ...mealObj,
-                foods: updatedFoods
-            }
-        }))
+        setMeals(prev => {
+            const newArray = prev.map((m, idx) => {
+                return idx == mealIdx?
+                {...m, foods: updatedFoods}
+                : m
+            })
+            return newArray;
+        })
         setSelectedFoodObj(updatedFood);
     }
 
     const removeFood = (food, idx) => {
-        const meal = food.diaryData.meal;
-        const mealObj = meals[meal];
+        const mealObj = meals[food.diaryData.mealIdx]
+        const mealIdx = food.diaryData.mealIdx;
 
         const updatedFoods = [...mealObj.foods];
         updatedFoods.splice(idx, 1);
 
-        setMeals(prev => ({
-            ...prev,
-            [meal]: {
-                ...mealObj,
-                foods: updatedFoods
-            }
-        }))
+        setMeals(prev => {
+            const newArray = prev.map((m, idx) => {
+                return idx == mealIdx?
+                {...m, foods: updatedFoods}
+                : m
+            })
+            return newArray;
+        })
     }
 
     return (
@@ -104,6 +104,7 @@ const FoodsSubTable = ({meals, setMeals, selectedFoodObj, setSelectedFoodObj, me
             {(() => {
 
                 return (
+                    
                     <tr style={{display: mealObj.show? 'table-row': 'none'}} className={`tr-food ${isMealSelected}`}>
                         <td colSpan="3">
                             <table className="table-food">

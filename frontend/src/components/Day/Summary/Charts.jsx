@@ -3,18 +3,18 @@ import { diaryGroups } from "../../../constants";
 import { titleCase, roundTo} from "../../../lib/functions";
 import DoughnutChart from "../../DoughnutChart";
 
-const Charts = ({dailyTargets, meals, selectedMeal, selectedFoodObj}) => {
-    const mealsCosts = Object.keys(meals).map(meal => roundTo(meals[meal].foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 2));
-    const totalMoneySpent = roundTo(Object.keys(meals).reduce((acc, meal) => acc + meals[meal].foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 0), 2);
-    const budgetRemainning = dailyTargets.budget - totalMoneySpent;
+const Charts = ({dailyTargets, meals, selectedMealIdx, selectedFoodObj}) => {
+    // Arr: Each meal cost individually.
+    const mealsCostsArr = meals.map(meal => roundTo(meal.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 2));
+    // Number: total momeny spent.
+    const totalMoneySpent = roundTo(mealsCostsArr.reduce((acc, m) => acc + m, 0), 2);
+    const budgetRemainning = roundTo(dailyTargets.budget - totalMoneySpent, 2);
 
     const backgroundColors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
 
     const isWithinBudget = budgetRemainning >= 0;
 
-    const mealLabels = diaryGroups.map(dg => titleCase(dg));
-
-    const semiTransparentStyle = {opacity: selectedMeal? 0.5: 1, pointerEvents: selectedMeal? 'none': 'auto'};
+    const mealLabels = meals.map(m => titleCase(m.name));
 
     return (
         <>
@@ -23,10 +23,11 @@ const Charts = ({dailyTargets, meals, selectedMeal, selectedFoodObj}) => {
         <div className="row">
             {/* Spent Budget */}
             {(() => {
-                const meal = meals[selectedMeal];
-                const labels = selectedMeal? meal.foods.map(f => f.foodData.productName): mealLabels;
-                const mealsOrMealCosts = selectedMeal? meal.foods.map(f => f.diaryData.totalCost): mealsCosts;
-                const moneySpent = selectedMeal? meal.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0): totalMoneySpent;
+                const meal = meals[selectedMealIdx];
+                const mealSelected = selectedMealIdx != null;
+                const labels = mealSelected? meal.foods.map(f => f.foodData.productName): mealLabels;
+                const mealsOrMealCosts = mealSelected? meal.foods.map(f => f.diaryData.totalCost): mealsCostsArr;
+                const moneySpent = mealSelected? meal.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0): totalMoneySpent;
 
                 return (
                     <div className="col-sm-6" style={{opacity: selectedFoodObj? 0.5: 1, pointerEvents: selectedFoodObj? 'none': 'auto'}}>
@@ -48,12 +49,12 @@ const Charts = ({dailyTargets, meals, selectedMeal, selectedFoodObj}) => {
             })()}
             
             {/* Remainning Budget */}
-            <div className="col-sm-6" style={{opacity: selectedMeal || selectedFoodObj? 0.5: 1, pointerEvents: selectedMeal || selectedFoodObj? 'none': 'auto'}}>
+            <div className="col-sm-6" style={{opacity: selectedMealIdx || selectedFoodObj? 0.5: 1, pointerEvents: selectedMealIdx || selectedFoodObj? 'none': 'auto'}}>
                 <DoughnutChart
                     labels={['Remainning', ...mealLabels]}
                     datasetLabel={'amount'}
                     emptyDatasetLabel={'amount'}
-                    data={[isWithinBudget? budgetRemainning: 0, ...mealsCosts]}
+                    data={[isWithinBudget? budgetRemainning: 0, ...mealsCostsArr]}
                     backgroundColor={['grey', ...backgroundColors]}
                 />
                 <p className="text-center fw-bold mt-2">
