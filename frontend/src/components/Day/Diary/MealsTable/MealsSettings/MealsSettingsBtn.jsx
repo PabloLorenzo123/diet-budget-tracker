@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import SettingsModal from "./SettingsModal";
 
-const MealsSettingsBtn = ({meals}) => {
+const MealsSettingsBtn = ({meals, setMeals}) => {
     const [showModal, setShowModal] = useState(false);
 
     const toggleModal = () => setShowModal(!showModal);
@@ -17,9 +17,10 @@ const MealsSettingsBtn = ({meals}) => {
         {showModal && 
             <SettingsModal
                 width={'50%'}
-                height={'50%'}
+                height={'60%'}
                 setShow={setShowModal}
                 meals={meals}
+                setMeals={setMeals}
             />
         }
         </>

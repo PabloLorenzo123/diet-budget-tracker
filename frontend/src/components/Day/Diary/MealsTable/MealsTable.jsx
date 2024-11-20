@@ -56,6 +56,8 @@ const MealsTable = ({meals, setMeals, mealNames, selectedMealIdx, setSelectedMea
                     </thead>
                     <tbody>
                         {meals.map((meal, idx) => {
+                            if (!meal) return;
+                            if (meal.hideFromDiary) return;
                             const mealName = meal.name;
                             const isMealSelected = selectedMealIdx == idx && !selectedFoodObj? ' selected': '';
                             const mealObj = meal;

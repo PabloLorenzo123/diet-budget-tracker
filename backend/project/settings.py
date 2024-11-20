@@ -159,6 +159,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True
 # This configuration opens your API to cross-site request forgery (CSRF) attacks because any domain can access your API with user credentials. 
 
+DIARY_SETTINGS_MAX_N_MEALS = 8
+
 RDI = {
     "energy": 2000.0,             # Calories (kcal)
     "protein": 50.0,              # grams

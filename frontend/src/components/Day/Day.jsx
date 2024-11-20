@@ -9,18 +9,38 @@ import { dailyTargetState } from "../../lib/nutrients";
 
 import '../../styles/diary/day.css';
 import NutrientTargets from "./NutrientTargets/NutrientTargets";
-import { defaultDiaryGroups, mealObjectState } from "../../constants";
+import { defaultDiaryGroupObject, defaultDiaryGroups, mealObjectState } from "../../constants";
+
+import api from "../../api";
 
 
 const Day = () => {
     const [dailyTargets, setDailyTargets] = useState(dailyTargetState)
     
-    const [meals, setMeals] = useState(defaultDiaryGroups); // A list of objects {foods, show}.
+    const [meals, setMeals] = useState([]); // A list of objects [...{name, foods, show}].
 
 
     const [selectedMealIdx, setSelectedMealIdx] = useState(null);
     const [selectedFoodObj, setSelectedFoodObj] = useState(null);
     
+    useEffect(() => {
+        const populateMealsState = async () => {
+            try {
+                const res = await api.get('auth/diary_settings/');
+                const resData = res.data;
+                if (res.status == 200){
+                    const mealsSettings = resData.mealsSettings;
+                    setMeals(() => {
+                        return mealsSettings.length > 0?
+                        resData.mealsSettings.map(meal => ({...defaultDiaryGroupObject, ...meal})): defaultDiaryGroups
+                    })
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        populateMealsState();
+    }, [])
     // useEffect(() => {
     //     const updateMealsObject = () => {
     //         // Set the meals state according to the mealNames state.

@@ -13,7 +13,10 @@ const Diary = ({meals, dailyTargets, setMeals, selectedMealIdx, setSelectedMealI
                     setMeals={setMeals}
                     dailyTargets={dailyTargets}
                 />
-                <MealsSettingsBtn meals={meals}/>
+                <MealsSettingsBtn
+                    meals={meals}
+                    setMeals={setMeals}
+                />
                 
                 
             </div>

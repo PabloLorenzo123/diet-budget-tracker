@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import FoodDetails from "./FoodDetails/FoodDetails";
+import FoodDetailsForm from "./FoodDetailsForm/FoodDetailsForm";
 import Modal from "../../../Modal";
 
 import { AddFoodModalTabs } from "../../../../constants";
@@ -98,7 +98,7 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, dailyTargets}) 
                         />
                         {showFoodDetails &&
                             <div style={{height: foodDetailsHeight}}>
-                                <FoodDetails
+                                <FoodDetailsForm
                                     showFoodDetails={showFoodDetails}
                                     setShowFoodDetails={setShowFoodDetails}
                                     showModal={showModal}

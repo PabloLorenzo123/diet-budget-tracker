@@ -56,7 +56,7 @@ export const getTotalNutrients = (nutrient, meals, dailyTargets, selectedMealIdx
       totalNutrients = selectedFoodObj.nutritionalContribution[nutrient];
   } else {
       // Sum all the nutrients of all the foods in the dairy.
-      totalNutrients = meals.reduce((acc, meal) => acc + meal.foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 0);
+      totalNutrients = meals.filter(m => m && !m.hideFromDiary).reduce((acc, meal) => acc + meal.foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 0);
   }
   totalNutrients = roundTo(totalNutrients, 2);
   const percentage = roundTo(totalNutrients / dailyTargets[nutrient].amount * 100, 2) ;

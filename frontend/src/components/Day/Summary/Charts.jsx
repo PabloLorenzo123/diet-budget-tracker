@@ -5,7 +5,8 @@ import DoughnutChart from "../../DoughnutChart";
 
 const Charts = ({dailyTargets, meals, selectedMealIdx, selectedFoodObj}) => {
     // Arr: Each meal cost individually.
-    const mealsCostsArr = meals.map(meal => roundTo(meal.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 2));
+    const mealsCostsArr = meals.filter(m => m && !m.hideFromDiary).map(meal => 
+        roundTo(meal.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 2));
     // Number: total momeny spent.
     const totalMoneySpent = roundTo(mealsCostsArr.reduce((acc, m) => acc + m, 0), 2);
     const budgetRemainning = roundTo(dailyTargets.budget - totalMoneySpent, 2);
@@ -14,7 +15,7 @@ const Charts = ({dailyTargets, meals, selectedMealIdx, selectedFoodObj}) => {
 
     const isWithinBudget = budgetRemainning >= 0;
 
-    const mealLabels = meals.map(m => titleCase(m.name));
+    const mealLabels = meals.filter(m => m).map(m => titleCase(m.name));
 
     return (
         <>
@@ -49,7 +50,7 @@ const Charts = ({dailyTargets, meals, selectedMealIdx, selectedFoodObj}) => {
             })()}
             
             {/* Remainning Budget */}
-            <div className="col-sm-6" style={{opacity: selectedMealIdx || selectedFoodObj? 0.5: 1, pointerEvents: selectedMealIdx || selectedFoodObj? 'none': 'auto'}}>
+            <div className="col-sm-6" style={{opacity: selectedMealIdx != undefined || selectedFoodObj? 0.5: 1, pointerEvents: selectedMealIdx || selectedFoodObj? 'none': 'auto'}}>
                 <DoughnutChart
                     labels={['Remainning', ...mealLabels]}
                     datasetLabel={'amount'}

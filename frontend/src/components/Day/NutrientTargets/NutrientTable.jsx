@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { nutrientsTable } from "../../../lib/nutrients";
 import {getTotalNutrients, titleCase} from "../../../lib/functions";
 
@@ -26,7 +26,7 @@ const NutrientTable = ({category, dailyTargets, meals, selectedMeal, selectedFoo
                 <tbody>
                     {nutrientsTable[category].map(nutrient => {
                         return (
-                            <>
+                            <Fragment key={nutrient.name}>
                                 {(() => {
                                     const [totalNutrients, totalNutrientsPercentage] = getTotalNutrients(nutrient.name, meals, dailyTargets, selectedMeal, selectedFoodObj);
                                     return (
@@ -46,7 +46,7 @@ const NutrientTable = ({category, dailyTargets, meals, selectedMeal, selectedFoo
                                         </tr>
                                         )
                                     })()}
-                            </>
+                            </Fragment>
                         )
                         
                     })}

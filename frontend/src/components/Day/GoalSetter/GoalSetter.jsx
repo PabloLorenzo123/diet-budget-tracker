@@ -41,7 +41,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
                     body[n] = dailyTargets[n].amount;
                 }
             });
-            const res = await api.post('auth/daily_targets/', body);
+            const res = await api.post('auth/diary_settings/daily_targets/', body);
             if (res.status == 200){
                 setPrevDailyTargets(dailyTargets); // So the save btn becomes disabled.
                 setIsLoading(false);
@@ -59,7 +59,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
     useEffect(() => {
         const getDailyTargets = async () => {
             try {
-                const res = await api.get('auth/daily_targets/');
+                const res = await api.get('auth/diary_settings/daily_targets/');
                 if (res.status == 200){
                     const resData = res.data.dailyTargets;
                     Object.keys(resData).forEach(nutrient => {

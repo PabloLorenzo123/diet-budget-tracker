@@ -3,8 +3,9 @@ from django.http import JsonResponse
 from django.db import IntegrityError
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
+
 # LOCAL.
-from .models import User
+from .models import User, DiarySettings, Meal
 from .serializers import UserSerializer
 from diet.models import NutritionData
 from project.lib import format_nutrients_from_request_body
@@ -29,8 +30,7 @@ def sign_up(request):
     # print(data)
     try:
         user = User.objects.create_user(**data)
-        user.nutrition_data = NutritionData.create_object_rdi()
-        user.save()
+        user.get_or_create_diary_settings()
         refresh = RefreshToken.for_user(user=user)
         return JsonResponse({
             'refreshToken': str(refresh),
@@ -45,38 +45,6 @@ def sign_up(request):
         return JsonResponse({
             'error': f'There was an error {e}',
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-@api_view(('GET', 'POST'))
-@permission_classes([AllowAny])
-def user_nutrition_goals(request):
-    user = request.user
-    if request.method == 'POST':
-        user_nutrition_goals = user.nutrition_goals
-        try:
-            data = json.loads(request.body)
-        except json.JSONDecodeError:
-            return Response({"error": "Invalid JSON data."}, status=status.HTTP_400_BAD_REQUEST)
-        
-        user.budget = data.get('budget', user.budget)
-        nutrition_goals = format_nutrients_from_request_body(data)
-        
-        for field, value in nutrition_goals.items():
-            if hasattr(user_nutrition_goals, field):
-                setattr(user_nutrition_goals, field, value)
-        
-        user_nutrition_goals.save()
-        user.save()
-        return Response({"success": "User daily targets have been saved."}, status=status.HTTP_200_OK)
-    
-    # GET request.
-    if user.nutrition_goals is None:
-        user.nutrition_goals = NutritionData.create_object_rdi()
-        user.save()
-        
-    return JsonResponse({
-        "dailyTargets": {'budget': float(user.budget), **user.nutrition_goals.nutrients_in_json()}
-    })
 
 
 @csrf_exempt # If you're using token authentication (e.g., JWT), Django REST framework typically disables CSRF checks because token authentication is stateless.
@@ -107,3 +75,106 @@ def login(request):
     else:
         print(user)
         return JsonResponse({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(('POST', 'GET'))
+@permission_classes([IsAuthenticated])
+def meals_diary_settings(request):
+    user = request.user
+    diary_settings = user.get_or_create_diary_settings() # Make sure diary settings is not null.
+    
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return Response({"error": "Invalid JSON data."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        meals_data = {meal['order']: meal for meal in data}
+        created_meals = {meal.order: meal for meal in user.diary_settings.meals.all()}
+        
+        meals_to_update = []
+        meals_to_create = []
+        
+        for key, meal_data in meals_data.items():
+            meal = created_meals.get(key)
+            if meal:  # Only update if meal already exists.
+                meal.name = meal_data['name']
+                meal.hide_from_diary = meal_data['hideFromDiary']
+                meals_to_update.append(meal)
+            else:   # Create a new meal object.
+                created_meal = Meal(name=meal_data['name'],
+                                    order=meal_data['order'],
+                                    diary_settings=user.diary_settings,
+                                    hide_from_diary=meal_data['hideFromDiary'])
+                meals_to_create.append(created_meal)
+        
+        if meals_to_update:
+            Meal.objects.bulk_update(meals_to_update, ['name', 'hide_from_diary'])
+        if meals_to_create:
+            Meal.objects.bulk_create(meals_to_create)
+            
+        return JsonResponse({
+            "success": "Meal names have been updated."
+        }, status=status.HTTP_200_OK)
+        
+    # GET REQUEST.
+    mealsSettings = sorted([meal.to_json() for meal in diary_settings.meals.all()], key=lambda m: m['order'])
+
+    return JsonResponse({
+        'mealsSettings': mealsSettings
+    }, status=status.HTTP_200_OK)
+    
+    
+    
+
+@api_view(('GET', 'POST'))
+@permission_classes([AllowAny])
+def user_nutrition_goals(request):
+    user = request.user
+    diary_settings = user.get_or_create_diary_settings()
+    
+    if request.method == 'POST':
+        user_nutrient_targets = user.diary_settings.nutrient_targets
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return Response({"error": "Invalid JSON data."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user.diary_settings.budget = data.get('budget', diary_settings.budget)
+        nutrient_targets = format_nutrients_from_request_body(data)
+        
+        for field, value in nutrient_targets.items():
+            if hasattr(user_nutrient_targets, field):
+                setattr(user_nutrient_targets, field, value)
+        
+        user_nutrient_targets.save()
+        user.save()
+        return Response({"success": "User daily targets have been saved."}, status=status.HTTP_200_OK)
+    
+    # GET request.
+    return JsonResponse({
+        "dailyTargets": {
+            'budget': float(user.diary_settings.budget),
+            **user.diary_settings.nutrient_targets.nutrients_in_json()
+        }
+    })
+
+@api_view(('GET',))
+@permission_classes([IsAuthenticated])
+def get_user_diary_settings(request):
+    user = request.user
+    diary_settings = user.get_or_create_diary_settings()
+    
+    dailyTargets = {
+            'budget': float(user.diary_settings.budget),
+            **user.diary_settings.nutrient_targets.nutrients_in_json()
+    }
+    
+    mealsSettings = sorted([meal.to_json() for meal in diary_settings.meals.all()], key=lambda m: m['order'])
+    
+    return JsonResponse({
+        'dailyTargets': dailyTargets,
+        'mealsSettings': mealsSettings
+    }, status=status.HTTP_200_OK)
+
+
