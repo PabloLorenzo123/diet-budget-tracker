@@ -1,13 +1,19 @@
 import { useState, useEffect } from "react";
 import Modal from "../../../../Modal";
+import ResBtn from "../../../../ResBtn";
+
 import { defaultDiaryGroupObject, maxNumberOfMeals } from "../../../../../constants";
-import { roundTo } from "../../../../../lib/functions";
+import { arraysAreEqual, roundTo } from "../../../../../lib/functions";
 import { toast } from "react-toastify";
 import api from "../../../../../api";
 
-const SettingsModal = ({setShow, width, height, meals, setMeals}) => {
+const SettingsModal = ({setShow, width, height, meals, setMeals, prevSettings, setPrevSettings, determineSettings}) => {
+
+    const [isResLoading, setIsResLoading] = useState(false); // Use for the spinning wheel in the save btn.
+    const [isResSuccesful, setIsResSuccesfull] = useState(false); // Use for the check mark in the save btn.
 
     const saveMealsSettings = async () => {
+        setIsResLoading(true);
         const requestBody = meals.filter(m => m).map((m, idx) => {
             return {
                 order: idx,
@@ -19,11 +25,17 @@ const SettingsModal = ({setShow, width, height, meals, setMeals}) => {
             const res = await api.post('auth/diary_settings/meals/', requestBody);
             if (res.status == 200) {
                 toast.success("Settings saved.");
+                setIsResLoading(false);
+                setIsResSuccesfull(true);
+                setPrevSettings(() => determineSettings())
+                setTimeout(() => setIsResSuccesfull(false), 1000); // Make res succesfull be false after 1000s.
+                return
             }
         } catch (error) {
             console.log(error)
             toast.error(error);
         }
+        setIsResLoading(false);
     }
 
     const toggleHideFromDiary = (e, index) => {
@@ -109,12 +121,13 @@ const SettingsModal = ({setShow, width, height, meals, setMeals}) => {
             </div>
             {/* Set as default button */}
             <div className="d-flex justify-content-center align-content-center">
-                <button
-                type="button"
-                className="btn btn-primary"
-                onClick={saveMealsSettings}>
-                    Set as default
-                </button>
+                <ResBtn
+                    onClick={saveMealsSettings}
+                    isResLoading={isResLoading}
+                    isResSuccesful={isResSuccesful}
+                    disabled={arraysAreEqual(prevSettings, determineSettings())}
+                    btnText={'Set as default'}
+                />
             </div>
         </Modal>
     )

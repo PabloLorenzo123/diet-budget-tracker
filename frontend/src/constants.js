@@ -7,7 +7,7 @@ export const diaryGroups = ['uncategorized', 'breakfast', 'lunch', 'dinner', 'sn
 
 export const defaultDiaryGroupObject = {name: '', foods: [], show: false};
 export const defaultDiaryGroups = [
-    {name: 'breakfast', foods: [], show: false, hideFromDiary: false},
+    {name: 'breakfast', foods: [], show: false, hideFromDiary: false}, // May consider adding a field named 'order'.
     {name: 'lunch', foods: [], show: false, hideFromDiary: false},
     {name: 'dinner', foods: [], show: false, hideFromDiary: false},
     {name: 'snacks', foods: [], show: false, hideFromDiary: false}

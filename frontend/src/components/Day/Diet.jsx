@@ -9,14 +9,19 @@ import { dailyTargetState } from "../../lib/nutrients";
 
 import '../../styles/diary/day.css';
 import NutrientTargets from "./NutrientTargets/NutrientTargets";
-import { defaultDiaryGroupObject, defaultDiaryGroups, mealObjectState } from "../../constants";
+
+import { defaultDiaryGroupObject, defaultDiaryGroups, maxNumberOfMeals } from "../../constants";
 
 import api from "../../api";
+import DaySwitcher from "./DaySwitcher";
 
 
-const Day = () => {
+const Diet = () => {
     const [dailyTargets, setDailyTargets] = useState(dailyTargetState)
     
+    const [days, setDays] = useState([]) // A list of lists of meals objects.
+    const [currentDay, setCurrentDay] = useState(0);
+
     const [meals, setMeals] = useState([]); // A list of objects [...{name, foods, show}].
 
 
@@ -26,44 +31,24 @@ const Day = () => {
     useEffect(() => {
         const populateMealsState = async () => {
             try {
-                const res = await api.get('auth/diary_settings/');
+                const res = await api.get('auth/diary_settings/meals/');
                 const resData = res.data;
                 if (res.status == 200){
                     const mealsSettings = resData.mealsSettings;
                     setMeals(() => {
-                        return mealsSettings.length > 0?
-                        resData.mealsSettings.map(meal => ({...defaultDiaryGroupObject, ...meal})): defaultDiaryGroups
+                        if (mealsSettings.length > 0) {
+                            return resData.mealsSettings.map(meal => ({...defaultDiaryGroupObject, ...meal}));
+                        }
+                        return defaultDiaryGroups
                     })
                 }
             } catch (error) {
+                setMeals(defaultDiaryGroups);
                 console.log(error);
             }
         }
         populateMealsState();
     }, [])
-    // useEffect(() => {
-    //     const updateMealsObject = () => {
-    //         // Set the meals state according to the mealNames state.
-    //         if (mealNames.length > meals.length) {
-    //             const differeance = mealNames.length - meals.length;
-    //             // If there were 3 meals and now a new meal name was added, add those empty arrays to the meals state.
-    //             setMeals(prev => [...prev, ...Array.from({length: differeance}, () => mealObjectState)])  
-    //         } else if (mealNames.length < meals.length) {
-    //             // Remove the excess meals.
-    //             setMeals(prev => prev.slice(mealNames.length));
-    //         }
-    //     }
-    //     updateMealsObject();
-    // }, [mealNames])
-
-    // useEffect(() => {
-    //     const createMealState = () => {
-    //         // Fetches the user custom meal names, then updates de meal state object.
-    //         setMeals(Array.from({length: mealNames.length}, () => mealObjectState));
-    //     }
-    //     createMealState();
-    //     console.log(meals);
-    // }, [])
 
     return (
         <>
@@ -105,7 +90,17 @@ const Day = () => {
                                 selectedFoodObj={selectedFoodObj}
                             />
                         </div>
-                    </div> 
+                    </div>
+
+                    {/* Right side when in large screen */}
+                    <div className="col-sm-2">
+                        <div className="app-container sticky-sm-top">
+                            <DaySwitcher
+                                currentDay={currentDay}
+                                setCurrentDay={setCurrentDay}
+                            />
+                        </div>
+                    </div>
 
 
                 </div>
@@ -114,4 +109,4 @@ const Day = () => {
     )
 }
 
-export default Day;
+export default Diet;

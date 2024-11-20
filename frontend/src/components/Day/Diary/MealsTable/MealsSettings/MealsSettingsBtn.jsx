@@ -4,6 +4,13 @@ import SettingsModal from "./SettingsModal";
 const MealsSettingsBtn = ({meals, setMeals}) => {
     const [showModal, setShowModal] = useState(false);
 
+    const determineSettings = () => meals.map(m => m?.name); // Function that creates the criteria of the current value of the settings.
+
+    const [prevSettings, setPrevSettings] = useState(() => {
+        return determineSettings(); // Returns a list of the meal names if the object has a meal attribute.
+    });
+
+
     const toggleModal = () => setShowModal(!showModal);
 
     return (
@@ -21,6 +28,9 @@ const MealsSettingsBtn = ({meals, setMeals}) => {
                 setShow={setShowModal}
                 meals={meals}
                 setMeals={setMeals}
+                prevSettings={prevSettings}
+                setPrevSettings={setPrevSettings}
+                determineSettings={determineSettings}
             />
         }
         </>

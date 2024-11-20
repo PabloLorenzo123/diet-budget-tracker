@@ -9,6 +9,7 @@ from .models import User, DiarySettings, Meal
 from .serializers import UserSerializer
 from diet.models import NutritionData
 from project.lib import format_nutrients_from_request_body
+from project import settings
 
 # REST FRAMEWORK.
 from rest_framework import generics
@@ -89,7 +90,7 @@ def meals_diary_settings(request):
         except json.JSONDecodeError:
             return Response({"error": "Invalid JSON data."}, status=status.HTTP_400_BAD_REQUEST)
         
-        meals_data = {meal['order']: meal for meal in data}
+        meals_data = {meal['order']: meal for meal in data[0: settings.DIARY_SETTINGS_MAX_N_MEALS]}
         created_meals = {meal.order: meal for meal in user.diary_settings.meals.all()}
         
         meals_to_update = []
@@ -118,7 +119,8 @@ def meals_diary_settings(request):
         }, status=status.HTTP_200_OK)
         
     # GET REQUEST.
-    mealsSettings = sorted([meal.to_json() for meal in diary_settings.meals.all()], key=lambda m: m['order'])
+    mealsSettings = sorted([meal.to_json() for meal in diary_settings.meals.all()],
+                           key=lambda m: m['order'])[:settings.DIARY_SETTINGS_MAX_N_MEALS]
 
     return JsonResponse({
         'mealsSettings': mealsSettings

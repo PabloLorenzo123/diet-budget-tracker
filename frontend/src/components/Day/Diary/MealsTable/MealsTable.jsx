@@ -63,7 +63,7 @@ const MealsTable = ({meals, setMeals, mealNames, selectedMealIdx, setSelectedMea
                             const mealObj = meal;
 
                             return (
-                            <Fragment key={mealName}>
+                            <Fragment key={idx}>
                                 {/* Tr meal, meal name and summary */}
                                 <tr className={`tr-meal ${isMealSelected}`} onClick={() => handleOnClickMeal(idx)}>
                                     <td className="td-meal">{titleCase(mealName)}</td>
