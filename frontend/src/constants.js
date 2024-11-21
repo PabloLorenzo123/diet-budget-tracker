@@ -14,6 +14,8 @@ export const defaultDiaryGroups = [
 ];
 
 export const maxNumberOfMeals = 8;
+export const maxNumberOfDays = 7;
+
 export const mealObjectState = {foods: [], show: false, hideFromDiary: false};
 
 export const defaultModalWidth = '70%';
