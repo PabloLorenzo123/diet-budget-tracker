@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { roundTo } from "../../../../lib/functions";
 
-const AddToDiaryBtn = ({meals, setMeals, showModal, setShowModal, selectedFood, setSelectedFood, addToDiaryForm, setAddToDiaryForm}) => {
+const AddToDiaryBtn = ({meals, setMeals, currentDay, showModal, setShowModal, selectedFood, setSelectedFood, addToDiaryForm, setAddToDiaryForm}) => {
     
     const addToDiary = async () => {
         const mealIdx = addToDiaryForm.diaryGroup;
-        const mealName = meals[mealIdx].name;
         const servings = parseFloat(addToDiaryForm.servings);
         const servingMeasure = addToDiaryForm.servingMeasure;
         const portionSize = servings * servingMeasure.valueInGrams;
@@ -32,17 +31,23 @@ const AddToDiaryBtn = ({meals, setMeals, showModal, setShowModal, selectedFood, 
         
         await setMeals(prev => {
             // Create a new array with updated objects
-            const newArray = prev.map((m, idx) => {
-                return idx == mealIdx?
-                    {
-                        ...m,
-                        foods: [...m.foods, food],
-                        show: true
-                    }
-                    : m
-            });
-            console.log(newArray);
-            return newArray;
+            return prev.map((day, idx) => {
+                if (idx == currentDay){
+                    // Then update the foods list of the selected meal.
+                    const newArray = day.map((m, idx) => {
+                        return idx == mealIdx?
+                            {
+                                ...m,
+                                foods: [...m.foods, food],
+                                show: true
+                            }
+                            : m
+                    });
+                    console.log(newArray);
+                    return newArray;
+                }
+                return day;
+            })
         })
     
         setShowModal(false);

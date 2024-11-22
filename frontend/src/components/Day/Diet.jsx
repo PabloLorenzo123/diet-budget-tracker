@@ -19,10 +19,8 @@ import DaySwitcher from "./DaySwitcher";
 const Diet = () => {
     const [dailyTargets, setDailyTargets] = useState(dailyTargetState)
     
-    const [days, setDays] = useState([]) // A list of lists of meals objects.
     const [currentDay, setCurrentDay] = useState(0);
-
-    const [meals, setMeals] = useState([]); // A list of objects [...{name, foods, show}].
+    const [meals, setMeals] = useState([[]]); // A list of lists (days) of objects [...{name, foods, show}] (meals).
 
 
     const [selectedMealIdx, setSelectedMealIdx] = useState(null);
@@ -35,15 +33,19 @@ const Diet = () => {
                 const resData = res.data;
                 if (res.status == 200){
                     const mealsSettings = resData.mealsSettings;
-                    setMeals(() => {
-                        if (mealsSettings.length > 0) {
-                            return resData.mealsSettings.map(meal => ({...defaultDiaryGroupObject, ...meal}));
-                        }
-                        return defaultDiaryGroups
+                    setMeals((prev) => {
+                        return prev.map((day, index) => {
+                            if (index == currentDay){
+                                if (mealsSettings.length > 0) {
+                                    return resData.mealsSettings.map(meal => ({...defaultDiaryGroupObject, ...meal}));
+                                }
+                                return defaultDiaryGroups
+                            }
+                        })
                     })
                 }
             } catch (error) {
-                setMeals(defaultDiaryGroups);
+                setMeals(prev => prev.map(day => defaultDiaryGroups));
                 console.log(error);
             }
         }
@@ -58,12 +60,16 @@ const Diet = () => {
                     {/* Left side when in a large screen. */}
                     <div className="col-sm-10">
                         <div className="app-container mb-2">
-                            <GoalSetter dailyTargets={dailyTargets} setDailyTargets={setDailyTargets}/>
+                            <GoalSetter
+                                dailyTargets={dailyTargets}
+                                setDailyTargets={setDailyTargets}
+                            />
                         </div>
                         <div className="day-container app-container mb-4">
                             <Diary
                                 meals={meals}
                                 setMeals={setMeals}
+                                currentDay={currentDay}
                                 dailyTargets={dailyTargets}
                                 selectedMealIdx={selectedMealIdx}
                                 setSelectedMealIdx={setSelectedMealIdx}
@@ -73,7 +79,7 @@ const Diet = () => {
                         </div>
 
                         
-                        <div className="food-summary-container app-container mb-4">
+                        {/* <div className="food-summary-container app-container mb-4">
                             <FoodSummary
                                 meals={meals}
                                 dailyTargets={dailyTargets}
@@ -89,7 +95,7 @@ const Diet = () => {
                                 selectedMealIdx={selectedMealIdx}
                                 selectedFoodObj={selectedFoodObj}
                             />
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Right side when in large screen */}

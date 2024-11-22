@@ -15,7 +15,7 @@ import SearchBar from "./SearchBar";
 import FoodsTable from "./FoodsTable";
 
 
-const AddFoodModal = ({showModal, setShowModal, meals, setMeals, dailyTargets}) => {
+const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, dailyTargets}) => {
     const [tab, setTab] = useState(AddFoodModalTabs[0]);
 
     const [foodProductsLoading, setFoodProductsLoading] = useState(false);
@@ -107,6 +107,7 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, dailyTargets}) 
                                     setSelectedFood={setSelectedFood}
                                     meals={meals}
                                     setMeals={setMeals}
+                                    currentDay={currentDay}
                                     dailyTargets={dailyTargets}
                                 />
                             </div>

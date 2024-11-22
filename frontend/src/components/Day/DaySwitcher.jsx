@@ -14,7 +14,7 @@ const DaySwitcher = ({currentDay, setCurrentDay}) => {
             style={navButtonsStyle}
             >
                 <div className="d-flex justify-content-center align-items-center">
-                    <span class="material-symbols-outlined">
+                    <span className="material-symbols-outlined">
                         arrow_back
                     </span>
                 </div>
@@ -26,7 +26,7 @@ const DaySwitcher = ({currentDay, setCurrentDay}) => {
             style={navButtonsStyle}
             >
                 <div className="d-flex justify-content-center align-items-center">
-                    <span class="material-symbols-outlined">
+                    <span className="material-symbols-outlined">
                         arrow_forward
                     </span>
                 </div>

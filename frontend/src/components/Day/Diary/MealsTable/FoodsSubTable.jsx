@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import { titleCase, roundTo, validateDecimalNumberInput } from "../../../../lib/functions";
 import { servingMeasures } from "../../../../constants";
 
-const FoodsSubTable = ({meals, setMeals, selectedFoodObj, setSelectedFoodObj, mealObj, isMealSelected, handleOnClickFood}) => {
+const FoodsSubTable = ({meals, setMeals, currentDay, selectedFoodObj, setSelectedFoodObj, mealObj, isMealSelected, handleOnClickFood}) => {
 
     const changeFoodServings = (e, idx, food) => {
         const value = parseFloat(e.target.value);
         if (isNaN(value)){
             return;
         }
-        const mealObj = meals[food.diaryData.mealIdx]
+        console.log(meals);
+        const mealObj = meals[currentDay][food.diaryData.mealIdx];
+        console.log(mealObj);
         const mealIdx = food.diaryData.mealIdx;
 
         let updatedFoods = mealObj.foods;
@@ -33,12 +35,18 @@ const FoodsSubTable = ({meals, setMeals, selectedFoodObj, setSelectedFoodObj, me
         updatedFoods[idx] = updatedFood;
 
         setMeals(prev => {
-            const newArray = prev.map((m, idx) => {
-                return idx == mealIdx?
-                {...m, foods: updatedFoods}
-                : m
-            })
-            return newArray;
+            return prev.map((day, dayIdx) => {
+                if (dayIdx == currentDay) {
+                    const newArray = day.map((m, idx) => {
+                        if (idx == mealIdx){
+                            return ({...m, foods: updatedFoods})
+                        }
+                        return m;
+                    })
+                    return newArray;
+                }
+                return day;
+            });
         })
         setSelectedFoodObj(updatedFood);
        // Food wont unselect because the food state only updates when onBlur and not when onChange.
@@ -49,7 +57,7 @@ const FoodsSubTable = ({meals, setMeals, selectedFoodObj, setSelectedFoodObj, me
         const sm = sms.find(item => item.unit == value);
         // Because the serving measure changed, the portion size too and so did the cost and nutritional contributions.
 
-        const mealObj = meals[food.diaryData.mealIdx]
+        const mealObj = meals[currentDay][food.diaryData.mealIdx]
         const mealIdx = food.diaryData.mealIdx;
 
         let updatedFoods = mealObj.foods;
@@ -70,30 +78,37 @@ const FoodsSubTable = ({meals, setMeals, selectedFoodObj, setSelectedFoodObj, me
         })
         updatedFoods[idx] = updatedFood;
         setMeals(prev => {
-            const newArray = prev.map((m, idx) => {
-                return idx == mealIdx?
-                {...m, foods: updatedFoods}
-                : m
+            return prev.map((day, dayIdx) => {
+                if (dayIdx == currentDay) {
+                    const newArray = day.map((m, idx) => {
+                        if (idx == mealIdx) return ({...m, foods: updatedFoods})
+                        return m;
+                    })
+                    return newArray;
+                }
             })
-            return newArray;
         })
         setSelectedFoodObj(updatedFood);
     }
 
     const removeFood = (food, idx) => {
-        const mealObj = meals[food.diaryData.mealIdx]
+        const mealObj = meals[currentDay][food.diaryData.mealIdx]
         const mealIdx = food.diaryData.mealIdx;
 
         const updatedFoods = [...mealObj.foods];
         updatedFoods.splice(idx, 1);
 
         setMeals(prev => {
-            const newArray = prev.map((m, idx) => {
-                return idx == mealIdx?
-                {...m, foods: updatedFoods}
-                : m
+            return prev.map((day, dayIdx) => {
+                if (dayIdx == currentDay){
+                    const newArray = day.map((m, idx) => {
+                        if (idx == mealIdx) return {...m, foods: updatedFoods}
+                        return m
+                    })
+                    return newArray;
+                }
+                return day;
             })
-            return newArray;
         })
     }
 

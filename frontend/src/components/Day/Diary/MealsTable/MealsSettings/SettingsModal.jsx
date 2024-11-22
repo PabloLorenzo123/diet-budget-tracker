@@ -7,14 +7,14 @@ import { arraysAreEqual, roundTo } from "../../../../../lib/functions";
 import { toast } from "react-toastify";
 import api from "../../../../../api";
 
-const SettingsModal = ({setShow, width, height, meals, setMeals, prevSettings, setPrevSettings, determineSettings}) => {
+const SettingsModal = ({setShow, width, height, meals, setMeals, currentDay, prevSettings, setPrevSettings, determineSettings}) => {
 
     const [isResLoading, setIsResLoading] = useState(false); // Use for the spinning wheel in the save btn.
     const [isResSuccesful, setIsResSuccesfull] = useState(false); // Use for the check mark in the save btn.
 
     const saveMealsSettings = async () => {
         setIsResLoading(true);
-        const requestBody = meals.filter(m => m).map((m, idx) => {
+        const requestBody = meals[currentDay].filter(m => m).map((m, idx) => {
             return {
                 order: idx,
                 name: m.name,
@@ -41,17 +41,21 @@ const SettingsModal = ({setShow, width, height, meals, setMeals, prevSettings, s
     const toggleHideFromDiary = (e, index) => {
         // Hides or shows a meal in the Dairy. This triggers when clicking the checkbox.
         setMeals(prev => {
-            return prev.map((m, idx) => {
-                if (idx == index) {
-                    return {...m, hideFromDiary: !m.hideFromDiary}
-                } else return m
+            return prev.map((day, dayIdx) => {
+                if (dayIdx == currentDay){
+                    return day.map((m, idx) => {
+                        if (idx == index) return ({...m, hideFromDiary: !m.hideFromDiary});
+                        return m; 
+                    })
+                }
+                return day;
             })
         })
     }
 
     const changeMealName = (e, index) => {
         const newName = e.target.value;
-        let newArray = [...meals]
+        let newArray = [...meals[currentDay]]
         if (newArray[index] == undefined){
             // If this index is undefined then create slots.
             // Fill the empty spots with undefined values.
@@ -61,18 +65,25 @@ const SettingsModal = ({setShow, width, height, meals, setMeals, prevSettings, s
                 }
             }
         }
-        setMeals(() => {
-            const updatedArray = newArray.map((m, idx) => {
-                if (idx == index) {
-                    const hideFromDiary = newName? false: true; // If not name provided then hide from dairy.
-                    return m == undefined? {
-                        ...defaultDiaryGroupObject,
-                        name: newName,
-                        hideFromDiary: false
-                    } : {...m, name: newName, hideFromDiary};
-                } else return m;
+
+        setMeals((prev) => {
+            return prev.map((day, dayIdx) => {
+                if (dayIdx == currentDay) {
+                    const updatedArray = newArray.map((m, idx) => {
+                        if (idx == index) {
+                            const hideFromDiary = newName? false: true; // If not name provided then hide from dairy.
+                            return m == undefined? {
+                                ...defaultDiaryGroupObject,
+                                name: newName,
+                                hideFromDiary: false
+                            } : {...m, name: newName, hideFromDiary};
+                        } else return m;
+                    })
+                    return updatedArray
+                }
+                return day;
             })
-            return updatedArray
+            
         })
     }
 
@@ -91,7 +102,7 @@ const SettingsModal = ({setShow, width, height, meals, setMeals, prevSettings, s
                                 <div className="d-flex justify-content-between align-items-center">
                                     {(() => {
                                         const mealIdx = colIdx * itemsPerColumn + itemIdx
-                                        const meal = meals[mealIdx];
+                                        const meal = meals[currentDay][mealIdx];
                                         const isChecked = meal? !meal.hideFromDiary && meal.name: false;
                                         return (<>
                                             <input

@@ -4,21 +4,28 @@ import { titleCase, roundTo } from "../../../../lib/functions";
 import "../../../../styles/diary/MealsTable.css";
 import FoodsSubTable from "./FoodsSubTable";
 
-const MealsTable = ({meals, setMeals, mealNames, selectedMealIdx, setSelectedMealIdx, selectedFoodObj, setSelectedFoodObj}) => {
+const MealsTable = ({meals, setMeals, currentDay, selectedMealIdx, setSelectedMealIdx, selectedFoodObj, setSelectedFoodObj}) => {
 
-    const getTotalNutrientsInMeal = (foods, nutrient) => roundTo(foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 2);
+    const getTotalNutrientsInMeal = (foods, nutrient) => 
+        roundTo(foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 2);
 
     const setShow = (e, mealIdx) => {
         // Toggles the show property of a meal.
         e.stopPropagation(); // To avoid evocating handleOnClickMeal().
         setMeals(prev => {
-            // Create a new array with updated objects
-            const newArray = prev.map((meal, idx) =>
-                idx === mealIdx
-                    ? { ...meal, show: !meal.show } // Create a new object for the updated meal
-                    : meal
-            );
-            return newArray;
+            return prev.map((day, dayIdx) => {
+                if (dayIdx == currentDay) {
+                    // Create a new array with updated objects
+                    const newArray = day.map((meal, idx) => {
+                        if (idx === mealIdx) {
+                            return { ...meal, show: !meal.show }; // Create a new object for the updated meal
+                        }
+                        return meal;
+                    });
+                    return newArray;
+                }
+                return day;
+            });
         });
     }
 
@@ -40,7 +47,7 @@ const MealsTable = ({meals, setMeals, mealNames, selectedMealIdx, setSelectedMea
             setSelectedFoodObj(null);
         }
         if (selectedMealIdx != null) setSelectedMealIdx(null);
-        console.log(food);
+        //console.log(food);
     }
 
     return (
@@ -55,7 +62,7 @@ const MealsTable = ({meals, setMeals, mealNames, selectedMealIdx, setSelectedMea
                         </tr>
                     </thead>
                     <tbody>
-                        {meals.map((meal, idx) => {
+                        {meals[currentDay].map((meal, idx) => {
                             if (!meal) return;
                             if (meal.hideFromDiary) return;
                             const mealName = meal.name;
@@ -98,6 +105,7 @@ const MealsTable = ({meals, setMeals, mealNames, selectedMealIdx, setSelectedMea
                                 <FoodsSubTable
                                     meals={meals}
                                     setMeals={setMeals}
+                                    currentDay={currentDay}
                                     mealObj={mealObj}
                                     selectedFoodObj={selectedFoodObj}
                                     setSelectedFoodObj={setSelectedFoodObj}

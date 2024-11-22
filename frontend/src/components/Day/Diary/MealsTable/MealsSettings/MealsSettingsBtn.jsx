@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import SettingsModal from "./SettingsModal";
 
-const MealsSettingsBtn = ({meals, setMeals}) => {
+const MealsSettingsBtn = ({meals, setMeals, currentDay}) => {
     const [showModal, setShowModal] = useState(false);
 
-    const determineSettings = () => meals.map(m => m?.name); // Function that creates the criteria of the current value of the settings.
+    const determineSettings = () => meals[currentDay].map(m => m?.name); // Function that creates the criteria of the current value of the settings.
 
     const [prevSettings, setPrevSettings] = useState(() => {
         return determineSettings(); // Returns a list of the meal names if the object has a meal attribute.
@@ -28,6 +28,7 @@ const MealsSettingsBtn = ({meals, setMeals}) => {
                 setShow={setShowModal}
                 meals={meals}
                 setMeals={setMeals}
+                currentDay={currentDay}
                 prevSettings={prevSettings}
                 setPrevSettings={setPrevSettings}
                 determineSettings={determineSettings}

@@ -5,7 +5,7 @@ import { servingMeasures } from "../../../../../constants";
 import AddToDiaryBtn from "../AddToDiaryBtn";
 import FoodDetailsTargets from "./FoodDetailsTargets";
 
-const FoodDetailsForm = ({showModal, setShowModal, showFoodDetails, setShowFoodDetails, selectedFood, setSelectedFood, meals, setMeals, dailyTargets}) => {
+const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood, meals, setMeals, currentDay, dailyTargets}) => {
     const [addToDiaryForm, setAddToDairyForm] = useState({
         diaryGroup: 0,
         servings: 1,
@@ -79,7 +79,7 @@ const FoodDetailsForm = ({showModal, setShowModal, showFoodDetails, setShowFoodD
                                     name="diaryGroup"
                                     value={addToDiaryForm.diaryGroup}
                                 >
-                                    {meals.map((meal, idx) => {
+                                    {meals[currentDay].map((meal, idx) => {
                                         if (!meal) return; // If undefined then don't show.
                                         if (meal.hideFromDiary) return;
                                         return <option key={meal.name} value={idx}>{titleCase(meal.name)}</option>
@@ -124,6 +124,7 @@ const FoodDetailsForm = ({showModal, setShowModal, showFoodDetails, setShowFoodD
                 <AddToDiaryBtn
                     meals={meals}
                     setMeals={setMeals}
+                    currentDay={currentDay}
                     showModal={showModal}
                     setShowModal={setShowModal}
                     selectedFood={selectedFood}
