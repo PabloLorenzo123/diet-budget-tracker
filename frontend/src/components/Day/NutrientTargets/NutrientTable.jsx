@@ -5,7 +5,7 @@ import {getTotalNutrients, titleCase} from "../../../lib/functions";
 import '../../../styles/nutrientTableForm.css';
 
 
-const NutrientTable = ({category, dailyTargets, meals, selectedMeal, selectedFoodObj}) => {
+const NutrientTable = ({category, dailyTargets, mealsArr, selectedMeal, selectedFoodObj}) => {
     return (
         <div className="table-wrapper">
             <table className="table nutrient-table">
@@ -28,7 +28,7 @@ const NutrientTable = ({category, dailyTargets, meals, selectedMeal, selectedFoo
                         return (
                             <Fragment key={nutrient.name}>
                                 {(() => {
-                                    const [totalNutrients, totalNutrientsPercentage] = getTotalNutrients(nutrient.name, meals, dailyTargets, selectedMeal, selectedFoodObj);
+                                    const [totalNutrients, totalNutrientsPercentage] = getTotalNutrients(nutrient.name, mealsArr, dailyTargets, selectedMeal, selectedFoodObj);
                                     return (
                                         <tr key={nutrient.name}>
                                             <td>{nutrient.altName}</td>

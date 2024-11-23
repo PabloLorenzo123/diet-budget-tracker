@@ -5,7 +5,7 @@ export const AddFoodModalTabs = ['All', 'Create'];
 
 export const diaryGroups = ['uncategorized', 'breakfast', 'lunch', 'dinner', 'snacks'];
 
-export const defaultDiaryGroupObject = {name: '', foods: [], show: false};
+export const defaultDiaryGroupObject = {name: '', foods: [], show: false, hideFromDiary: false};
 export const defaultDiaryGroups = [
     {name: 'breakfast', foods: [], show: false, hideFromDiary: false}, // May consider adding a field named 'order'.
     {name: 'lunch', foods: [], show: false, hideFromDiary: false},

@@ -5,9 +5,9 @@ import {getTotalNutrients} from "../../../lib/functions";
 import Charts from "./Charts";
 
 
+const FoodSummary = ({meals, currentDay, dailyTargets, selectedMealIdx, selectedFoodObj}) => {
 
-
-const FoodSummary = ({meals, dailyTargets, selectedMealIdx, selectedFoodObj}) => {
+    const mealsArr = meals[currentDay];
 
     return (
         <>
@@ -15,7 +15,7 @@ const FoodSummary = ({meals, dailyTargets, selectedMealIdx, selectedFoodObj}) =>
             <div className="col-sm-6 border-end">
                 <Charts
                     dailyTargets={dailyTargets}
-                    meals={meals}
+                    mealsArr={mealsArr}
                     selectedMealIdx={selectedMealIdx}
                     selectedFoodObj={selectedFoodObj}
                 />
@@ -32,7 +32,7 @@ const FoodSummary = ({meals, dailyTargets, selectedMealIdx, selectedFoodObj}) =>
                             {/* Progress bar */}
                             <div className="col-12 col-sm-6 ">
                                 {(() => {
-                                    const [totalNutrients, totalNutrientsPercentage] = getTotalNutrients(macronutrient.name, meals, dailyTargets, selectedMealIdx, selectedFoodObj);
+                                    const [totalNutrients, totalNutrientsPercentage] = getTotalNutrients(macronutrient.name, mealsArr, dailyTargets, selectedMealIdx, selectedFoodObj);
                                     return (
                                         <>
                                             {/* Progress bar details on top of the bar */}

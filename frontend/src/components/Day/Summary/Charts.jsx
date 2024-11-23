@@ -3,9 +3,9 @@ import { diaryGroups } from "../../../constants";
 import { titleCase, roundTo} from "../../../lib/functions";
 import DoughnutChart from "../../DoughnutChart";
 
-const Charts = ({dailyTargets, meals, selectedMealIdx, selectedFoodObj}) => {
+const Charts = ({dailyTargets, mealsArr, selectedMealIdx, selectedFoodObj}) => {
     // Arr: Each meal cost individually.
-    const mealsCostsArr = meals.filter(m => m && !m.hideFromDiary).map(meal => 
+    const mealsCostsArr = mealsArr.filter(m => m && !m.hideFromDiary).map(meal => 
         roundTo(meal.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 2));
     // Number: total momeny spent.
     const totalMoneySpent = roundTo(mealsCostsArr.reduce((acc, m) => acc + m, 0), 2);
@@ -15,7 +15,7 @@ const Charts = ({dailyTargets, meals, selectedMealIdx, selectedFoodObj}) => {
 
     const isWithinBudget = budgetRemainning >= 0;
 
-    const mealLabels = meals.filter(m => m).map(m => titleCase(m.name));
+    const mealLabels = mealsArr.filter(m => m && !m.hideFromDiary).map(m => titleCase(m.name));
 
     return (
         <>
@@ -24,7 +24,7 @@ const Charts = ({dailyTargets, meals, selectedMealIdx, selectedFoodObj}) => {
         <div className="row">
             {/* Spent Budget */}
             {(() => {
-                const meal = meals[selectedMealIdx];
+                const meal = mealsArr[selectedMealIdx];
                 const mealSelected = selectedMealIdx != null;
                 const labels = mealSelected? meal.foods.map(f => f.foodData.productName): mealLabels;
                 const mealsOrMealCosts = mealSelected? meal.foods.map(f => f.diaryData.totalCost): mealsCostsArr;

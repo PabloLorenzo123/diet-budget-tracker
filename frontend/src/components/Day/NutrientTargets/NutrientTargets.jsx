@@ -4,8 +4,10 @@ import NutrientTable from "./NutrientTable";
 import { nutrientsTable } from "../../../lib/nutrients";
 import { splitArray } from "../../../lib/functions";
 
-const NutrientTargets = ({dailyTargets, meals, selectedMealIdx, selectedFoodObj}) => {
+const NutrientTargets = ({dailyTargets, meals, currentDay, selectedMealIdx, selectedFoodObj}) => {
     
+    const mealsArr = meals[currentDay];
+
     const [leftColumnCategories, rightColumnCategories] = splitArray(Object.keys(nutrientsTable));
 
     const renderTables = (arr) => {
@@ -15,7 +17,7 @@ const NutrientTargets = ({dailyTargets, meals, selectedMealIdx, selectedFoodObj}
                     <NutrientTable
                         category={category}
                         dailyTargets={dailyTargets}
-                        meals={meals}
+                        mealsArr={mealsArr}
                         selectedMeal={selectedMealIdx}
                         selectedFoodObj={selectedFoodObj}
                     />

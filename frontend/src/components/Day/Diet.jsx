@@ -14,12 +14,14 @@ import { defaultDiaryGroupObject, defaultDiaryGroups, maxNumberOfMeals } from ".
 
 import api from "../../api";
 import DaySwitcher from "./DaySwitcher";
+import GroceryHaul from "./GroceryHaul";
 
 
 const Diet = () => {
     const [dailyTargets, setDailyTargets] = useState(dailyTargetState)
     
     const [currentDay, setCurrentDay] = useState(0);
+    const [groceries, setGroceries] = useState({});
     const [meals, setMeals] = useState([[]]); // A list of lists (days) of objects [...{name, foods, show}] (meals).
 
 
@@ -79,9 +81,10 @@ const Diet = () => {
                         </div>
 
                         
-                        {/* <div className="food-summary-container app-container mb-4">
+                        <div className="food-summary-container app-container mb-4">
                             <FoodSummary
                                 meals={meals}
+                                currentDay={currentDay}
                                 dailyTargets={dailyTargets}
                                 selectedMealIdx={selectedMealIdx}
                                 selectedFoodObj={selectedFoodObj}
@@ -91,21 +94,32 @@ const Diet = () => {
                         <div className="nutrient-targets-container app-container">
                             <NutrientTargets
                                 meals={meals}
+                                currentDay={currentDay}
                                 dailyTargets={dailyTargets}
                                 selectedMealIdx={selectedMealIdx}
                                 selectedFoodObj={selectedFoodObj}
                             />
-                        </div> */}
+                        </div>
                     </div>
 
                     {/* Right side when in large screen */}
                     <div className="col-sm-2">
-                        <div className="app-container sticky-sm-top">
-                            <DaySwitcher
-                                currentDay={currentDay}
-                                setCurrentDay={setCurrentDay}
-                            />
+                        <div className="sticky-sm-top">
+                            <div className="app-container">
+                                <DaySwitcher
+                                    meals={meals}
+                                    setMeals={setMeals}
+                                    currentDay={currentDay}
+                                    setCurrentDay={setCurrentDay}
+                                />
+                            </div>
+
+                            <div className="app-container">
+                                <GroceryHaul
+                                />
+                            </div>
                         </div>
+                        
                     </div>
 
 
