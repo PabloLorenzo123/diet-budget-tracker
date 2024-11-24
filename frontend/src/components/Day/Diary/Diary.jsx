@@ -3,7 +3,8 @@ import AddFoodBtn from "./AddFood/AddFoodBtn";
 import MealsTable from "./MealsTable/MealsTable";
 import MealsSettingsBtn from "./MealsTable/MealsSettings/MealsSettingsBtn";
 
-const Diary = ({meals, setMeals, currentDay, dailyTargets, selectedMealIdx, setSelectedMealIdx, selectedFoodObj, setSelectedFoodObj}) => {
+const Diary = ({meals, setMeals, currentDay, groceries, setGroceries,
+     dailyTargets, selectedMealIdx, setSelectedMealIdx, selectedFoodObj, setSelectedFoodObj}) => {
 
     return (
         <>
@@ -12,6 +13,8 @@ const Diary = ({meals, setMeals, currentDay, dailyTargets, selectedMealIdx, setS
                     meals={meals}
                     setMeals={setMeals}
                     currentDay={currentDay}
+                    groceries={groceries}
+                    setGroceries={setGroceries}
                     dailyTargets={dailyTargets}
                 />
                 <MealsSettingsBtn
@@ -26,6 +29,8 @@ const Diary = ({meals, setMeals, currentDay, dailyTargets, selectedMealIdx, setS
                 meals={meals}
                 setMeals={setMeals}
                 currentDay={currentDay}
+                groceries={groceries}
+                setGroceries={setGroceries}
                 selectedMealIdx={selectedMealIdx}
                 setSelectedMealIdx={setSelectedMealIdx}
                 selectedFoodObj={selectedFoodObj}

@@ -2,16 +2,17 @@ import { useState, useEffect } from "react";
 import { titleCase, roundTo, validateDecimalNumberInput } from "../../../../lib/functions";
 import { servingMeasures } from "../../../../constants";
 
-const FoodsSubTable = ({meals, setMeals, currentDay, selectedFoodObj, setSelectedFoodObj, mealObj, isMealSelected, handleOnClickFood}) => {
+const FoodsSubTable = ({meals, setMeals, currentDay, groceries, setGroceries,
+     selectedFoodObj, setSelectedFoodObj, mealObj, isMealSelected, handleOnClickFood}) => {
 
     const changeFoodServings = (e, idx, food) => {
         const value = parseFloat(e.target.value);
         if (isNaN(value)){
             return;
         }
-        console.log(meals);
+        // console.log(meals);
         const mealObj = meals[currentDay][food.diaryData.mealIdx];
-        console.log(mealObj);
+        // console.log(mealObj);
         const mealIdx = food.diaryData.mealIdx;
 
         let updatedFoods = mealObj.foods;
@@ -34,6 +35,7 @@ const FoodsSubTable = ({meals, setMeals, currentDay, selectedFoodObj, setSelecte
 
         updatedFoods[idx] = updatedFood;
 
+        // Update meals.
         setMeals(prev => {
             return prev.map((day, dayIdx) => {
                 if (dayIdx == currentDay) {
@@ -47,6 +49,18 @@ const FoodsSubTable = ({meals, setMeals, currentDay, selectedFoodObj, setSelecte
                 }
                 return day;
             });
+        })
+        // Update in groceries.
+        const productId = updatedFood.id
+        setGroceries(prev => {
+            return {
+                ...prev,
+                [productId]: {
+                    ...groceries[productId],
+                    // Update the food object corresponding to this one in the foods array.
+                    foods: [...groceries[productId].foods.splice(updatedFood.groceriesIdx, 1, updatedFood)]
+                }
+            }
         })
         setSelectedFoodObj(updatedFood);
        // Food wont unselect because the food state only updates when onBlur and not when onChange.
@@ -88,6 +102,18 @@ const FoodsSubTable = ({meals, setMeals, currentDay, selectedFoodObj, setSelecte
                 }
             })
         })
+        // Update in groceries.
+        const productId = updatedFood.id
+        setGroceries(prev => {
+            return {
+                ...prev,
+                [productId]: {
+                    ...groceries[productId],
+                    // Update the food object corresponding to this one in the foods array.
+                    foods: [...groceries[productId].foods.splice(updatedFood.groceriesIdx, 1, updatedFood)]
+                }
+            }
+        })
         setSelectedFoodObj(updatedFood);
     }
 
@@ -110,6 +136,19 @@ const FoodsSubTable = ({meals, setMeals, currentDay, selectedFoodObj, setSelecte
                 return day;
             })
         })
+
+         // Update in groceries.
+         const productId = selectedFoodObj.id
+         setGroceries(prev => {
+             return {
+                 ...prev,
+                 [productId]: {
+                     ...groceries[productId],
+                     // Update the food object corresponding to this one in the foods array.
+                     foods: [...groceries[productId].foods.splice(selectedFoodObj.groceriesIdx, 1)]
+                 }
+             }
+         })
     }
 
     return (

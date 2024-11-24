@@ -3,7 +3,7 @@ import AddFoodModal from "./AddFoodModal";
 
 import '../../../../styles/addFoodBtn/AddFoodBtn.css';
 
-const AddFoodBtn = ({meals, setMeals, currentDay, dailyTargets}) => {
+const AddFoodBtn = ({meals, setMeals, currentDay, groceries, setGroceries, dailyTargets}) => {
     const [showModal, setShowModal] = useState(false);
 
     return (
@@ -20,6 +20,8 @@ const AddFoodBtn = ({meals, setMeals, currentDay, dailyTargets}) => {
                     meals={meals}
                     setMeals={setMeals}
                     currentDay={currentDay}
+                    groceries={groceries}
+                    setGroceries={setGroceries}
                     dailyTargets={dailyTargets}
                 />
             }

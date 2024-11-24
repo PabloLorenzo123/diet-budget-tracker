@@ -5,13 +5,31 @@ import { servingMeasures } from "../../../../../constants";
 import AddToDiaryBtn from "../AddToDiaryBtn";
 import FoodDetailsTargets from "./FoodDetailsTargets";
 
-const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood, meals, setMeals, currentDay, dailyTargets}) => {
+const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood, meals,
+     setMeals, currentDay, groceries, setGroceries, dailyTargets}) => {
+
     const [addToDiaryForm, setAddToDairyForm] = useState({
-        diaryGroup: 0,
+        diaryGroup: 0, // A.K.A What meal object.
         servings: 1,
         servingMeasure: {},
         servingMeasures: servingMeasures,
     })
+
+    useEffect(() => {
+        // Each time the selectedFood changes, add its serving measures to the form options.
+        if (!isObjEmpty(selectedFood)){
+            const newServingMeasures = [{
+                unit: selectedFood.foodData.measure,
+                valueInGrams: selectedFood.foodData.gramWeight
+            }, ...servingMeasures];
+
+            setAddToDairyForm(prev => ({
+                ...prev,
+                servingMeasure: newServingMeasures[0],
+                servingMeasures: newServingMeasures
+            }))
+        }
+    }, [selectedFood])
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -31,22 +49,7 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
         }))
     }
 
-    useEffect(() => {
-        // Each time the selectedFood changes, add its serving measures to the form options.
-        if (!isObjEmpty(selectedFood)){
-            const newServingMeasures = [{
-                unit: selectedFood.foodData.measure,
-                valueInGrams: selectedFood.foodData.gramWeight
-            }, ...servingMeasures];
-
-            setAddToDairyForm(prev => ({
-                ...prev,
-                servingMeasure: newServingMeasures[0],
-                servingMeasures: newServingMeasures
-            }))
-        }
-    }, [selectedFood])
-
+    
     return (
         <>
         <div className="container-fluid py-2 mt-2">
@@ -81,8 +84,8 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
                                 >
                                     {meals[currentDay].map((meal, idx) => {
                                         if (!meal) return; // If undefined then don't show.
-                                        if (meal.hideFromDiary) return;
-                                        return <option key={meal.name} value={idx}>{titleCase(meal.name)}</option>
+                                        if (meal.hideFromDiary) return; // If hidden don't show.
+                                        return <option key={idx} value={idx}>{titleCase(meal.name)}</option>
                                     })}
                                 </select>
                             </div>
@@ -125,6 +128,8 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
                     meals={meals}
                     setMeals={setMeals}
                     currentDay={currentDay}
+                    groceries={groceries}
+                    setGroceries={setGroceries}
                     showModal={showModal}
                     setShowModal={setShowModal}
                     selectedFood={selectedFood}

@@ -22,6 +22,7 @@ const Diet = () => {
     
     const [currentDay, setCurrentDay] = useState(0);
     const [groceries, setGroceries] = useState({});
+    // object of products ids = {foodData: {gramWeight, measure, productLink, productName, productPrice, servings}, foods: []}
     const [meals, setMeals] = useState([[]]); // A list of lists (days) of objects [...{name, foods, show}] (meals).
 
 
@@ -36,18 +37,19 @@ const Diet = () => {
                 if (res.status == 200){
                     const mealsSettings = resData.mealsSettings;
                     setMeals((prev) => {
-                        return prev.map((day, index) => {
-                            if (index == currentDay){
+                        return prev.map((day, dayIndex) => {
+                            if (dayIndex == currentDay){
                                 if (mealsSettings.length > 0) {
                                     return resData.mealsSettings.map(meal => ({...defaultDiaryGroupObject, ...meal}));
                                 }
                                 return defaultDiaryGroups
                             }
+                            return day;
                         })
                     })
                 }
             } catch (error) {
-                setMeals(prev => prev.map(day => defaultDiaryGroups));
+                setMeals(prev => prev.map(_ => defaultDiaryGroups));
                 console.log(error);
             }
         }
@@ -60,7 +62,7 @@ const Diet = () => {
                 <div className="main-container row">
 
                     {/* Left side when in a large screen. */}
-                    <div className="col-sm-10">
+                    <div className="col-sm-9">
                         <div className="app-container mb-2">
                             <GoalSetter
                                 dailyTargets={dailyTargets}
@@ -72,6 +74,8 @@ const Diet = () => {
                                 meals={meals}
                                 setMeals={setMeals}
                                 currentDay={currentDay}
+                                groceries={groceries}
+                                setGroceries={setGroceries}
                                 dailyTargets={dailyTargets}
                                 selectedMealIdx={selectedMealIdx}
                                 setSelectedMealIdx={setSelectedMealIdx}
@@ -103,9 +107,9 @@ const Diet = () => {
                     </div>
 
                     {/* Right side when in large screen */}
-                    <div className="col-sm-2">
+                    <div className="col-sm-3">
                         <div className="sticky-sm-top">
-                            <div className="app-container">
+                            <div className="app-container mb-2">
                                 <DaySwitcher
                                     meals={meals}
                                     setMeals={setMeals}
@@ -116,6 +120,7 @@ const Diet = () => {
 
                             <div className="app-container">
                                 <GroceryHaul
+                                    groceries={groceries}
                                 />
                             </div>
                         </div>

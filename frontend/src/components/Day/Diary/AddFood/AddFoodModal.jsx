@@ -15,13 +15,14 @@ import SearchBar from "./SearchBar";
 import FoodsTable from "./FoodsTable";
 
 
-const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, dailyTargets}) => {
+const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, groceries, setGroceries, dailyTargets}) => {
     const [tab, setTab] = useState(AddFoodModalTabs[0]);
 
     const [foodProductsLoading, setFoodProductsLoading] = useState(false);
     const [foodProducts, setFoodProducts] = useState([]);
 
     const [selectedFood, setSelectedFood] = useState({});
+    // => {id, nutritionData, foodData: {gramWeight, measure, productLink, productName, productPrice, servings}}
     const [showFoodDetails, setShowFoodDetails] = useState(false);
 
     const getAllFoodProducts = async () => {
@@ -74,9 +75,9 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, dai
             
 
             <div className="d-flex search-tabs mb-2">
-                {AddFoodModalTabs.map((item, idx) => {
+                {AddFoodModalTabs.map(item => {
                     return (
-                    <div className={`search-tab${item == tab? ' selected-tab': ''}`} key={item + 'tab'} onClick={() => setTab(item)}>
+                    <div className={`search-tab${item == tab? ' selected-tab': ''}`} key={item} onClick={() => setTab(item)}>
                         {item}
                     </div>
                 )})}
@@ -108,6 +109,8 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, dai
                                     meals={meals}
                                     setMeals={setMeals}
                                     currentDay={currentDay}
+                                    groceries={groceries}
+                                    setGroceries={setGroceries}
                                     dailyTargets={dailyTargets}
                                 />
                             </div>
