@@ -15,6 +15,7 @@ import { defaultDiaryGroupObject, defaultDiaryGroups, maxNumberOfMeals } from ".
 import api from "../../api";
 import DaySwitcher from "./DaySwitcher";
 import GroceryHaul from "./GroceryHaul";
+import DietSummary from "./DietSummary/DietSummary";
 
 
 const Diet = () => {
@@ -60,7 +61,6 @@ const Diet = () => {
         <>
             <main id="app">
                 <div className="main-container row">
-
                     {/* Left side when in a large screen. */}
                     <div className="col-sm-9">
                         <div className="app-container mb-2">
@@ -95,7 +95,7 @@ const Diet = () => {
                             />
                         </div>
                         
-                        <div className="nutrient-targets-container app-container">
+                        <div className="nutrient-targets-container app-container mb-2">
                             <NutrientTargets
                                 meals={meals}
                                 currentDay={currentDay}
@@ -118,9 +118,16 @@ const Diet = () => {
                                 />
                             </div>
 
-                            <div className="app-container">
+                            <div className="app-container mb-2">
                                 <GroceryHaul
                                     groceries={groceries}
+                                />
+                            </div>
+
+                            <div className="app-container">
+                                <DietSummary
+                                    meals={meals}
+                                    dailyTargetState={dailyTargetState}
                                 />
                             </div>
                         </div>

@@ -6,7 +6,7 @@ const AddToDiaryBtn = ({meals, setMeals, currentDay, groceries, setGroceries,
     
     const addToDiary = async () => {
         const mealIdx = addToDiaryForm.diaryGroup;
-        const groceriesIdx = groceries[selectedFood.id]?.foods.length? groceries[selectedFood.id].length: 0;
+        const groceriesIdx = groceries[selectedFood.id]?.foods.length? groceries[selectedFood.id].foods.length: 0;
 
         const servings = parseFloat(addToDiaryForm.servings);
         const servingMeasure = addToDiaryForm.servingMeasure; // {unit, valueInGrams}.
@@ -63,6 +63,7 @@ const AddToDiaryBtn = ({meals, setMeals, currentDay, groceries, setGroceries,
                 }
             }
         })
+        console.log(food);
         setShowModal(false);
     }
 

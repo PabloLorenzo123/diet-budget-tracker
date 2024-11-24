@@ -156,62 +156,63 @@ def save_food_product(request):
     if servings <= 0:
         return Response({"error": "Price needs to be greater than 0."}, status=status.HTTP_400_BAD_REQUEST)
     
+    #try:
+    food_product_data = {
+        'user': user,
+        'name': name,
+        'product_link': data.get("productLink"),
+        'img_url': data.get("imgUrl"),
+        'price': float(price),
+        'servings': float(data.get("servings", 1.0)),
+        'serving_measure': data.get("measure", "serving"),
+        'serving_size': data.get("gramWeight", None)
+    }
+    nutrition_data = {
+        # nutrients.
+        'energy': float(data.get("energy", 0.0)),
+        'protein': float(data.get("protein", 0.0)),
+        'fiber': float(data.get("fiber", 0.0)),
+        'starch': float(data.get("starch", 0.0)),
+        'sugars': float(data.get("sugars", 0.0)),
+        'added_sugars': float(data.get("addedSugars", 0.0)),
+        'net_carbs': float(data.get("netCarbs", 0.0)),
+        # Fats.
+        'monounsaturated_fat': float(data.get("monounsaturatedFat", 0.0)),
+        'polyunsaturated_fat': float(data.get("polyunsaturatedFat", 0.0)),
+        'saturated_fat': float(data.get("saturatedFat", 0.0)),
+        'trans_fat': float(data.get("transFat", 0.0)),
+        'cholesterol': float(data.get("cholesterol", 0.0)),
+        'total_fat': float(data.get("totalFat", 0.0)),
+        # Vitamins.
+        'b1': float(data.get("B1", 0.0)),
+        'b2': float(data.get("B2", 0.0)),
+        'b3': float(data.get("B3", 0.0)),
+        'b5': float(data.get("B5", 0.0)),
+        'b6': float(data.get("B6", 0.0)),
+        'b12': float(data.get("B12", 0.0)),
+        'choline': float(data.get("choline", 0.0)),
+        'folate': float(data.get("folate", 0.0)),
+        'a': float(data.get("A", 0.0)),
+        'c': float(data.get("C", 0.0)),
+        'd': float(data.get("D", 0.0)),
+        'e': float(data.get("E", 0.0)),
+        'k': float(data.get("K", 0.0)),
+        # Minerals.
+        'calcium': float(data.get("calcium", 0.0)),
+        'chromium': float(data.get("chromium", 0.0)),
+        'copper': float(data.get("copper", 0.0)),
+        'iron': float(data.get("iron", 0.0)),
+        'magnesium': float(data.get("magnesium", 0.0)),
+        'manganese': float(data.get("manganese", 0.0)),
+        'molybdenum': float(data.get("molybdenum", 0.0)),
+        'phosphorus': float(data.get("phosphorus", 0.0)),
+        'potassium': float(data.get("potassium", 0.0)),
+        'selenium': float(data.get("selenium", 0.0)),
+        'sodium': float(data.get("sodium", 00.0)),
+        'zinc': float(data.get("zinc", 0.0))
+    }
+    
     try:
-        food_product_data = {
-            'user': user,
-            'name': name,
-            'product_link': data.get("productLink"),
-            'img_url': data.get("imgUrl"),
-            'price': price,
-            'servings': data.get("servings", 1),
-            'serving_measure': data.get("measure", "serving"),
-            'serving_size': data.get("gramWeight")
-        }
-        nutrition_data = {
-            # nutrients.
-            'energy': data.get("energy", 0.0),
-            'protein': data.get("protein", 0.0),
-            'fiber': data.get("fiber", 0.0),
-            'starch': data.get("starch", 0.0),
-            'sugars': data.get("sugars", 0.0),
-            'added_sugars': data.get("addedSugars", 0.0),
-            'net_carbs': data.get("netCarbs", 0.0),
-            # Fats.
-            'monounsaturated_fat': data.get("monounsaturatedFat", 0.0),
-            'polyunsaturated_fat': data.get("polyunsaturatedFat", 0.0),
-            'saturated_fat': data.get("saturatedFat", 0.0),
-            'trans_fat': data.get("transFat", 0.0),
-            'cholesterol': data.get("cholesterol", 0.0),
-            'total_fat': data.get("totalFat", 0.0),
-            # Vitamins.
-            'b1': data.get("B1", 0.0),
-            'b2': data.get("B2", 0.0),
-            'b3': data.get("B3", 0.0),
-            'b5': data.get("B5", 0.0),
-            'b6': data.get("B6", 0.0),
-            'b12': data.get("B12", 0.0),
-            'choline': data.get("choline", 0.0),
-            'folate': data.get("folate", 0.0),
-            'a': data.get("A", 0.0),
-            'c': data.get("C", 0.0),
-            'd': data.get("D", 0.0),
-            'e': data.get("E", 0.0),
-            'k': data.get("K", 0.0),
-            # Minerals.
-            'calcium': data.get("calcium", 0.0),
-            'chromium': data.get("chromium", 0.0),
-            'copper': data.get("copper", 0.0),
-            'iron': data.get("iron", 0.0),
-            'magnesium': data.get("magnesium", 0.0),
-            'manganese': data.get("manganese", 0.0),
-            'molybdenum': data.get("molybdenum", 0.0),
-            'phosphorus': data.get("phosphorus", 0.0),
-            'potassium': data.get("potassium", 0.0),
-            'selenium': data.get("selenium", 0.0),
-            'sodium': data.get("sodium", 00.0),
-            'zinc': data.get("zinc", 0.0)
-        }
-        
         if request.method == 'POST':
             food_product = FoodProduct(**food_product_data)
             fp_nutrition_data = NutritionData(**nutrition_data)
@@ -241,8 +242,9 @@ def save_food_product(request):
                 return Response({"success": "Food product saved"}, status=status.HTTP_201_CREATED)   
             else:
                 return JsonResponse({'error': 'Food product not found'}, status=status.HTTP_404_NOT_FOUND)
-    
     except Exception as e:
+        print(e)
+        print(json.dumps(food_product_data, indent=2))
         return Response({"error": f"An unexpected error occurred. {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 

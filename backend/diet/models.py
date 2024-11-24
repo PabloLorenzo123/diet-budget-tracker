@@ -113,7 +113,7 @@ class FoodProduct(models.Model):
     product_link = models.URLField(null=True)
     img_url = models.URLField(null=True)
     price = models.DecimalField(max_digits=5, decimal_places=2, default=0) # In USD.
-    servings = models.IntegerField(default=1)
+    servings = models.DecimalField(max_digits=5, decimal_places=2, default=1)
     serving_measure = models.CharField(max_length=20, default="serving") # Serving, an egg, a tablespoon, etc.
     serving_size = models.DecimalField(max_digits=5, decimal_places=2, null=True) # Serving size is always in grams.
     
@@ -128,7 +128,7 @@ class FoodProduct(models.Model):
                 'productLink': self.product_link,
                 'servings': float(self.servings),
                 'measure': self.serving_measure,
-                'gramWeight': float(self.serving_size),
+                'gramWeight': self.serving_size,
                 'productPrice': float(self.price),
             },
             'nutritionData': self.nutrition_data.nutrients_in_json()

@@ -26,7 +26,10 @@ const DaySwitcher = ({meals, setMeals, currentDay, setCurrentDay}) => {
     const navButtonsStyle = {width: '50%'};
     return (
         <>
-        <h6 className="text-center fw-bold">Day {currentDay + 1}</h6>
+        <h6 className="text-center fw-bold">
+            Day {currentDay + 1}
+            {meals.length > 1? ` / ${meals.length}`: ''}
+            </h6>
         <div className="bg-secondary d-flex justify-content-center">
             {/* Previous button */}
             <button

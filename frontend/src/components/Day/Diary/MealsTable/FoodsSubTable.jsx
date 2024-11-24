@@ -5,7 +5,26 @@ import { servingMeasures } from "../../../../constants";
 const FoodsSubTable = ({meals, setMeals, currentDay, groceries, setGroceries,
      selectedFoodObj, setSelectedFoodObj, mealObj, isMealSelected, handleOnClickFood}) => {
 
-    const changeFoodServings = (e, idx, food) => {
+    const addUpdateFoodToGroceries = (updatedFood, del = false) => {
+        const productId = updatedFood.id
+        setGroceries(prev => {
+            return {
+                ...prev,
+                [productId]: {
+                    ...groceries[productId],
+                    // Update the food object corresponding to this one in the foods array.
+                    foods: [
+                        // This is quicker than a map(el => el.index == desiredIndex then updating).
+                        ...groceries[productId].foods.slice(0, updatedFood.diaryData.groceriesIdx),
+                        del? undefined: updatedFood,
+                        ...groceries[productId].foods.slice(updatedFood.diaryData.groceriesIdx +1)
+                    ]
+                }
+            }
+        })
+    }
+
+    const changeFoodServings = async (e, idx, food) => {
         const value = parseFloat(e.target.value);
         if (isNaN(value)){
             return;
@@ -51,17 +70,8 @@ const FoodsSubTable = ({meals, setMeals, currentDay, groceries, setGroceries,
             });
         })
         // Update in groceries.
-        const productId = updatedFood.id
-        setGroceries(prev => {
-            return {
-                ...prev,
-                [productId]: {
-                    ...groceries[productId],
-                    // Update the food object corresponding to this one in the foods array.
-                    foods: [...groceries[productId].foods.splice(updatedFood.groceriesIdx, 1, updatedFood)]
-                }
-            }
-        })
+        addUpdateFoodToGroceries(updatedFood);
+
         setSelectedFoodObj(updatedFood);
        // Food wont unselect because the food state only updates when onBlur and not when onChange.
     }
@@ -100,20 +110,12 @@ const FoodsSubTable = ({meals, setMeals, currentDay, groceries, setGroceries,
                     })
                     return newArray;
                 }
+                return day;
             })
         })
         // Update in groceries.
-        const productId = updatedFood.id
-        setGroceries(prev => {
-            return {
-                ...prev,
-                [productId]: {
-                    ...groceries[productId],
-                    // Update the food object corresponding to this one in the foods array.
-                    foods: [...groceries[productId].foods.splice(updatedFood.groceriesIdx, 1, updatedFood)]
-                }
-            }
-        })
+        addUpdateFoodToGroceries(updatedFood);
+
         setSelectedFoodObj(updatedFood);
     }
 
@@ -138,17 +140,7 @@ const FoodsSubTable = ({meals, setMeals, currentDay, groceries, setGroceries,
         })
 
          // Update in groceries.
-         const productId = selectedFoodObj.id
-         setGroceries(prev => {
-             return {
-                 ...prev,
-                 [productId]: {
-                     ...groceries[productId],
-                     // Update the food object corresponding to this one in the foods array.
-                     foods: [...groceries[productId].foods.splice(selectedFoodObj.groceriesIdx, 1)]
-                 }
-             }
-         })
+         addUpdateFoodToGroceries(selectedFoodObj, true);
     }
 
     return (

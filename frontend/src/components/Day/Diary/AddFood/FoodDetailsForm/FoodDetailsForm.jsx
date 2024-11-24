@@ -54,8 +54,21 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
         <>
         <div className="container-fluid py-2 mt-2">
             {/* Header product name */}
-            <div className="mb-1 text-center fw-bold">
+            <div className="mb-1 fw-bold d-flex align-items-center justify-content-center">
                 {selectedFood.foodData.productName}
+                {/* Open link in new tab button */}
+                <button className="bg-transparent border-0 p-0 m-0 d-flex align-items-center">
+                    <span className="material-symbols-outlined">
+                        {selectedFood.foodData.productLink?
+                            <a href={selectedFood.foodData.productLink} target="_blank" className="text-decoration-none text-body">
+                                open_in_new
+                            </a>
+                            :
+                            'open_in_new'
+                        }
+                    </span>
+                </button>
+                
             </div>
             {/* Blocks */}
             <div className="row mb-2 d-flex justify-content-around">

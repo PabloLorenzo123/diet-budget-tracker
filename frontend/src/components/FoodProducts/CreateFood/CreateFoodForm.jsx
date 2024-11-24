@@ -14,7 +14,7 @@ const defaultFoodData = {
   productLink: "",
   servings: 1, // How many servings are in the product.
   measure: "serving", // It could be a serving, a tbspoon, an egg.
-  gramWeight: "", // How many grams is a serving, this is optional. n/a for eggs for instance, grams or mililtes.
+  gramWeight: null, // How many grams is a serving, this is optional. n/a for eggs for instance, grams or mililtes.
   productPrice: 0
 }
 
