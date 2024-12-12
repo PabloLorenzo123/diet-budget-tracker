@@ -9,6 +9,7 @@ urlpatterns = [
     path('food_products/search/', views.search_food_products, name="search_food_products"),
     # POST & PUT.
     path('save_food/', views.save_food_product, name="save_food_product"),
+    path('save-diet-plan/', views.save_diet_plan, name="save_diet_plan"),
     # DELETE.
     path('food_product/<uuid:id>/', views.food_product, name="food_product"),
 ]

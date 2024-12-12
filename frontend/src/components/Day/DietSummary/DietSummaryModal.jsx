@@ -1,5 +1,7 @@
 import {useState, useEffect, Fragment} from 'react';
-import { roundTo } from '../../../lib/functions';
+
+import { roundTo, getTotalNutrientsInMeal } from '../../../lib/functions';
+
 import Modal from '../../Modal';
 
 const DietSummaryModal = ({meals, setShowModal}) => {
@@ -13,22 +15,31 @@ const DietSummaryModal = ({meals, setShowModal}) => {
             {meals.map((day, idx) => {
                 return (
                     <Fragment key={idx}>
-                        <h5 className='fw-bold'>{`Day ${idx + 1}`}</h5>
-                        <hr />
+                        <h5 className='fw-bold m-0 p-0'>
+                            {`Day ${idx + 1}`}
+                        </h5>
+                        <hr className='mt-2'/>
+
                         {/* Meals */}
                     
-                                
+                        {/*Show meals that are not hidden and that have food elements within them.*/}
                         {day.filter(m => m && !m.hideFromDiary && m.foods.length).map((meal, idx) => {
-                            const totalCalories = roundTo(meal.foods.reduce((acc, f) => acc + f.nutritionalContribution.energy, 0), 2);
-                            const totalProtein = roundTo(meal.foods.reduce((acc, f) => acc + f.nutritionalContribution.protein, 0), 2);
-                            const totalNetCarbs = roundTo(meal.foods.reduce((acc, f) => acc + f.nutritionalContribution.netCarbs, 0), 2);
-                            const totalFat = roundTo(meal.foods.reduce((acc, f) => acc + f.nutritionalContribution.totalFat, 0), 2);
+                            // Total values of the meal.
+                            const totalEnergy = getTotalNutrientsInMeal(meal.foods, 'energy');
+                            const totalProtein = getTotalNutrientsInMeal(meal.foods, 'protein');
+                            const totalNetCarbs = getTotalNutrientsInMeal(meal.foods, 'netCarbs');
+                            const totalFat = getTotalNutrientsInMeal(meal.foods, 'totalFat');
                             const totalCost = roundTo(meal.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 2);
 
                             return (
                                 <>
-                                <h6>{meal.name}</h6>
+
                                 <table className='table'>
+                                    <thead>
+                                        <tr className='table-secondary'>
+                                            <th colSpan={'7'}>{meal.name}</th>
+                                        </tr>
+                                    </thead>
                                     <tbody className='table-group-divider'>
                                         {meal.foods.map((food, idx) => {
                                             console.log(food);
@@ -61,7 +72,7 @@ const DietSummaryModal = ({meals, setShowModal}) => {
                                                 <span className='fw-bold'>Total</span>
                                             </td>
                                             <td className='fw-bold'>
-                                                {totalCalories}kcal
+                                                {totalEnergy}kcal
                                             </td>
                                             <td className='fw-bold'>
                                                 {totalProtein}g

@@ -140,8 +140,28 @@ class FoodProduct(models.Model):
     
 class DietPlan(models.Model):
     """A diet plan has at most 7 different days."""
-    foodProducts = models.ManyToManyField(FoodProduct)
+    name = models.CharField(max_length=50, null=True)
+    creator = models.ForeignKey('accounts.user', on_delete=models.CASCADE, related_name='diets')
     budget = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    productsQuantity = models.JSONField() # ex {sardines: {servings: 20, items: 2}...}
-    days = models.JSONField() # Saves each day of the diet.
+    nutrient_targets = models.ForeignKey(NutritionData, null=True)
+    
 
+class DietDay(models.Model):
+    """A Diet plan has multiple DietDays, DietDays have multiple meals and meals have multiple food products."""
+    diet = models.ForeignKey(DietPlan, on_delete=models.CASCADE, related_name='days')
+    number = models.IntegerField()
+
+
+class DietDayMeal(models.Model):
+    """A Meal have multiple food products."""
+    name = models.CharField(max_length=10)
+    number = models.IntegerField()
+    day = models.ForeignKey(DietDay, on_delete=models.CASCADE, related_name='meals')
+
+
+class DietDayMealFood(models.Model):
+    """Food product in a meal"""
+    diet_day_meal = models.ForeignKey(DietDayMeal, on_delete=models.CASCADE, related_name="foods")
+    food_product = models.ForeignKey(FoodProduct, on_delete=models.CASCADE)
+    servings = models.FloatField(max_length=10)
+    serving_measure_in_grams = models.FloatField(max_length=10)

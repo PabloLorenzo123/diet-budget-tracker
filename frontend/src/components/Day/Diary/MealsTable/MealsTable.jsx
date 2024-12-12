@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from "react";
-import { titleCase, roundTo } from "../../../../lib/functions";
+import { titleCase, roundTo, getTotalNutrientsInMeal } from "../../../../lib/functions";
 
 import "../../../../styles/diary/MealsTable.css";
 import FoodsSubTable from "./FoodsSubTable";
@@ -7,8 +7,7 @@ import FoodsSubTable from "./FoodsSubTable";
 const MealsTable = ({meals, setMeals, currentDay, groceries, setGroceries, selectedMealIdx,
     setSelectedMealIdx, selectedFoodObj, setSelectedFoodObj}) => {
 
-    const getTotalNutrientsInMeal = (foods, nutrient) => 
-        roundTo(foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 2);
+    
 
     const setShow = (e, mealIdx) => {
         // Toggles the show property of a meal.
@@ -66,24 +65,31 @@ const MealsTable = ({meals, setMeals, currentDay, groceries, setGroceries, selec
                         {meals[currentDay].map((meal, idx) => {
                             if (!meal) return;
                             if (meal.hideFromDiary) return;
+
                             const mealName = meal.name;
-                            const isMealSelected = selectedMealIdx == idx && !selectedFoodObj? ' selected': '';
+                            const isMealSelectedClass = selectedMealIdx == idx && !selectedFoodObj? ' selected': '';
                             const mealObj = meal;
+                            // Totals.
+                            const totalEnergy = getTotalNutrientsInMeal(mealObj.foods, 'energy');
+                            const totalProtein = getTotalNutrientsInMeal(mealObj.foods, 'protein');
+                            const totalNetCarbs = getTotalNutrientsInMeal(mealObj.foods, 'netCarbs');
+                            const totalFat = getTotalNutrientsInMeal(mealObj.foods, 'totalFat');
+                            const totalCost = roundTo(mealObj.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 2);
 
                             return (
                             <Fragment key={idx}>
                                 {/* Tr meal, meal name and summary */}
-                                <tr className={`tr-meal ${isMealSelected}`} onClick={() => handleOnClickMeal(idx)}>
+                                <tr className={`tr-meal ${isMealSelectedClass}`} onClick={() => handleOnClickMeal(idx)}>
                                     <td className="td-meal">{titleCase(mealName)}</td>
                                     <td className="td-diary-data">
                                         {mealObj.foods.length > 0 && 
-                                        <>
-                                            <span>{getTotalNutrientsInMeal(mealObj.foods, 'energy')} kcal - </span>
-                                            <span>{getTotalNutrientsInMeal(mealObj.foods, 'protein')} g protein - </span>
-                                            <span>{getTotalNutrientsInMeal(mealObj.foods, 'netCarbs')} g carbs - </span>
-                                            <span>{getTotalNutrientsInMeal(mealObj.foods, 'totalFat')} g fat - </span>
-                                            <span>${mealObj.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0)}</span>
-                                        </>
+                                            <>
+                                                <span>{totalEnergy} kcal - </span>
+                                                <span>{totalProtein} g protein - </span>
+                                                <span>{totalNetCarbs} g carbs - </span>
+                                                <span>{totalFat} g fat - </span>
+                                                <span>${totalCost}</span>
+                                            </>
                                         }
                                     </td>
                                     <td>
@@ -112,7 +118,7 @@ const MealsTable = ({meals, setMeals, currentDay, groceries, setGroceries, selec
                                     mealObj={mealObj}
                                     selectedFoodObj={selectedFoodObj}
                                     setSelectedFoodObj={setSelectedFoodObj}
-                                    isMealSelected={isMealSelected}
+                                    isMealSelected={isMealSelectedClass}
                                     handleOnClickFood={handleOnClickFood}
                                 />
                             </Fragment>)
