@@ -143,7 +143,13 @@ class DietPlan(models.Model):
     name = models.CharField(max_length=50, null=True)
     creator = models.ForeignKey('accounts.user', on_delete=models.CASCADE, related_name='diets')
     budget = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    nutrient_targets = models.ForeignKey(NutritionData, null=True)
+    nutrient_targets = models.ForeignKey(NutritionData, on_delete=models.SET_NULL, null=True)
+    
+    def __str__(self):
+        return f"Diet {self.name} by {self.creator} {self.budget}$"
+    
+    def n_days(self) -> int:
+        return len(self.days.all())
     
 
 class DietDay(models.Model):

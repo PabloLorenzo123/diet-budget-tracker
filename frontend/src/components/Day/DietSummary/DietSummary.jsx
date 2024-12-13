@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
 import DietSummaryModal from "./DietSummaryModal";
+import SaveDietBtn from "./SaveDietBtn";
 
 const DietSummary = ({meals, dailyTargets}) => {
     const [showModal, setShowModal] = useState(false);
+
+    const [dietPlanName, setDietPlanName] = useState('');
+    console.log(meals)
+    const handleONChange = (e) => setDietPlanName(e.target.value);
 
     return (
         <>
@@ -18,6 +23,8 @@ const DietSummary = ({meals, dailyTargets}) => {
                     <input
                         id="dietPlanName"
                         type="text"
+                        onChange={handleONChange}
+                        value={dietPlanName}
                         className="bg-transparent border-0 border-1 border-dark border-bottom"
                         placeholder="Diet Plan Name"
                     />
@@ -26,7 +33,11 @@ const DietSummary = ({meals, dailyTargets}) => {
                 
             <div className="d-grid gap-2">
                 <button className="btn btn-secondary" type="button" onClick={() => setShowModal(true)}>Summary</button>
-                <button className="btn btn-primary" type="button">Save Diet Plan</button>
+                <SaveDietBtn
+                    dietPlanName={dietPlanName}
+                    meals={meals}
+                    dailyTargets={dailyTargets}
+                />
             </div>
 
             {

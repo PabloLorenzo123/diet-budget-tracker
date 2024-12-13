@@ -70,3 +70,67 @@ export const arraysAreEqual = (arr1, arr2) => {
 
 export const getTotalNutrientsInMeal = (foods, nutrient) => 
   roundTo(foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 2);
+
+
+export const  transformNutrientData = (nutrientData) => {
+  const keyMapping = {
+      // General.
+      energy: "energy",
+      protein: "protein",
+
+      // Carbs.
+      fiber: "fiber",
+      starch: "starch",
+      sugars: "sugars",
+      addedSugars: "added_sugars",
+      netCarbs: "net_carbs",
+
+      // Fats.
+      monounsaturatedFat: "monounsaturated_fat",
+      polyunsaturatedFat: "polyunsaturated_fat",
+      saturatedFat: "saturated_fat",
+      transFat: "trans_fat",
+      cholesterol: "cholesterol",
+      totalFat: "total_fat",
+
+      // Vitamins.
+      B1: "b1",
+      B2: "b2",
+      B3: "b3",
+      B5: "b5",
+      B6: "b6",
+      B12: "b12",
+      choline: "choline",
+      folate: "folate",
+      A: "a",
+      C: "c",
+      D: "d",
+      E: "e",
+      K: "k",
+
+      // Minerals.
+      calcium: "calcium",
+      chromium: "chromium",
+      copper: "copper",
+      iron: "iron",
+      magnesium: "magnesium",
+      manganese: "manganese",
+      molybdenum: "molybdenum",
+      phosphorus: "phosphorus",
+      potassium: "potassium",
+      selenium: "selenium",
+      sodium: "sodium",
+      zinc: "zinc"
+  };
+
+  const transformedData = {};
+    for (const [key, value] of Object.entries(nutrientData)) {
+        if (!keyMapping[key]) {
+            continue; // Skip the entry if the key is not in the mapping
+        }
+        transformedData[keyMapping[key]] = value.dv; // Use `value.dv` as the float value
+    }
+
+    return transformedData;
+}
+
