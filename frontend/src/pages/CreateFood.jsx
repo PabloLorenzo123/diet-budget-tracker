@@ -7,7 +7,6 @@ import FoodProducts from "../components/FoodProducts/FoodProducts";
 const CreateFood = () => {
     return (
         <>
-            <NavBar />
             <FoodProducts />
         </>
     )

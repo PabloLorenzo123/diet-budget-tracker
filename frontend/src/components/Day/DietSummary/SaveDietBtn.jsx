@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 
 const SaveDietBtn = ({dietPlanName, meals, dailyTargets}) => {
     const handleOnClick = async () => {
-        console.log(dailyTargets);
         try {
             const requestBody = {
                 name: dietPlanName,
@@ -26,10 +25,11 @@ const SaveDietBtn = ({dietPlanName, meals, dailyTargets}) => {
                         }))
                     }
                 })
-
             }
-
             const res = await api.post('diet/save-diet-plan/', requestBody)
+            if (res.status == 201) {
+                toast.success(`${dietPlanName} saved.`);
+            }
         } catch (err) {
             console.log(err);
             toast.error(err);

@@ -1,25 +1,90 @@
-import react from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Root from './pages/Root';
+import react, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+
+// Pages.
+import Index from './pages/Index';
+import Home from './pages/Home';
 import Login from './pages/Login';
 import Logout from './pages/Logout';
 import Signup from './pages/Signup';
 import CreateFood from './pages/CreateFood';
+import DietPlans from './pages/DietPlans';
+
+import ProtectedRoute from './components/ProtectedRoute';
+import { isAuthorized } from './lib/isAuthorizedFunc';
+
 import { ToastContainer } from 'react-toastify';
+import LoadingSpinner from './components/LoadingSpinner';
+import DietPlan from './pages/DietPlan';
 
 function App() {
+
+  const [authorized, setAuthorized] = useState(null);
+  const [currentPath, setCurrentPath] = useState(null); // URL current path.
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const result = await isAuthorized();
+      setAuthorized(result); // Update the state with the result
+    };
+
+    checkAuth(); // Call the async function
+  }, [])
+
+  if (authorized == null) {
+    return (
+        <LoadingSpinner />
+    )
+  }
+
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Root />}/>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/logout" element={<Logout />}/>
-          <Route path="/signup" element={<Signup/>}/>
-          <Route path="/create-food-product" element={<CreateFood />}/>
+          {/* If user is authorized the '/' page will be the index otherwise the homepage */}
+          {authorized == true?
+            <Route
+              path="/"
+              element={
+              <ProtectedRoute authorized={authorized} setAuthorized={setAuthorized} currentPath={currentPath} setCurrentPath={setCurrentPath}>
+                <Index />
+              </ProtectedRoute>
+              }/>
+            :
+            <Route path="/" element={<Home />}/>
+          }
+          {/* Auth Routes */}
+          <Route path="/login" element={<Login setAuthorized={setAuthorized}/>}/>
+          <Route path="/logout" element={<Logout setAuthorized={setAuthorized}/>}/>
+          <Route path="/signup" element={<Signup setAuthorized={setAuthorized}/>}/>
+          {/* App Routes */}
+          <Route path="/create-food-product" element={
+            <ProtectedRoute authorized={authorized} setAuthorized={setAuthorized} currentPath={currentPath} setCurrentPath={setCurrentPath}>
+              <CreateFood />
+            </ProtectedRoute>}
+          />
+
+          <Route path="/dietplans" element={
+            <ProtectedRoute authorized={authorized} setAuthorized={setAuthorized} currentPath={currentPath} setCurrentPath={setCurrentPath}>
+              <DietPlans />
+            </ProtectedRoute>}
+          />
+
+          <Route path="/dietplans/:uuid" element={
+            <ProtectedRoute authorized={authorized} setAuthorized={setAuthorized} currentPath={currentPath} setCurrentPath={setCurrentPath}>
+              <DietPlan />
+            </ProtectedRoute>}
+          />
+
         </Routes>
-      </BrowserRouter>    
-      <ToastContainer />  
+
+        
+      </BrowserRouter>
+
+      <ToastContainer
+        position='top-center'
+        hideProgressBar={true}
+      />  
     </>
   )
 }

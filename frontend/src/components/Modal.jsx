@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import '../styles/modal.css';
 import { defaultModalHeight, defaultModalWidth } from "../constants";
 
+import { ToastContainer } from "react-toastify";
+
 const Modal = ({setShow, scroll=true, width=defaultModalWidth, height=defaultModalHeight, header, children}) => {
 
   useEffect(() => {
@@ -15,7 +17,7 @@ const Modal = ({setShow, scroll=true, width=defaultModalWidth, height=defaultMod
   return(
       <>
         
-          <div className="modal-backdrop" onClick={() => setShow(false)}>
+          <div className="custom-modal-backdrop" onClick={() => setShow(false)}>
               <div className={`custom-modal ${scroll? 'overflow-y-scroll': 'overflow-y-hidden'}`} style={{width, height}} onClick={e => e.stopPropagation()}>
                 <div className="custom-modal-header mb-4">
                   <h4 className="fw-bold">{header}</h4>
@@ -23,6 +25,7 @@ const Modal = ({setShow, scroll=true, width=defaultModalWidth, height=defaultMod
                 {children}
               </div>
           </div>
+
         
       </>
   )

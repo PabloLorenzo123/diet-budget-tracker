@@ -10,7 +10,7 @@ import '../../../styles/diary/GoalSetter.css';
 import '../../../styles/nutrientTableForm.css';
 
 const GoalSetter = ({dailyTargets, setDailyTargets}) => {
-    const [prevDailyTargets, setPrevDailyTargets] = useState({});
+    const [prevDailyTargets, setPrevDailyTargets] = useState({...dailyTargets});
 
     const [isLoading, setIsLoading] = useState(false); // Use for the spinning wheel in the save btn.
     const [isLoadingSuccesful, setIsLoadingSuccesfull] = useState(false); // Use for the check mark in the save btn.
@@ -55,32 +55,6 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
         }
         setIsLoading(false);
     }
-
-    useEffect(() => {
-        const getDailyTargets = async () => {
-            try {
-                const res = await api.get('auth/diary_settings/daily_targets/');
-                if (res.status == 200){
-                    const resData = res.data.dailyTargets;
-                    Object.keys(resData).forEach(nutrient => {
-                        if (nutrientsInformation[nutrient]){ // Only budget would fail this if condition.
-                            const value = resData[nutrient];
-                            const dv = nutrientsInformation[nutrient]?.dv;
-                            resData[nutrient] = {
-                                amount: value,
-                                dv: roundTo((value / dv) * 100, 2) || 0
-                            }
-                        }    
-                    })
-                    setPrevDailyTargets(resData); // This is used to determine if daily targets changes.
-                    setDailyTargets(resData);
-                }
-            } catch (error) {
-                console.log(`Could not retrieve user's daily targets. ${error}`);
-            }
-        }
-        getDailyTargets()
-    }, [])
 
     const isSaveBtnDisabled = prevDailyTargets == dailyTargets;
 

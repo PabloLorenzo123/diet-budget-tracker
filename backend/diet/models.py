@@ -140,6 +140,10 @@ class FoodProduct(models.Model):
     
 class DietPlan(models.Model):
     """A diet plan has at most 7 different days."""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp for when the record was created
+    updated_at = models.DateTimeField(auto_now=True)  # Timestamp for the last update
+    
     name = models.CharField(max_length=50, null=True)
     creator = models.ForeignKey('accounts.user', on_delete=models.CASCADE, related_name='diets')
     budget = models.DecimalField(max_digits=5, decimal_places=2, null=True)
@@ -151,6 +155,16 @@ class DietPlan(models.Model):
     def n_days(self) -> int:
         return len(self.days.all())
     
+    def get_diet_plan_as_json(self) -> dict:
+        return {
+            'id': self.id,
+            'name': self.name,
+            'protein': self.nutrient_targets.protein,
+            'netCarbs': self.nutrient_targets.net_carbs,
+            'totalFat': self.nutrient_targets.total_fat,
+            'date': max(self.created_at, self.updated_at).strftime('%Y-%m-%d') if self.created_at and self.updated_at else self.created_at or self.updated_at,
+            'budget': self.budget
+        }
 
 class DietDay(models.Model):
     """A Diet plan has multiple DietDays, DietDays have multiple meals and meals have multiple food products."""
@@ -163,6 +177,15 @@ class DietDayMeal(models.Model):
     name = models.CharField(max_length=10)
     number = models.IntegerField()
     day = models.ForeignKey(DietDay, on_delete=models.CASCADE, related_name='meals')
+    
+    def __str__(self):
+        return f"meal {self.number} for {self.day} in {self.day.diet}"
+    
+    def get_meal_as_json(self) -> dict:
+        return {
+            'name': self.name,
+            'foods': [f.get_food_as_json() for f in sorted(self.foods.all(), lambda f: f.number)],
+        }
 
 
 class DietDayMealFood(models.Model):
@@ -171,3 +194,19 @@ class DietDayMealFood(models.Model):
     food_product = models.ForeignKey(FoodProduct, on_delete=models.CASCADE)
     servings = models.FloatField(max_length=10)
     serving_measure_in_grams = models.FloatField(max_length=10)
+    number = models.IntegerField() # In the meal.foods array where does this food fall, what's the index?
+    
+    def __str__(self):
+        return f"{self.food_product} {self.servings} * {self.serving_measure_in_grams} for {self.diet_day_meal.day.diet}"
+    
+    def get_food_as_json(self):
+        return {
+            'foodProduct': {
+                'id': self.food_product.id,
+                'foodProductServingMeasure': self.food_product.serving_measure,
+                'foodProductServingSize': self.food_product.serving_size,
+            },
+            'servings': self.servings,
+            'servingMeasureInGrams': self.serving_measure_in_grams,
+            'mealIdx': self.number
+        }

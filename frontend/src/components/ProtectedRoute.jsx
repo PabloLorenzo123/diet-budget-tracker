@@ -1,15 +1,22 @@
-import {Navigate} from 'react-router-dom';
+import {Navigate, useNavigate} from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
 import api from '../api'
 import { REFRESH_TOKEN, ACCESS_TOKEN } from '../constants';
 import { useState, useEffect } from 'react';
+import NavBar from './NavBar';
+import LoadingSpinner from './LoadingSpinner';
 
-const ProtectedRoute = () => {
-    const [isAuthorized, setIsAuthorized] = useState(null);
+const ProtectedRoute = ({authorized, setAuthorized, children, currentPath, setCurrentPath}) => {
+    const [loading, setLoading] = useState(null);
 
     useEffect(() => {
-        auth().catch(() => setIsAuthorized(false));
+        auth().catch(() => setAuthorized(false));
     }, [])
+
+    // When a user clicks a link in the navbar the currentPath changes, then auth() is run again.
+    useEffect(() => {
+        auth().catch(() => setAuthorized(false));
+    }, [currentPath])
     
     const refreshToken = async () => {
         const refreshToken = localStorage.getItem(REFRESH_TOKEN);
@@ -19,20 +26,21 @@ const ProtectedRoute = () => {
             });
             if (res.status == 200){
                 localStorage.setItem(ACCESS_TOKEN, res.data.access);
-                setIsAuthorized(true);
+                setAuthorized(true);
             } else {
-                setIsAuthorized(false);
+                setAuthorized(false);
             }
         } catch (error) {
             console.log(error);
-            setIsAuthorized(false);
+            setAuthorized(false);
         }
     }
 
     const auth = async () => {
+        setLoading(true);
         const token = localStorage.getItem(ACCESS_TOKEN);
         if (!token){
-            setIsAuthorized(false);
+            setAuthorized(false);
             return;
         }
         const decoded = jwtDecode(token);
@@ -42,11 +50,22 @@ const ProtectedRoute = () => {
         if (tokenExpiration < now){
             await refreshToken();
         } else {
-            setIsAuthorized(true);
+            setAuthorized(true);
         }
+        setLoading(false);
     }
 
-    return isAuthorized
+    return (
+        <>
+            <NavBar currentPath={currentPath} setCurrentPath={setCurrentPath}/>
+            <div id='app'>
+            {!loading?
+                children:
+                <LoadingSpinner />
+            }
+            </div>
+        </>
+    )
 }
 
 export default ProtectedRoute

@@ -7,13 +7,13 @@ const DietSummary = ({meals, dailyTargets}) => {
 
     const [dietPlanName, setDietPlanName] = useState('');
     console.log(meals)
-    const handleONChange = (e) => setDietPlanName(e.target.value);
+    const handleOnChange = (e) => setDietPlanName(e.target.value);
 
     return (
         <>
             <div className="row g-3 align-items-center">
                 <div className="col-auto">
-                    <label for="dietPlanName" className="col-form-label">
+                    <label htmlFor="dietPlanName" className="col-form-label">
                         <span className="h5">
                             Diet Plan
                         </span>
@@ -23,7 +23,7 @@ const DietSummary = ({meals, dailyTargets}) => {
                     <input
                         id="dietPlanName"
                         type="text"
-                        onChange={handleONChange}
+                        onChange={handleOnChange}
                         value={dietPlanName}
                         className="bg-transparent border-0 border-1 border-dark border-bottom"
                         placeholder="Diet Plan Name"

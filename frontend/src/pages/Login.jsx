@@ -4,9 +4,14 @@ import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
 import api from "../api";
 import AuthForm from "../components/AuthForm";
 
-const Login = () => {
+const Login = ({setAuthorized}) => {
     return (
-        <AuthForm action={"login"} title={"Welcome Back"} btnText={'LOG IN'} />
+        <AuthForm
+            action={"login"}
+            title={"Welcome Back"}
+            btnText={'LOG IN'}
+            setAuthorized={setAuthorized}
+        />
     )
 }
 

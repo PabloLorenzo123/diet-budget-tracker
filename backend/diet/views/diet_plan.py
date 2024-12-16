@@ -13,6 +13,36 @@ from rest_framework.response import Response
 import requests
 import json
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_diet_plans(request):
+    """Returns all the diet plans a user has"""
+    user = request.user
+    res = [diet.get_diet_plan_as_json() for diet in user.diets.all()]
+    return Response({
+        'dietPlans': res
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_diet_plan(request, uuid):
+    """Returns the datastructure corresponding to a dietplan."""
+    user = request.user
+    diet_plan = DietPlan.objects.get(uuid=uuid)
+    if not diet_plan and diet_plan.owner == user:
+        return Response({'error': f'{user} is not the owner of this dietplan'}, status=status.HTTP_403_FORBIDDEN)
+    
+    res = [] # Days and meals and foods.
+    for day in diet_plan.days:
+        d = []
+        for meal in sorted(day.meals.all(), key=lambda m: m.number):
+            d.append(meal.get_meal_as_json())
+        d.append(res)
+    
+    return Response(res, status=status.HTTP_200_OK)
+
+    
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def save_diet_plan(request):
@@ -88,10 +118,10 @@ def save_diet_plan(request):
             meal = DietDayMeal.objects.create(
                 name=meal_name,
                 number=meal_number,
-                day=day
+                day=day,
             )
 
-            for food_data in foods:
+            for food_number, food_data in enumerate(foods, start=1):
                 food_id = food_data.get('id')
                 servings = food_data.get('servings')
                 serving_measure_in_grams = food_data.get('servingMeasureInGrams')
@@ -108,7 +138,8 @@ def save_diet_plan(request):
                     diet_day_meal=meal,
                     food_product=food_product,
                     servings=servings,
-                    serving_measure_in_grams=serving_measure_in_grams
+                    serving_measure_in_grams=serving_measure_in_grams,
+                    number=food_number
                 )
 
     return Response({'success': 'Diet plan saved successfully.'}, status=status.HTTP_201_CREATED)

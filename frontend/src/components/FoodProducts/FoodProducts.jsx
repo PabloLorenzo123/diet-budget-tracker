@@ -28,7 +28,6 @@ const FoodProducts = () => {
 
     return (
         <div>
-            <main id="app">
                 {showIndex &&
                     <>
                         <h2 className="fw-bold">Food Products</h2>
@@ -64,8 +63,6 @@ const FoodProducts = () => {
                     afterSubmitFunc={afterSubmitFunc}
                     />
                 }
-            </main>
-            <ToastContainer position="top-center"/>
         </div>
     )
 }

@@ -42,7 +42,7 @@ const FoodProductsList = ({showIndex, setShowIndex, showCreate, setShowCreate, s
     }, [])
 
     return (
-        <table className="table food-products-list">
+        <table className="table">
             <thead>
                 <tr>
                     <th>Description</th>
