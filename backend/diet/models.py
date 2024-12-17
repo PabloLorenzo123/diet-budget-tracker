@@ -184,7 +184,7 @@ class DietDayMeal(models.Model):
     def get_meal_as_json(self) -> dict:
         return {
             'name': self.name,
-            'foods': [f.get_food_as_json() for f in sorted(self.foods.all(), lambda f: f.number)],
+            'foods': [f.get_food_as_json() for f in sorted(self.foods.all(), key=lambda f: f.number)],
         }
 
 
@@ -192,8 +192,10 @@ class DietDayMealFood(models.Model):
     """Food product in a meal"""
     diet_day_meal = models.ForeignKey(DietDayMeal, on_delete=models.CASCADE, related_name="foods")
     food_product = models.ForeignKey(FoodProduct, on_delete=models.CASCADE)
+    
     servings = models.FloatField(max_length=10)
     serving_measure_in_grams = models.FloatField(max_length=10)
+    
     number = models.IntegerField() # In the meal.foods array where does this food fall, what's the index?
     
     def __str__(self):
@@ -201,11 +203,7 @@ class DietDayMealFood(models.Model):
     
     def get_food_as_json(self):
         return {
-            'foodProduct': {
-                'id': self.food_product.id,
-                'foodProductServingMeasure': self.food_product.serving_measure,
-                'foodProductServingSize': self.food_product.serving_size,
-            },
+            **self.food_product.in_json(),
             'servings': self.servings,
             'servingMeasureInGrams': self.serving_measure_in_grams,
             'mealIdx': self.number

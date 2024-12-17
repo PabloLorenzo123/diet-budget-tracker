@@ -13,6 +13,31 @@ from rest_framework.response import Response
 import requests
 import json
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_diet_plan(request, id):
+    """Returns the datastructure corresponding to a dietplan."""
+    user = request.user
+    diet_plan = DietPlan.objects.get(id=id)
+    if not diet_plan and diet_plan.owner == user:
+        return Response({'error': f'{user} is not the owner of this dietplan'}, status=status.HTTP_403_FORBIDDEN)
+    
+    days = [] # Days and meals and foods.
+    for day in diet_plan.days.all():
+        d = {'meals': []}
+        for meal in sorted(day.meals.all(), key=lambda m: m.number):
+            d['meals'].append(meal.get_meal_as_json())
+        days.append(d)
+        
+    res = {
+        'days': days,
+        'nutrientTargets': diet_plan.nutrient_targets.nutrients_in_json() if diet_plan.nutrient_targets else None,
+    }
+    
+    return Response(res, status=status.HTTP_200_OK)
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_diet_plans(request):
@@ -24,23 +49,7 @@ def get_diet_plans(request):
     }, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_diet_plan(request, uuid):
-    """Returns the datastructure corresponding to a dietplan."""
-    user = request.user
-    diet_plan = DietPlan.objects.get(uuid=uuid)
-    if not diet_plan and diet_plan.owner == user:
-        return Response({'error': f'{user} is not the owner of this dietplan'}, status=status.HTTP_403_FORBIDDEN)
-    
-    res = [] # Days and meals and foods.
-    for day in diet_plan.days:
-        d = []
-        for meal in sorted(day.meals.all(), key=lambda m: m.number):
-            d.append(meal.get_meal_as_json())
-        d.append(res)
-    
-    return Response(res, status=status.HTTP_200_OK)
+
 
     
 @api_view(['POST'])
@@ -102,14 +111,14 @@ def save_diet_plan(request):
         nutrient_targets=nutrient_targets
     )
 
-    for day_number, day_data in enumerate(days, start=1):
+    for day_number, day_data in enumerate(days):
         meals = day_data.get('meals')
         if not meals or not isinstance(meals, list):
             continue
 
         day = DietDay.objects.create(diet=diet, number=day_number)
 
-        for meal_number, meal_data in enumerate(meals, start=1):
+        for meal_number, meal_data in enumerate(meals):
             meal_name = meal_data.get('name')
             foods = meal_data.get('foods')
             if not foods or not isinstance(foods, list):
@@ -121,7 +130,7 @@ def save_diet_plan(request):
                 day=day,
             )
 
-            for food_number, food_data in enumerate(foods, start=1):
+            for food_number, food_data in enumerate(foods):
                 food_id = food_data.get('id')
                 servings = food_data.get('servings')
                 serving_measure_in_grams = food_data.get('servingMeasureInGrams')

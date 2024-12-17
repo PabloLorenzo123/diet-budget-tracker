@@ -15,12 +15,9 @@ import GroceryHaul from "./GroceryHaul";
 import DietSummary from "./DietSummary/DietSummary";
 
 
-const Diet = ({dailyTargets, setDailyTargets, meals, setMeals}) => {
+const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGroceries}) => {
     
     const [currentDay, setCurrentDay] = useState(0);
-    const [groceries, setGroceries] = useState({});
-    // object of products ids = {foodData: {gramWeight, measure, productLink, productName, productPrice, servings}, foods: []}
-
     const [selectedMealIdx, setSelectedMealIdx] = useState(null);
     const [selectedFoodObj, setSelectedFoodObj] = useState(null);
     

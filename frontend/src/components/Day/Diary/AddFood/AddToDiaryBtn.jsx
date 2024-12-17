@@ -1,25 +1,20 @@
 import { useState, useEffect } from "react";
-import { roundTo } from "../../../../lib/functions";
+import { roundTo, calculateNutritionalContribution } from "../../../../lib/functions";
 
 const AddToDiaryBtn = ({meals, setMeals, currentDay, groceries, setGroceries,
     showModal, setShowModal, selectedFood, setSelectedFood, addToDiaryForm, setAddToDiaryForm}) => {
     
     const addToDiary = async () => {
-        const mealIdx = addToDiaryForm.diaryGroup;
-        const groceriesIdx = groceries[selectedFood.id]?.foods.length? groceries[selectedFood.id].foods.length: 0;
+        const mealIdx = addToDiaryForm.diaryGroup; // The meal this food product will be added to.
+        const groceriesIdx = groceries[selectedFood.id]?.foods.length > 0 ? 
+        groceries[selectedFood.id].foods.length: 0;
 
         const servings = parseFloat(addToDiaryForm.servings);
         const servingMeasure = addToDiaryForm.servingMeasure; // {unit, valueInGrams}.
         const portionSize = servings * servingMeasure.valueInGrams;
         const totalCost = roundTo((selectedFood.foodData.productPrice / selectedFood.foodData.servings) * servings, 2);
 
-        const nutritionalContribution = {...selectedFood.nutritionData};
-        // Update the nutritional contribution data.
-        Object.keys(nutritionalContribution).map(nutrient => {
-            // console.log(portionSize, selectedFood.nutritionData[nutrient], selectedFood.foodData.servingSize);
-            nutritionalContribution[nutrient] = 
-            roundTo(portionSize * selectedFood.nutritionData[nutrient] / selectedFood.foodData.gramWeight, 2);
-        })
+        const nutritionalContribution = calculateNutritionalContribution(selectedFood, portionSize);
 
         // Add this food to the foods array of the corresponding meal.
         const food = {

@@ -4,7 +4,7 @@ import Diet from '../components/Day/Diet';
 import { dailyTargetState, nutrientsInformation } from "../lib/nutrients";
 import { defaultDiaryGroups, defaultDiaryGroupObject } from '../constants';
 
-import { roundTo } from '../lib/functions';
+import { roundTo, transformDailyTargets } from '../lib/functions';
 
 import '../styles/index.css';
 import { useState, useEffect } from 'react';
@@ -14,6 +14,7 @@ import api from '../api';
 const Index = () => {
     const [loading, setIsLoading] = useState(true)
     const [dailyTargets, setDailyTargets] = useState(dailyTargetState)
+    const [groceries, setGroceries] = useState({});
     const [meals, setMeals] = useState([[]]); // A list of lists (days) of objects [...{name, foods, show}] (meals).
     /**
      * Structure of the Meal Data:
@@ -114,18 +115,7 @@ const Index = () => {
             try {
                 const res = await api.get('auth/diary_settings/daily_targets/');
                 if (res.status == 200){
-                    const resData = res.data.dailyTargets;
-                    Object.keys(resData).forEach(nutrient => {
-                        if (nutrientsInformation[nutrient]){ // Only budget would fail this if condition.
-                            const value = resData[nutrient];
-                            const dv = nutrientsInformation[nutrient]?.dv;
-                            resData[nutrient] = {
-                                amount: value,
-                                dv: roundTo((value / dv) * 100, 2) || 0
-                            }
-                        }    
-                    })
-                    setDailyTargets(resData);
+                    setDailyTargets(transformDailyTargets(res.data.dailyTargets));
                 }
             } catch (error) {
                 console.log(`Could not retrieve user's daily targets. ${error}`);
@@ -143,6 +133,8 @@ const Index = () => {
                 setDailyTargets={setDailyTargets}
                 meals={meals}
                 setMeals={setMeals}
+                groceries={groceries}
+                setGroceries={setGroceries}
             />
         </>
     )

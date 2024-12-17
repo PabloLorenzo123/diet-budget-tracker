@@ -1,3 +1,5 @@
+import { nutrientsInformation } from "./nutrients";
+
 export const titleCase = (str) => {
     return str
       .toLowerCase()
@@ -134,3 +136,33 @@ export const  transformNutrientData = (nutrientData) => {
     return transformedData;
 }
 
+
+export const calculateNutritionalContribution = (foodProduct, portionSize) => {
+  const nutritionalContribution = { ...foodProduct.nutritionData };
+
+  // Update the nutritional contribution data based on portion size.
+  Object.keys(nutritionalContribution).forEach(nutrient => {
+      const nutrientValue = foodProduct.nutritionData[nutrient];
+      const gramWeight = foodProduct.foodData.gramWeight;
+      
+      nutritionalContribution[nutrient] = roundTo((portionSize * nutrientValue) / gramWeight, 2);
+  });
+
+  return nutritionalContribution;
+}
+
+
+export const transformDailyTargets = (dt) => {
+  const dailyTargets = {}
+  Object.keys(dt).map(nutrient => {
+      if (nutrientsInformation[nutrient]){ // Only budget would fail this if condition.
+          const value = dt[nutrient];
+          const dv = nutrientsInformation[nutrient]?.dv;
+          dailyTargets[nutrient] = {
+              amount: value,
+              dv: roundTo((value / dv) * 100, 2) || 0
+          }
+      }    
+    })
+    return dailyTargets;
+}

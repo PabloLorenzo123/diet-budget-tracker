@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
 import api from "../../api";
 
+import { useNavigate } from "react-router-dom";
+
 import { toast } from "react-toastify";
 
 const Diets = () => {
     const [dietPlans, setDietPlans] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchDietPlans = async () => {
@@ -20,6 +24,10 @@ const Diets = () => {
         }
         fetchDietPlans()
     }, [])
+
+    const goDietDetails = (id) => {
+        navigate(`${id}`);
+    }
 
     return (
     <>
@@ -42,7 +50,7 @@ const Diets = () => {
                 <tbody>
                     {dietPlans.map((d, idx) => {
                         return (
-                            <tr key={idx}>
+                            <tr key={idx} onClick={() => goDietDetails(d.id)}>
                                 <td>{d.name}</td>
                                 <td>{d.protein}</td>
                                 <td>{d.netCarbs}</td>
