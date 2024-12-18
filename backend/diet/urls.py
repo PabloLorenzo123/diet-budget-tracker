@@ -11,7 +11,8 @@ urlpatterns = [
     path('diet-plan/<uuid:id>/', views.get_diet_plan, name="get_diet_plan"),
     # POST & PUT.
     path('save_food/', views.save_food_product, name="save_food_product"),
-    path('save-diet-plan/', views.save_diet_plan, name="save_diet_plan"),
+    path('diet-plan/', views.save_diet_plan, name="save_diet_plan"),
     # DELETE.
     path('food_product/<uuid:id>/', views.food_product, name="food_product"),
+    path('diet-plan/<uuid:id>', views.delete_diet_plan, name="delete_diet_plan"),
 ]

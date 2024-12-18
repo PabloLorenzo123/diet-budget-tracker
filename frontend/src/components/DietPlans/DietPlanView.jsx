@@ -7,12 +7,17 @@ import Diet from "../Day/Diet";
 
 import api from "../../api";
 import { calculateNutritionalContribution, transformDailyTargets } from "../../lib/functions";
+import LoadingSpinner from "../LoadingSpinner";
 
 const DietPlanView = ({dietPlanId}) => {
     const [loading, setLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
+
     const [dailyTargets, setDailyTargets] = useState(dailyTargetState)
     const [groceries, setGroceries] = useState({});
     const [meals, setMeals] = useState([[]]); // A list of lists (days) of objects [...{name, foods, show}] (meals).
+
+    const [dietPlanName, setDietPlanName] = useState('');
 
     useEffect(() => {
 
@@ -33,7 +38,7 @@ const DietPlanView = ({dietPlanId}) => {
                 const groceriesIdx = groceries[f.id]?.foods.length > 0 ? 
                 groceries[f.id].foods.length: 0;
 
-                return {
+                const food = {
                     ...f, // id, foodData, nutritionData.
                     nutritionalContribution: calculateNutritionalContribution(f, portionSize),
                     diaryData: {
@@ -48,6 +53,18 @@ const DietPlanView = ({dietPlanId}) => {
                         groceriesIdx,
                     },
                 }
+
+                setGroceries(prev => {
+                    return {
+                        ...prev,
+                        [food.id]: {
+                            foodData: food.foodData,
+                            foods: prev[foods.id] ? [...prev[foods.id].foods, food] : [food]
+                        }
+                    }
+                })
+
+                return food;
             })
         }
 
@@ -67,13 +84,15 @@ const DietPlanView = ({dietPlanId}) => {
         }
 
         const fetchDietPlan = async () => {
-            setLoading(true);
+            
             try {
+                setLoading(true);
                 const res = await api.get(`diet/diet-plan/${dietPlanId}/`);
                 if (res.status == 200){
                     const data = res.data;
                     const days = data.days;
                     const nutrientTargetsData = data.nutrientTargets;
+                    setDietPlanName(data.dietPlanName);
                     setMeals(transformDays(days))
                     if (nutrientTargetsData) {
                         setDailyTargets(transformDailyTargets(nutrientTargetsData))
@@ -81,24 +100,49 @@ const DietPlanView = ({dietPlanId}) => {
                 }
             } catch (error) {
                 console.log(error);
+                setIsError(true);
             } finally {
                 setLoading(false);
             }
             
         }
-        fetchDietPlan();
+
+        const setup = async () => {
+            try {
+                setLoading(true);
+                await fetchDietPlan()
+            } catch (error) {
+                console.log(error);
+                setIsError(true);
+            } finally {
+                setLoading(false)
+            }
+        }
+        
+        setup();
     }, [])
 
     return (
     <>
-            <Diet
+        {loading?
+            <LoadingSpinner />:
+        isError?
+            <p className="text-center">There was an error loading this diet plan.</p>
+        :
+        <Diet
                 dailyTargets={dailyTargets}
                 setDailyTargets={setDailyTargets}
                 meals={meals}
                 setMeals={setMeals}
                 groceries={groceries}
                 setGroceries={setGroceries}
-            />
+
+                dietPlanName={dietPlanName}
+                setDietPlanName={setDietPlanName}
+                dietPlanId={dietPlanId}
+        />
+        }
+            
     </>
     )
 }

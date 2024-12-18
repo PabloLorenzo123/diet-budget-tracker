@@ -10,7 +10,7 @@ import '../../../styles/diary/GoalSetter.css';
 import '../../../styles/nutrientTableForm.css';
 
 const GoalSetter = ({dailyTargets, setDailyTargets}) => {
-    const [prevDailyTargets, setPrevDailyTargets] = useState({...dailyTargets});
+    const [prevDailyTargets, setPrevDailyTargets] = useState(null);
 
     const [isLoading, setIsLoading] = useState(false); // Use for the spinning wheel in the save btn.
     const [isLoadingSuccesful, setIsLoadingSuccesfull] = useState(false); // Use for the check mark in the save btn.
@@ -18,6 +18,11 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
     const [showModal, setShowModal] = useState(false);
 
     const handleBudgetChange = (e) => setDailyTargets(prev => ({...prev, budget: e.target.value}));
+
+    useEffect(() => {
+        console.log(dailyTargets)
+        setPrevDailyTargets({...dailyTargets})
+    }, [])
 
     const handleChange = (e) => {
         const { name, value } = e.target;

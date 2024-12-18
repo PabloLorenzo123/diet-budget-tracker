@@ -29,6 +29,24 @@ const Diets = () => {
         navigate(`${id}`);
     }
 
+    const deleteDietPlan = async (e, id, name) => {
+        e.stopPropagation();
+        try {
+            const userConfirmed = window.confirm("Are you sure you want to delete this?");
+            if (!userConfirmed) return;
+            const res = await api.delete(`diet/diet-plan/${id}`);
+            if (res.status == 204){
+                setDietPlans(prev => {
+                    return prev.filter(dp => dp.id != id);
+                })
+                toast.success(`${name} has been deleted.`);
+            }
+        } catch (err){
+            console.log(err);
+            toast.error(`${name} could'nt be deleted`);
+        }
+    }
+
     return (
     <>
         <h1 className="fw-bold">Your Diet Plans</h1>
@@ -58,7 +76,7 @@ const Diets = () => {
                                 <td>{d.date}</td>
                                 <td>{d.budget}</td>
                                 <td>
-                                    <button type="button" className="delete-btn">
+                                    <button type="button" className="delete-btn" onClick={(e) => deleteDietPlan(e, d.id, d.name)}>
                                         <span className="material-symbols-outlined">
                                             delete_forever
                                         </span>

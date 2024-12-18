@@ -1,5 +1,6 @@
 import NavBar from '../components/NavBar';
 import Diet from '../components/Day/Diet';
+import LoadingSpinner from '../components/LoadingSpinner'
 
 import { dailyTargetState, nutrientsInformation } from "../lib/nutrients";
 import { defaultDiaryGroups, defaultDiaryGroupObject } from '../constants';
@@ -10,12 +11,17 @@ import '../styles/index.css';
 import { useState, useEffect } from 'react';
 
 import api from '../api';
+import { toast } from 'react-toastify';
 
 const Index = () => {
     const [loading, setIsLoading] = useState(true)
+    const [isError, setIsError] = useState(false);
+    
     const [dailyTargets, setDailyTargets] = useState(dailyTargetState)
     const [groceries, setGroceries] = useState({});
     const [meals, setMeals] = useState([[]]); // A list of lists (days) of objects [...{name, foods, show}] (meals).
+   
+    const [dietPlanName, setDietPlanName] = useState('');
     /**
      * Structure of the Meal Data:
      * 
@@ -122,20 +128,43 @@ const Index = () => {
             }
         }
 
-        populateMealsState();
-        getDailyTargets();
+        const setup = async () => {
+            try {
+                setIsLoading(true);
+                await Promise.all([populateMealsState(), getDailyTargets()]);
+            } catch (error) {
+                console.error("Error during setup:", error);
+                setIsError(true);
+                toast.error("There was an error setting up your data. Please try again.");
+                // Handle errors here, e.g., display an error message
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        setup();
+        
     }, [])
 
     return(
         <>
-            <Diet
-                dailyTargets={dailyTargets}
-                setDailyTargets={setDailyTargets}
-                meals={meals}
-                setMeals={setMeals}
-                groceries={groceries}
-                setGroceries={setGroceries}
-            />
+            {   loading? 
+                    <LoadingSpinner />:
+                isError?
+                    <p className='text-center'>There was an error loading your data, please try again.</p>
+                :
+                <Diet
+                    dailyTargets={dailyTargets}
+                    setDailyTargets={setDailyTargets}
+                    meals={meals}
+                    setMeals={setMeals}
+                    groceries={groceries}
+                    setGroceries={setGroceries}
+                    dietPlanName={dietPlanName}
+                    setDietPlanName={setDietPlanName}
+                />
+            }
+            
         </>
     )
 }

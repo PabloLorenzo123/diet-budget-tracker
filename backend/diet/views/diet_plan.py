@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from project.settings import USDA_API_KEY
 from django.http import JsonResponse
 
@@ -19,10 +19,8 @@ import json
 def get_diet_plan(request, id):
     """Returns the datastructure corresponding to a dietplan."""
     user = request.user
-    diet_plan = DietPlan.objects.get(id=id)
-    if not diet_plan and diet_plan.owner == user:
-        return Response({'error': f'{user} is not the owner of this dietplan'}, status=status.HTTP_403_FORBIDDEN)
-    
+    diet_plan = get_object_or_404(DietPlan, id=id, creator=user)
+   
     days = [] # Days and meals and foods.
     for day in diet_plan.days.all():
         d = {'meals': []}
@@ -31,6 +29,8 @@ def get_diet_plan(request, id):
         days.append(d)
         
     res = {
+        'id': diet_plan.id,
+        'dietPlanName': diet_plan.name,
         'days': days,
         'nutrientTargets': diet_plan.nutrient_targets.nutrients_in_json() if diet_plan.nutrient_targets else None,
     }
@@ -49,10 +49,17 @@ def get_diet_plans(request):
     }, status=status.HTTP_200_OK)
 
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_diet_plan(request, id):
+    """Deletes a diet plan"""
+    user = request.user
+    diet_plan = get_object_or_404(DietPlan, id=id, creator=request.user)
+    diet_plan.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-    
-@api_view(['POST'])
+@api_view(['POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def save_diet_plan(request):
     """
@@ -87,7 +94,7 @@ def save_diet_plan(request):
         data = json.loads(request.body)
     except json.JSONDecodeError:
         return Response({'error': 'Request body must be valid JSON.'}, status=status.HTTP_400_BAD_REQUEST)
-
+    
     name = data.get('name')
     days = data.get('days')
     budget = data.get('budget', 0)
@@ -103,32 +110,49 @@ def save_diet_plan(request):
         return Response({'error': 'Nutrient targets are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
     nutrient_targets = NutritionData.objects.create(**nutrient_targets_data)
+    
+    if request.method == 'POST':
+        diet = DietPlan.objects.create(
+            name=name,
+            creator=user,
+            budget=budget,
+            nutrient_targets=nutrient_targets
+        )
+    elif request.method == 'PUT':
+        id = data.get('id')
+        if not id:
+            return Response({'error': 'An Id referencing to the diet plan to be updated needs to be provided as the parameter "id"'}, status=status.HTTP_400_BAD_REQUEST)
+        diet = get_object_or_404(DietPlan, id=id, creator=request.user)
+        # Delete all associated days in a single query for efficiency.
+        diet.days.all().delete()
 
-    diet = DietPlan.objects.create(
-        name=name,
-        creator=user,
-        budget=budget,
-        nutrient_targets=nutrient_targets
-    )
+        # Update the diet plan details.
+        diet.name = name
+        diet.budget = budget
+        diet.nutrient_targets = nutrient_targets
+        diet.save()
+
+    # Bulk creation for days, meals, and foods
+    diet_days = []
+    meals_to_create = []
+    foods_to_create = []
 
     for day_number, day_data in enumerate(days):
-        meals = day_data.get('meals')
-        if not meals or not isinstance(meals, list):
+        meals = day_data.get('meals', [])
+        if not isinstance(meals, list):
             continue
 
-        day = DietDay.objects.create(diet=diet, number=day_number)
+        day = DietDay(diet=diet, number=day_number)
+        diet_days.append(day)
 
         for meal_number, meal_data in enumerate(meals):
-            meal_name = meal_data.get('name')
-            foods = meal_data.get('foods')
-            if not foods or not isinstance(foods, list):
+            meal_name = meal_data.get('name', '')
+            foods = meal_data.get('foods', [])
+            if not isinstance(foods, list):
                 continue
 
-            meal = DietDayMeal.objects.create(
-                name=meal_name,
-                number=meal_number,
-                day=day,
-            )
+            meal = DietDayMeal(name=meal_name, number=meal_number, day=day)
+            meals_to_create.append(meal)
 
             for food_number, food_data in enumerate(foods):
                 food_id = food_data.get('id')
@@ -138,17 +162,17 @@ def save_diet_plan(request):
                 if not all([food_id, servings, serving_measure_in_grams]):
                     continue
 
-                try:
-                    food_product = FoodProduct.objects.get(id=food_id)
-                except FoodProduct.DoesNotExist:
-                    continue
-
-                DietDayMealFood.objects.create(
+                foods_to_create.append(DietDayMealFood(
                     diet_day_meal=meal,
-                    food_product=food_product,
+                    food_product_id=food_id,
                     servings=servings,
                     serving_measure_in_grams=serving_measure_in_grams,
                     number=food_number
-                )
+                ))
+
+    # Save all days, meals, and foods in bulk
+    DietDay.objects.bulk_create(diet_days)
+    DietDayMeal.objects.bulk_create(meals_to_create)
+    DietDayMealFood.objects.bulk_create(foods_to_create)
 
     return Response({'success': 'Diet plan saved successfully.'}, status=status.HTTP_201_CREATED)

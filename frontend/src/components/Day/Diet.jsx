@@ -15,12 +15,11 @@ import GroceryHaul from "./GroceryHaul";
 import DietSummary from "./DietSummary/DietSummary";
 
 
-const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGroceries}) => {
+const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGroceries, dietPlanName, setDietPlanName, dietPlanId}) => {
     
     const [currentDay, setCurrentDay] = useState(0);
     const [selectedMealIdx, setSelectedMealIdx] = useState(null);
     const [selectedFoodObj, setSelectedFoodObj] = useState(null);
-    
     
 
     return (
@@ -93,6 +92,9 @@ const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGro
                                 <DietSummary
                                     meals={meals}
                                     dailyTargets={dailyTargets}
+                                    dietPlanName={dietPlanName}
+                                    setDietPlanName={setDietPlanName}
+                                    dietPlanId={dietPlanId}
                                 />
                             </div>
                         </div>

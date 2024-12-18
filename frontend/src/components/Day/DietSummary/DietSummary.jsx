@@ -2,11 +2,9 @@ import { useState, useEffect } from "react";
 import DietSummaryModal from "./DietSummaryModal";
 import SaveDietBtn from "./SaveDietBtn";
 
-const DietSummary = ({meals, dailyTargets}) => {
+const DietSummary = ({meals, dailyTargets, dietPlanName, setDietPlanName, dietPlanId}) => {
     const [showModal, setShowModal] = useState(false);
 
-    const [dietPlanName, setDietPlanName] = useState('');
-    console.log(meals)
     const handleOnChange = (e) => setDietPlanName(e.target.value);
 
     return (
@@ -37,6 +35,7 @@ const DietSummary = ({meals, dailyTargets}) => {
                     dietPlanName={dietPlanName}
                     meals={meals}
                     dailyTargets={dailyTargets}
+                    dietPlanId={dietPlanId}
                 />
             </div>
 
