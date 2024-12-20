@@ -50,7 +50,7 @@ const NavBar = ({currentPath, setCurrentPath}) => {
                                 onClick={() => goTo('/create-food-product')}
                             >
                                 <span className="material-symbols-outlined">menu_book</span>
-                                <span className="ms-2">Create Food Product</span>
+                                <span className="ms-2">Your Food Products</span>
                             </button>
                         </li>
                         <li className="nav-item">

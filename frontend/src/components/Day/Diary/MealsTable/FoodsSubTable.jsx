@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { titleCase, roundTo, validateDecimalNumberInput } from "../../../../lib/functions";
-import { servingMeasures } from "../../../../constants";
+import { massUnits } from "../../../../constants";
 
 const FoodsSubTable = ({meals, setMeals, currentDay, groceries, setGroceries,
      selectedFoodObj, setSelectedFoodObj, mealObj, isMealSelected, handleOnClickFood}) => {
@@ -186,7 +186,7 @@ const FoodsSubTable = ({meals, setMeals, currentDay, groceries, setGroceries,
                                                     {selectedFoodObj == f?
                                                         <>
                                                         {(() => {
-                                                            const sms = [...servingMeasures, {
+                                                            const sms = [...massUnits, {
                                                                 unit: f.foodData.measure,
                                                                 valueInGrams: f.foodData.gramWeight
                                                             }]; // Serving measures.
@@ -211,7 +211,7 @@ const FoodsSubTable = ({meals, setMeals, currentDay, groceries, setGroceries,
                                                         :
                                                         // Display measure name and add and 's' if neccesary.
                                                         `${f.diaryData.servingMeasure.unit}${f.diaryData.servings > 1 
-                                                            && !servingMeasures.includes(f.diaryData.servingMeasure)? 's': ''}`
+                                                            && !massUnits.includes(f.diaryData.servingMeasure)? 's': ''}`
                                                     }
                                                 </td>
                                                 <td>{f.nutritionalContribution.energy}kcal</td>

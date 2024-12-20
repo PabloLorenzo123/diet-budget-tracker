@@ -31,6 +31,7 @@ def get_diet_plan(request, id):
     res = {
         'id': diet_plan.id,
         'dietPlanName': diet_plan.name,
+        'budget': diet_plan.budget,
         'days': days,
         'nutrientTargets': diet_plan.nutrient_targets.nutrients_in_json() if diet_plan.nutrient_targets else None,
     }
@@ -97,7 +98,12 @@ def save_diet_plan(request):
     
     name = data.get('name')
     days = data.get('days')
-    budget = data.get('budget', 0)
+    
+    try:
+        budget = float(data.get('budget', 0))
+    except ValueError:
+        return Response({'error': 'budget must be a number'}, status=status.HTTP_400_BAD_REQUEST)
+    
     nutrient_targets_data = data.get('nutrientTargets')
 
     if not name:
@@ -108,7 +114,8 @@ def save_diet_plan(request):
         return Response({'error': 'A diet plan can have at most 7 days.'}, status=status.HTTP_400_BAD_REQUEST)
     if not nutrient_targets_data:
         return Response({'error': 'Nutrient targets are required.'}, status=status.HTTP_400_BAD_REQUEST)
-
+    
+    nutrient_targets_data = NutritionData.camel_case_to_model_fields(data=nutrient_targets_data)
     nutrient_targets = NutritionData.objects.create(**nutrient_targets_data)
     
     if request.method == 'POST':

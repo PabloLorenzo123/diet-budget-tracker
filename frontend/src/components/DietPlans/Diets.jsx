@@ -5,7 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
+import LoadingSpinner from '../LoadingSpinner';
+
 const Diets = () => {
+    const [Loading, setLoading] = useState(false);
     const [dietPlans, setDietPlans] = useState([]);
 
     const navigate = useNavigate();
@@ -13,6 +16,7 @@ const Diets = () => {
     useEffect(() => {
         const fetchDietPlans = async () => {
             try {
+                setLoading(true);
                 const res = await api.get('diet/diet-plans/');
                 if (res.status == 200){
                     setDietPlans(res.data.dietPlans)
@@ -20,6 +24,8 @@ const Diets = () => {
             } catch (err) {
                 console.log(err)
                 toast.error(err.message)
+            } finally {
+                setLoading(false);
             }
         }
         fetchDietPlans()
@@ -47,49 +53,60 @@ const Diets = () => {
         }
     }
 
-    return (
-    <>
-        <h1 className="fw-bold">Your Diet Plans</h1>
-        <p className="lead">Browse through your diet plans</p>
-        <div className="mt-2 bg-white" style={{width: '100%', height: '100%'}} >
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Protein</th>
-                        <th>Carbs</th>
-                        <th>Fat</th>
-                        <th>Date</th>
-                        <th>Budget</th>
-                        <th></th>
-                    </tr>
-                </thead>
-            
-                <tbody>
-                    {dietPlans.map((d, idx) => {
-                        return (
-                            <tr key={idx} onClick={() => goDietDetails(d.id)}>
-                                <td>{d.name}</td>
-                                <td>{d.protein}</td>
-                                <td>{d.netCarbs}</td>
-                                <td>{d.totalFat}</td>
-                                <td>{d.date}</td>
-                                <td>{d.budget}</td>
-                                <td>
-                                    <button type="button" className="delete-btn" onClick={(e) => deleteDietPlan(e, d.id, d.name)}>
-                                        <span className="material-symbols-outlined">
-                                            delete_forever
-                                        </span>
-                                    </button>
-                                </td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
-        </div>
-    </>
-    )
+    if (Loading) {
+        return <LoadingSpinner />
+    } else {
+        return (
+        <>
+            <h1 className="fw-bold">Your Diet Plans</h1>
+            <p className="lead">Browse through your diet plans</p>
+            <div className="mt-2 bg-white" style={{width: '100%', height: '100%'}} >
+            <table className="table table-striped table-hover table-bordered align-middle">
+    <thead className="table-dark">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Protein (g)</th>
+            <th scope="col">Carbs (g)</th>
+            <th scope="col">Fat (g)</th>
+            <th scope="col">Date</th>
+            <th scope="col">Budget</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {dietPlans.map((d, idx) => {
+            return (
+                <tr key={idx} onClick={() => goDietDetails(d.id)} style={{ cursor: 'pointer' }}>
+                    <td>{d.name}</td>
+                    <td>{d.protein}g</td>
+                    <td>{d.netCarbs}g</td>
+                    <td>{d.totalFat}g</td>
+                    <td>{d.date}</td>
+                    <td>${d.budget}</td>
+                    <td>
+                        <button 
+                            type="button" 
+                            className="btn btn-danger btn-sm" 
+                            onClick={(e) => { 
+                                e.stopPropagation(); 
+                                deleteDietPlan(e, d.id, d.name); 
+                            }}
+                        >
+                            <span className="material-symbols-outlined">
+                                delete_forever
+                            </span>
+                        </button>
+                    </td>
+                </tr>
+            );
+        })}
+    </tbody>
+</table>
+
+            </div>
+        </>
+        )
+    }
 }
 
 export default Diets;

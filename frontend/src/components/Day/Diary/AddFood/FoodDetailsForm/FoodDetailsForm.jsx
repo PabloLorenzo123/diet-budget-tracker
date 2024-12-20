@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { titleCase, isObjEmpty, validateDecimalNumberInput } from "../../../../../lib/functions";
 
-import { servingMeasures } from "../../../../../constants";
+import { massUnits } from "../../../../../constants";
 import AddToDiaryBtn from "../AddToDiaryBtn";
 import FoodDetailsTargets from "./FoodDetailsTargets";
 
@@ -12,7 +12,7 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
         diaryGroup: 0, // A.K.A What meal object.
         servings: 1,
         servingMeasure: {},
-        servingMeasures: servingMeasures,
+        servingMeasures: massUnits,
     })
 
     useEffect(() => {
@@ -21,7 +21,7 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
             const newServingMeasures = [{
                 unit: selectedFood.foodData.measure,
                 valueInGrams: selectedFood.foodData.gramWeight
-            }, ...servingMeasures];
+            }, ...massUnits];
 
             setAddToDairyForm(prev => ({
                 ...prev,

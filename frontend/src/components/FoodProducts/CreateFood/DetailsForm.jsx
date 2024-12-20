@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { roundTo, isNumber, validateDecimalNumberInput } from "../../../lib/functions";
+import { roundTo, isNumber, validateDecimalNumberInput, titleCase } from "../../../lib/functions";
+import { massUnits } from "../../../constants";
 
 const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) => {
 
@@ -11,11 +12,44 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
         }));
     };
 
+    const handleMeasureUnitChange = (e) => {
+        const measureUnitIdx = e.target.value;
+        const measureUnit = massUnits[measureUnitIdx];
+        let newAmount;
+        if (foodData.measurement.amount){
+            newAmount = roundTo(foodData.gramWeight / measureUnit.valueInGrams, 2)
+        } else {
+            newAmount = foodData.measurement.amount;
+        }
+        setFoodData(prev => ({
+          ...prev,
+          measurement: {
+            unit: measureUnit,
+            amount: newAmount,
+          },
+          gramWeight: measureUnit.valueInGrams * newAmount || 0,
+        }))
+    }
+
+    const handleMeasureAmountChange = (e) => {
+        const value = e.target.value;
+        
+        setFoodData(prev => ({
+            ...prev,
+            measurement: {
+                ...prev.measurement,
+                amount: value,
+            },
+            gramWeight: foodData.measurement.unit.valueInGrams * value || 0
+        }))
+    }
+
     return (
         <>
         <div className="create-food-form">
                 <p className="fw-bold h4">Info</p>
 
+                {/* General Info Form */}
                 <div className="row mb-3">
                     <label htmlFor="productName" className="col-sm-2 col-form-label">Product Full Name</label>
                     <div className="col-sm-8">
@@ -32,6 +66,7 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                     </div>
                 </div>
 
+                {/* Serving And Measurements Form */}
                 <div className="row mb-3">
                     <label htmlFor="servingTable" className="col-sm-2 col-form-label">Serving Sizes</label>
                     <div className="col-sm-6">
@@ -45,40 +80,56 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                                 <tr>
                                     <th># Servings</th>
                                     <th>Measure</th>
-                                    <th>Grams</th>
+                                    <th>
+                                        <select
+                                            className="form-control"
+                                            onChange={handleMeasureUnitChange}
+                                            value={massUnits.findIndex(mu => mu.unit == foodData.measurement.unit.unit)}
+                                        >
+                                            {massUnits.map((sm, idx) => {
+                                                return (
+                                                    <option key={idx} value={idx}>
+                                                        {titleCase(sm.name)}
+                                                    </option>
+                                                )
+                                            })}
+                                        </select>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
                                         <input
-                                        type="text"
-                                        inputMode="decimal" // Enables numeric keypad on mobile
-                                        onChange={handleChange}
-                                        onInput={e => validateDecimalNumberInput(e, 1)}
-                                        className="form-control"
-                                        name="servings"
-                                        value={foodData.servings}
+                                            type="text"
+                                            inputMode="decimal" // Enables numeric keypad on mobile
+                                            onChange={handleChange}
+                                            onInput={e => validateDecimalNumberInput(e, 1)}
+                                            className="form-control"
+                                            name="servings"
+                                            value={foodData.servings}
                                         />
                                     </td>
                                     <td>
                                         <input
-                                        type="text"
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        name="measure"
-                                        value={foodData.measure}/>
+                                            type="text"
+                                            onChange={handleChange}
+                                            className="form-control"
+                                            name="measure"
+                                            value={foodData.measure}
+                                        />
                                     </td>
                                     <td>
                                         <input
-                                        type='text'
-                                        inputMode="decimal" // Enables numeric keypad on mobile
-                                        placeholder="n/a"
-                                        onChange={handleChange}
-                                        onInput={validateDecimalNumberInput}
-                                        className="form-control"
-                                        name="gramWeight"
-                                        value={foodData.gramWeight} />
+                                            type='text'
+                                            inputMode="decimal" // Enables numeric keypad on mobile
+                                            placeholder="n/a"
+                                            onChange={handleMeasureAmountChange}
+                                            onInput={validateDecimalNumberInput}
+                                            className="form-control"
+                                            name="gramWeight"
+                                            value={foodData.measurement.amount}
+                                        />
                                     </td>
                                 </tr>
                             </tbody>
@@ -101,10 +152,6 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                         value={foodData.productPrice}
                         />
                     </div>
-                </div>
-                
-                <div className="mb-3">
-                    
                 </div>
 
             </div>

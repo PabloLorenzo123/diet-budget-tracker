@@ -58,11 +58,13 @@ export const getTotalNutrients = (nutrient, meals, dailyTargets, selectedMealIdx
       totalNutrients = selectedFoodObj.nutritionalContribution[nutrient];
   } else {
       // Sum all the nutrients of all the foods in the dairy.
-      totalNutrients = meals.filter(m => m && !m.hideFromDiary).reduce((acc, meal) => acc + meal.foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 0);
+      totalNutrients = meals.filter(m => m && !m.hideFromDiary).
+      reduce((acc, meal) => acc + meal.foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 0);
   }
   totalNutrients = roundTo(totalNutrients, 2);
-  const percentage = roundTo(totalNutrients / dailyTargets[nutrient].amount * 100, 2) ;
-  return [totalNutrients, percentage];
+  const percentage = roundTo(totalNutrients / dailyTargets[nutrient].amount * 100, 2) || 0; // In case the daily target value is 0.
+                                                                                            // To avoid dividing by 0.
+  return [totalNutrients, percentage ]; 
 }
 
 export const arraysAreEqual = (arr1, arr2) => {
@@ -72,69 +74,6 @@ export const arraysAreEqual = (arr1, arr2) => {
 
 export const getTotalNutrientsInMeal = (foods, nutrient) => 
   roundTo(foods.reduce((acc, f) => acc + f.nutritionalContribution[nutrient], 0), 2);
-
-
-export const  transformNutrientData = (nutrientData) => {
-  const keyMapping = {
-      // General.
-      energy: "energy",
-      protein: "protein",
-
-      // Carbs.
-      fiber: "fiber",
-      starch: "starch",
-      sugars: "sugars",
-      addedSugars: "added_sugars",
-      netCarbs: "net_carbs",
-
-      // Fats.
-      monounsaturatedFat: "monounsaturated_fat",
-      polyunsaturatedFat: "polyunsaturated_fat",
-      saturatedFat: "saturated_fat",
-      transFat: "trans_fat",
-      cholesterol: "cholesterol",
-      totalFat: "total_fat",
-
-      // Vitamins.
-      B1: "b1",
-      B2: "b2",
-      B3: "b3",
-      B5: "b5",
-      B6: "b6",
-      B12: "b12",
-      choline: "choline",
-      folate: "folate",
-      A: "a",
-      C: "c",
-      D: "d",
-      E: "e",
-      K: "k",
-
-      // Minerals.
-      calcium: "calcium",
-      chromium: "chromium",
-      copper: "copper",
-      iron: "iron",
-      magnesium: "magnesium",
-      manganese: "manganese",
-      molybdenum: "molybdenum",
-      phosphorus: "phosphorus",
-      potassium: "potassium",
-      selenium: "selenium",
-      sodium: "sodium",
-      zinc: "zinc"
-  };
-
-  const transformedData = {};
-    for (const [key, value] of Object.entries(nutrientData)) {
-        if (!keyMapping[key]) {
-            continue; // Skip the entry if the key is not in the mapping
-        }
-        transformedData[keyMapping[key]] = value.dv; // Use `value.dv` as the float value
-    }
-
-    return transformedData;
-}
 
 
 export const calculateNutritionalContribution = (foodProduct, portionSize) => {
@@ -163,8 +102,8 @@ export const transformDailyTargets = (dt) => {
               dv: roundTo((value / dv) * 100, 2) || 0
           }
       }    
-    })
-    return dailyTargets;
+  })
+  return dailyTargets;
 }
 
 
@@ -176,3 +115,30 @@ export const areArraysEqual = (arr1, arr2) => {
       return JSON.stringify(obj1) === JSON.stringify(obj2);
   });
 };
+
+
+export const areObjectsEqual = (obj1, obj2) => {
+  // Check if both objects have the same number of keys
+  if (Object.keys(obj1).length !== Object.keys(obj2).length) {
+      return false;
+  }
+
+  // Check if every key-value pair in obj1 matches obj2
+  for (const key in obj1) {
+      // Check if the key exists in obj2
+      if (!obj2.hasOwnProperty(key)) {
+          return false;
+      }
+
+      // If values are objects, compare them deeply
+      if (typeof obj1[key] === 'object' && obj1[key] !== null && typeof obj2[key] === 'object' && obj2[key] !== null) {
+          if (!areObjectsEqual(obj1[key], obj2[key])) {
+              return false;
+          }
+      } else if (obj1[key] !== obj2[key]) {
+          return false;
+      }
+  }
+
+  return true;  // Objects are equal
+}

@@ -4,19 +4,12 @@ import DetailsForm from "./DetailsForm";
 import NutritionDataForm from "./NutritionDataForm";
 import SaveBtn from "./SaveBtn";
 
+import { defaultFoodData, defaultMassUnitIdx, massUnits } from "../../../constants";
 import { nutrientState, nutrientsInformation } from "../../../lib/nutrients";
 import { roundTo, isObjEmpty } from "../../../lib/functions";
 
 import "../../../styles/foodProducts/createFoodProduct.css";
 
-const defaultFoodData = {
-  productName: "",
-  productLink: "",
-  servings: 1, // How many servings are in the product.
-  measure: "serving", // It could be a serving, a tbspoon, an egg.
-  gramWeight: null, // How many grams is a serving, this is optional. n/a for eggs for instance, grams or mililtes.
-  productPrice: 0
-}
 
 const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, selectedFood, setSelectedFood, afterSubmitFunc}) => {
   const [foodData, setFoodData] = useState(defaultFoodData);
@@ -36,7 +29,14 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
           }
         )
         // Update states.
-        setFoodData(selectedFood.foodData);
+        console.log(selectedFood.foodData)
+        setFoodData({
+          ...selectedFood.foodData,
+          measurement: {
+            unit: massUnits[defaultMassUnitIdx],
+            amount: selectedFood.foodData.gramWeight,
+          },
+        });
         setNutritionData(selectedFoodNutritionData);
       }
     }
@@ -64,7 +64,7 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
         <h2 className="fw-bold">Create Food Product</h2>
         <p className="text-body-secondary">Create a new food product.</p>
 
-        {setShowIndex &&
+        {setShowIndex && // If set showIndex is not null, it means there's an index.
         <button type="button" className="back-to-index-btn" onClick={backToIndex}>
           <span className="material-symbols-outlined">
             arrow_back

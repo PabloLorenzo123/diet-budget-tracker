@@ -28,7 +28,8 @@ const NutrientTable = ({category, dailyTargets, mealsArr, selectedMeal, selected
                         return (
                             <Fragment key={nutrient.name}>
                                 {(() => {
-                                    const [totalNutrients, totalNutrientsPercentage] = getTotalNutrients(nutrient.name, mealsArr, dailyTargets, selectedMeal, selectedFoodObj);
+                                    const [totalNutrients, totalNutrientsPercentage] = 
+                                    getTotalNutrients(nutrient.name, mealsArr, dailyTargets, selectedMeal, selectedFoodObj);
                                     return (
                                         <tr key={nutrient.name}>
                                             <td>{nutrient.altName}</td>

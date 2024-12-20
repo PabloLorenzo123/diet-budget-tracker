@@ -11,10 +11,10 @@ const NutritionDataForm = ({foodData, setFoodData, nutritionData, setNutritionDa
     <>
       <div className="create-food-form">
         <ManualOrSearchFood
-        foodData={foodData}
-        setFoodData={setFoodData}
-        nutritionData={nutritionData}
-        setNutritionData={setNutritionData}
+          foodData={foodData}
+          setFoodData={setFoodData}
+          nutritionData={nutritionData}
+          setNutritionData={setNutritionData}
         />
         <div className="nutrient-data mb-2">
           <p className="fw-bold h5">Nutrition Overview</p>
@@ -24,19 +24,19 @@ const NutritionDataForm = ({foodData, setFoodData, nutritionData, setNutritionDa
           </p>
           <div className="d-flex align-items-center">
             <h6>
-            Nutrients in <span className="fw-bold">one {foodData.measure}</span>
+              Nutrients in <span className="fw-bold">one {foodData.measure} ({foodData.measurement.amount}{foodData.measurement.unit.unit})</span>
             </h6>
               {
                 <input
-                type="text"
-                inputMode="decimal" // Enables numeric keypad on mobile
-                placeholder="n/a"
-                onChange={e => setFoodData(prev => ({...prev, gramWeight: e.target.value}))}
-                onInput={validateDecimalNumberInput}
-                className="form-control ms-2"
-                name="gramWeight"
-                value={foodData.gramWeight}
-                style={{width: '100px'}}
+                  type="text"
+                  inputMode="decimal" // Enables numeric keypad on mobile
+                  placeholder="n/a"
+                  onChange={e => setFoodData(prev => ({...prev, gramWeight: e.target.value}))}
+                  onInput={validateDecimalNumberInput}
+                  className="form-control ms-2"
+                  name="gramWeight"
+                  value={foodData.gramWeight}
+                  style={{width: '100px'}}
                 />
               }
             <span>g</span>    

@@ -5,14 +5,15 @@ import { roundTo, getTotalNutrientsInMeal } from '../../../lib/functions';
 import Modal from '../../Modal';
 
 const DietSummaryModal = ({meals, setShowModal}) => {
+    const notEmptyDays = meals.filter(d => d.filter(m => !m.hideFromDiary).some(m => m.foods.length > 0));
     return (
         <>
 
         <Modal setShow={setShowModal} scroll={true} header={'Diet plan'}>
 
             <hr className="border border-primary border-3 opacity-75" />
-            {/* Days */}
-            {meals.map((day, idx) => {
+            {/* Days that are not empty*/}
+            {notEmptyDays.map((day, idx) => {
                 return (
                     <Fragment key={idx}>
                         <h5 className='fw-bold m-0 p-0'>
@@ -23,7 +24,7 @@ const DietSummaryModal = ({meals, setShowModal}) => {
                         {/* Meals */}
                     
                         {/*Show meals that are not hidden and that have food elements within them.*/}
-                        {day.filter(m => m && !m.hideFromDiary && m.foods.length).map((meal, idx) => {
+                        {day.filter(m => m && !m.hideFromDiary && m.foods.length > 0).map((meal, idx) => {
                             // Total values of the meal.
                             const totalEnergy = getTotalNutrientsInMeal(meal.foods, 'energy');
                             const totalProtein = getTotalNutrientsInMeal(meal.foods, 'protein');

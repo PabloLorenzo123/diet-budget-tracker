@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { dailyTargetState } from "../../lib/nutrients";
-import { servingMeasures } from "../../constants";
+import { massUnits } from "../../constants";
 
 import Diet from "../Day/Diet";
 
@@ -30,7 +30,7 @@ const DietPlanView = ({dietPlanId}) => {
                     smUnit = f.foodData.measure
                 } else {
                     // Find the unit from the default ones if it's not the one in the food product.
-                    smUnit = servingMeasures.find(el => el.valueInGrams == f.servingMeasureInGrams)
+                    smUnit = massUnits.find(el => el.valueInGrams == f.servingMeasureInGrams)
                 }
                 const portionSize = f.servings * f.servingMeasureInGrams;
                 const totalCost = portionSize * f.foodData.productPrice / f.foodData.gramWeight;
@@ -92,10 +92,17 @@ const DietPlanView = ({dietPlanId}) => {
                     const data = res.data;
                     const days = data.days;
                     const nutrientTargetsData = data.nutrientTargets;
+                    
                     setDietPlanName(data.dietPlanName);
-                    setMeals(transformDays(days))
-                    if (nutrientTargetsData) {
-                        setDailyTargets(transformDailyTargets(nutrientTargetsData))
+                    setMeals(transformDays(days));
+
+                    if (nutrientTargetsData != null) {
+                        setDailyTargets(() => {
+                            return {
+                                ...transformDailyTargets(nutrientTargetsData),
+                                budget: data.budget || 0
+                            }
+                        })
                     } // Otherwise all the nutrients but with 0.
                 }
             } catch (error) {
@@ -130,16 +137,16 @@ const DietPlanView = ({dietPlanId}) => {
             <p className="text-center">There was an error loading this diet plan.</p>
         :
         <Diet
-                dailyTargets={dailyTargets}
-                setDailyTargets={setDailyTargets}
-                meals={meals}
-                setMeals={setMeals}
-                groceries={groceries}
-                setGroceries={setGroceries}
+            dailyTargets={dailyTargets}
+            setDailyTargets={setDailyTargets}
+            meals={meals}
+            setMeals={setMeals}
+            groceries={groceries}
+            setGroceries={setGroceries}
 
-                dietPlanName={dietPlanName}
-                setDietPlanName={setDietPlanName}
-                dietPlanId={dietPlanId}
+            dietPlanName={dietPlanName}
+            setDietPlanName={setDietPlanName}
+            dietPlanId={dietPlanId}
         />
         }
             

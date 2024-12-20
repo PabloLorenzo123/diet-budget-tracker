@@ -146,27 +146,24 @@ const Index = () => {
         
     }, [])
 
-    return(
-        <>
-            {   loading? 
-                    <LoadingSpinner />:
-                isError?
-                    <p className='text-center'>There was an error loading your data, please try again.</p>
-                :
-                <Diet
-                    dailyTargets={dailyTargets}
-                    setDailyTargets={setDailyTargets}
-                    meals={meals}
-                    setMeals={setMeals}
-                    groceries={groceries}
-                    setGroceries={setGroceries}
-                    dietPlanName={dietPlanName}
-                    setDietPlanName={setDietPlanName}
-                />
-            }
-            
-        </>
-    )
+    if (loading) {
+        return <LoadingSpinner />
+    } else if (isError) {
+        return <p className='text-center'>There was an error loading your data, please try again.</p>
+    } else {
+        return(
+            <Diet
+                dailyTargets={dailyTargets}
+                setDailyTargets={setDailyTargets}
+                meals={meals}
+                setMeals={setMeals}
+                groceries={groceries}
+                setGroceries={setGroceries}
+                dietPlanName={dietPlanName}
+                setDietPlanName={setDietPlanName}
+            />
+        )
+    }
 }
 
 export default Index

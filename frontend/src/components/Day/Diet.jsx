@@ -11,7 +11,7 @@ import { defaultDiaryGroupObject, defaultDiaryGroups, maxNumberOfMeals } from ".
 
 import api from "../../api";
 import DaySwitcher from "./DaySwitcher";
-import GroceryHaul from "./GroceryHaul";
+import GroceryHaul from "./GroceryHaul/GroceryHaul";
 import DietSummary from "./DietSummary/DietSummary";
 
 
@@ -20,7 +20,7 @@ const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGro
     const [currentDay, setCurrentDay] = useState(0);
     const [selectedMealIdx, setSelectedMealIdx] = useState(null);
     const [selectedFoodObj, setSelectedFoodObj] = useState(null);
-    
+    console.log(meals);
 
     return (
         <>

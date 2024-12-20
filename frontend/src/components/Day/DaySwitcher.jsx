@@ -2,9 +2,13 @@ import { useState, useEffect } from "react";
 import { defaultDiaryGroupObject, maxNumberOfDays } from "../../constants";
 
 const DaySwitcher = ({meals, setMeals, currentDay, setCurrentDay}) => {
-    
+
+    const IsCurrentDayEmpty = () => {
+        return meals[currentDay].filter(m => !m.hideFromDiary).every(m => m.foods.length == 0);
+    }
+
     const prevDayDisabled = currentDay - 1 < 0;
-    const nextDayDisabled = currentDay + 1 >= maxNumberOfDays;
+    const nextDayDisabled = currentDay + 1 >= maxNumberOfDays || IsCurrentDayEmpty() && !meals[currentDay + 1];
 
     const switchToPrevDay = () => !prevDayDisabled? setCurrentDay(prev => prev - 1): '';
 

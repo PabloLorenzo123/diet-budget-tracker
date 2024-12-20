@@ -20,12 +20,12 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
     const handleBudgetChange = (e) => setDailyTargets(prev => ({...prev, budget: e.target.value}));
 
     useEffect(() => {
-        console.log(dailyTargets)
         setPrevDailyTargets({...dailyTargets})
     }, [])
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const name = e.target.name;
+        const value = parseFloat(e.target.value);
         const dv = nutrientsInformation[name]?.dv;
         setDailyTargets((prev) => ({
           ...prev,

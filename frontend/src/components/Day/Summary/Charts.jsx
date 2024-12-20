@@ -9,7 +9,7 @@ const Charts = ({dailyTargets, mealsArr, selectedMealIdx, selectedFoodObj}) => {
         roundTo(meal.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 2));
     // Number: total momeny spent.
     const totalMoneySpent = roundTo(mealsCostsArr.reduce((acc, m) => acc + m, 0), 2);
-    const budgetRemainning = roundTo(dailyTargets.budget - totalMoneySpent, 2);
+    const budgetRemainning = roundTo(dailyTargets.budget - totalMoneySpent, 2) || 0;
 
     const backgroundColors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
 
@@ -22,6 +22,7 @@ const Charts = ({dailyTargets, mealsArr, selectedMealIdx, selectedFoodObj}) => {
         {/* Dougnut charts */}
         <h5 className="fw-bold">Budget</h5>
         <div className="row">
+
             {/* Spent Budget */}
             {(() => {
                 const meal = mealsArr[selectedMealIdx];

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import api from '../../../api.js';
 import { nutrientsInformation, nutrientState } from "../../../lib/nutrients.js";
 import { roundTo } from "../../../lib/functions.js";
+import { toast } from "react-toastify";
+import { massUnits, defaultMassUnitIdx } from "../../../constants.js";
 
 const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionData}) => {
     const [isManual, setIsManual] = useState(false);
@@ -21,17 +23,19 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
         if (!searchInput.query) {
             return;
         }
-        setSearchResultsLoading(true);
         try {
+            setSearchResultsLoading(true);
             const res = await api.get(`diet/search_foods/?query=${searchInput.query}&branded=${searchInput.branded}`);
             const data = res.data;
             if (res.status == 200) {
                 setSearchResults(data.foods);
             }
         } catch (error) {
+            toast.error('There was an error tryng to search this food.');
             console.log(error);
-        } 
-        setSearchResultsLoading(false);
+        } finally {
+            setSearchResultsLoading(false);
+        }
     }
 
     const selectSearchResult = async (fdcId) => {
@@ -45,13 +49,19 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
 
         // If the user didn't input grams in the DetailsForm then.
         if (!foodData.gramWeight){
-            await setFoodData(prev => ({...prev, gramWeight: resultSelected.servingSize}));
+            await setFoodData(prev => ({
+                ...prev,
+                measurement: {
+                    unit: massUnits[0],
+                    amount: resultSelected.servingSize,
+                },
+                gramWeight: resultSelected.servingSize
+            }));
         }
 
         // Update the nutrition tables.
-        
         const nutrients = {...nutrientState};
-        console.log(resultSelected.foodNutrients);
+        // console.log(resultSelected.foodNutrients);
         Object.keys(resultSelected.foodNutrients).forEach(nutrient => {
             
             if (nutrientsInformation[nutrient]){
@@ -87,9 +97,19 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
     }
 
     
-    const updateServingSize = (food, grams) => {
-        
-        setFoodData(prev => ({...prev, gramWeight: grams})); // Update gram weight.
+    const updateServingSize = (food, grams, changeMeasurement=true) => {
+        console.log('running update serving size.');
+
+        if (changeMeasurement){
+            setFoodData(prev => ({
+                ...prev,
+                measurement: {
+                    unit: massUnits[defaultMassUnitIdx],
+                    amount: grams,
+                },
+                gramWeight: grams
+            })); // Update gram weight.
+        }
 
         const nutritionDataCopy = {...nutritionData};
         Object.keys(nutritionDataCopy).forEach(nutrient => {
@@ -105,9 +125,9 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
         // When user gram weight changes, update the nutrition table accordingly.
         if (selectedSearchResult){
             const food = searchResults.find(result => result.fdcId == selectedSearchResult);
-            updateServingSize(food, foodData.gramWeight);
+            updateServingSize(food, foodData.gramWeight, false);
         }
-    }, [foodData.gramWeight])
+    }, [foodData.measurement.amount])
     
     return (
         <>
@@ -118,30 +138,30 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
             <div className="mb-3">
                 <div className="form-check">
                     <input
-                    className="form-check-input"
-                    type="radio"
-                    name="isManual"
-                    id="manualYes"
-                    value="yes"
-                    checked={isManual}
-                    onChange={() => setIsManual(true)}
+                        className="form-check-input"
+                        type="radio"
+                        name="isManual"
+                        id="manualYes"
+                        value="yes"
+                        checked={isManual}
+                        onChange={() => setIsManual(true)}
                     />
                     <label className="form-check-label" htmlFor="manualYes">
-                    Yes
+                        Yes
                     </label>
                 </div>
                 <div className="form-check">
                     <input
-                    className="form-check-input"
-                    type="radio"
-                    name="isManual"
-                    id="manualNo"
-                    value="no"
-                    checked={!isManual}
-                    onChange={() => setIsManual(false)}
+                        className="form-check-input"
+                        type="radio"
+                        name="isManual"
+                        id="manualNo"
+                        value="no"
+                        checked={!isManual}
+                        onChange={() => setIsManual(false)}
                     />
                     <label className="form-check-label" htmlFor="manualNo">
-                    No
+                        No
                     </label>
                 </div>
             </div>
@@ -151,13 +171,13 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
                 <div className="row mt-3 mb-4">
                     <div className="col-10 col-sm-8">
                         <input
-                        type="text"
-                        disabled={isManual}
-                        className="form-control"
-                        placeholder="Search for nutritional information (e.g., beef, sardines, eggs)"
-                        value={searchInput.query}
-                        onChange={(e) =>
-                        setSearchInput((prev) => ({ ...prev, query: e.target.value }))
+                            type="text"
+                            disabled={isManual}
+                            className="form-control"
+                            placeholder="Search for nutritional information (e.g., beef, sardines, eggs)"
+                            value={searchInput.query}
+                            onChange={(e) =>
+                            setSearchInput((prev) => ({ ...prev, query: e.target.value }))
                         }
                         />
                     </div>
@@ -166,29 +186,29 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
                 <div className="row mb-3">
                     
                     <p className="form-text">
-                    Is this an unbranded minimally processed food (e.g., eggs, vegbles) or a
-                    processed an labeled item?
+                        Is this an unbranded minimally processed food (e.g., eggs, vegbles) or a
+                        processed an labeled item?
                     </p>
                     <div className="col d-flex align-items-center">
                         <label className="form-check-label me-3">
                             <input
-                            type="radio"
-                            name="foodType"
-                            className="form-check-input me-1"
-                            checked={searchInput.branded === false}
-                            disabled={isManual}
-                            onChange={() => setSearchInput((prev) => ({ ...prev, branded: false }))}
+                                type="radio"
+                                name="foodType"
+                                className="form-check-input me-1"
+                                checked={searchInput.branded === false}
+                                disabled={isManual}
+                                onChange={() => setSearchInput((prev) => ({ ...prev, branded: false }))}
                             />
                             Commodity Food
                         </label>
                         <label className="form-check-label">
                             <input
-                            type="radio"
-                            name="foodType"
-                            className="form-check-input me-1"
-                            checked={searchInput.branded === true}
-                            disabled={isManual}
-                            onChange={() => setSearchInput((prev) => ({ ...prev, branded: true }))}
+                                type="radio"
+                                name="foodType"
+                                className="form-check-input me-1"
+                                checked={searchInput.branded === true}
+                                disabled={isManual}
+                                onChange={() => setSearchInput((prev) => ({ ...prev, branded: true }))}
                             />
                             Branded Food
                         </label>

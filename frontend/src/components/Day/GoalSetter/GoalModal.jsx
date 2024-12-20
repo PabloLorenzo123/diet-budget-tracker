@@ -9,7 +9,7 @@ const GoalModal = ({showModal, setShowModal, dailyTargets, setDailyTargets, hand
     const unitSpanStyle = {width: '25px'};
     
     return (
-        <Modal showModal={showModal} setShow={setShowModal} header={'Set your daily goals'}>
+        <Modal showModal={showModal} setShow={setShowModal} header={'Set your daily goals'} scroll={false}>
             <hr className="border border-primary border-3 opacity-75" />
             <div className="nutrient-tables-container" style={{height: '80%', overflowY: 'auto', padding: '10px'}}>
                 <table className="nutrient-table table">
