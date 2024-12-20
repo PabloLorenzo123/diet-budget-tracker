@@ -3,6 +3,8 @@ import { roundTo } from "../../../../lib/functions";
 
 
 const FoodsTable = ({foodProducts, selectFood, selectedFood, searchResultsHeight, foodProductsLoading}) => {
+
+    
     return (
         <>
         {

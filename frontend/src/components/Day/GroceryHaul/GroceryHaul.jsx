@@ -14,50 +14,62 @@ const GroceryHaul = ({groceries}) => {
     // the element from the array.
 
     // Show the products which have food items in the diary, otherwise don't show.
-    const [showModal, setShowModal] = useState(false);
     const [receipt, setReceipt] = useState([]);
-    const [totalCost, setTotalCost] = useState(0);
+
+    const [totalGroceriesCost, setTotalGroceriesCost] = useState(0);
+    const [totalDietPlanCost, setTotalDietPlanCost] = useState(0);
+
+    const [showModal, setShowModal] = useState(false);
+    
 
     useEffect(() => {
         let newReceipt = [];
         let groceriesTotalCost = 0;
+        let dietPlanTotalCost = 0;
 
+        // Get the products objects, which in their list of 'foods' (times they appear in the diet plan) there is a least a product objet.
+        // Which is not null.
         const products = Object.keys(groceries).map(prodId => groceries[prodId]).filter(p => p.foods.some(f => f));
+
         products.forEach(product => {
-            const productName = product.foodData.productName;
-            const foodData = product.foodData;
+            const foodData = product.foodData; // product name, link, servings, gramWeight, etc.
 
             // The sum of all the portion sizes.
             const totalGrams = product.foods.reduce((acc, p) => 
-                p? acc + p.diaryData.portionSize: acc // If undefined then skip.
+                p != null? acc + p.diaryData.portionSize: acc // If undefined then skip.
             , 0);
 
             // The total grams in a item is the serving size times servings in the item.
-            const gramsPerItem = foodData.gramWeight * foodData.servings;
+            const productNetContent = foodData.gramWeight * foodData.servings;
 
-            const nItemsToBuy = roundTo(Math.ceil(totalGrams / gramsPerItem), 1);
-            const totalCost = nItemsToBuy * foodData.productPrice;
+            const nItemsToBuy = roundTo(Math.ceil(totalGrams / productNetContent), 1);
+            
+            const totalBruteCost = nItemsToBuy * foodData.productPrice;
 
+            console.log(totalGrams, productNetContent, foodData.productPrice)
+            const totalNetCost = roundTo(totalGrams * (foodData.productPrice / productNetContent), 2);
+            
             // Update total cost.
-            groceriesTotalCost += totalCost;
+            groceriesTotalCost += totalBruteCost;
+            dietPlanTotalCost += totalNetCost;
 
             newReceipt.push({
                 product,
                 nItemsToBuy,
-                totalCost,
+                totalCost: totalBruteCost,
             })
         })
 
         setReceipt(newReceipt);
-        setTotalCost(groceriesTotalCost);
+        setTotalGroceriesCost(groceriesTotalCost);
+        setTotalDietPlanCost(dietPlanTotalCost);
+
     }, [groceries])
 
     const style = {
         maxHeight: groceryHaulMaxHeight,
         overflowY: 'scroll',
     }
-
-    let groceriesTotalCost = 0;
 
     return (
     <>
@@ -76,12 +88,20 @@ const GroceryHaul = ({groceries}) => {
         <hr/>
 
         <p className="text-end me-4">
-            <span className="fw-bold me-4">Total</span>{`$${totalCost}`}
+            <span className="fw-bold me-4">Total</span>{`$${totalGroceriesCost}`}
+        </p>
+        <p>
+            <span className="fw-bold">Diet Plan Total Cost: </span>
+            {totalDietPlanCost}
         </p>
 
         {showModal && 
-            <GroceryHaulModal setShowModal={setShowModal} receipt={receipt} totalCost={totalCost}/>
-            }
+            <GroceryHaulModal
+                setShowModal={setShowModal}
+                receipt={receipt}
+                totalGroceriesCost={totalGroceriesCost}
+            />
+        }
     </>
     )
 }

@@ -8,7 +8,7 @@ const FoodDetailsTargets = ({meals, dailyTargets, selectedFood, addToDiaryForm})
     const getTotalNutrients = (nutrient) => {
         const nutrientPerGram = selectedFood.nutritionData[nutrient] / selectedFood.foodData.gramWeight;
         const totalNutrients = roundTo(nutrientPerGram * addToDiaryForm.servingMeasure.valueInGrams * addToDiaryForm.servings, 2);
-        const percentage = roundTo(totalNutrients / dailyTargets[nutrient].amount * 100, 2);
+        const percentage = roundTo(totalNutrients / dailyTargets[nutrient].amount * 100, 2) || 0;
         return [totalNutrients, percentage];
     }
 
@@ -25,6 +25,7 @@ const FoodDetailsTargets = ({meals, dailyTargets, selectedFood, addToDiaryForm})
                 <div className="col-sm-6">
                     <span className="fw-bold">Budget</span>
                 </div>
+                {/* Budget progress bar */}
                 <div className="col-sm-6">
                     {(() => {
                         const [moneySpent, moneySpentPercentage] = getTotalSpent();
@@ -33,17 +34,21 @@ const FoodDetailsTargets = ({meals, dailyTargets, selectedFood, addToDiaryForm})
                             {/* Progress bar details on top of the bar */}
                             <div className="d-flex flex-wrap justify-content-between">
                                 <span>${moneySpent} / ${dailyTargets.budget}</span>
-                                <span>{moneySpentPercentage}%</span>
+                                <span>{moneySpentPercentage || 0}%</span>
                             </div>
                             {/* Progress bar */}
                             <div className="progress" role="progressbar" aria-label="Basic example" aria-valuenow={moneySpentPercentage} aria-valuemin="0" aria-valuemax="100" style={{height: '15px'}}>
-                                <div className="progress-bar" style={{width: `${moneySpentPercentage}%`}}></div>
+                                <div
+                                    className="progress-bar"
+                                    style={{width: `${moneySpentPercentage? moneySpentPercentage: '100'}%`}}
+                                ></div>
                             </div>
                             </>
                         )
                     })()}
                 </div>
             </div>
+            {/* Macronutrients progress bars */}
             {nutrientsTable.general.map(macronutrient => {
                 return (
                     <div className="row align-items-end" key={macronutrient.name}>
@@ -59,11 +64,14 @@ const FoodDetailsTargets = ({meals, dailyTargets, selectedFood, addToDiaryForm})
                                     {/* Progress bar details on top of the bar */}
                                     <div className="d-flex flex-wrap justify-content-between">
                                         <span>{totalNutrients}{macronutrient.unit} / {dailyTargets[macronutrient.name].amount}{macronutrient.unit}</span>
-                                        <span>{totalNutrientsPercentage}%</span>
+                                        <span>{totalNutrientsPercentage || 0}%</span>
                                     </div>
                                     {/* Progress bar */}
                                     <div className="progress" role="progressbar" aria-label="Basic example" aria-valuenow={totalNutrientsPercentage} aria-valuemin="0" aria-valuemax="100" style={{height: '15px'}}>
-                                        <div className="progress-bar" style={{width: `${totalNutrientsPercentage}%`}}></div>
+                                        <div
+                                            className="progress-bar"
+                                            style={{width: `${totalNutrientsPercentage? totalNutrientsPercentage: '100'}%`}}
+                                        ></div>
                                     </div>
                                     </>
                                 )
