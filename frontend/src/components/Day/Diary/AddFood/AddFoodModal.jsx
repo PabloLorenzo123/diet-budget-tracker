@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import FoodDetailsForm from "./FoodDetailsForm/FoodDetailsForm";
 import Modal from "../../../Modal";
 
-import { AddFoodModalTabs } from "../../../../constants";
+import { AddFoodModalVisibleTabs } from "../../../../constants";
 import api from "../../../../api";
 
 import { roundTo } from "../../../../lib/functions";
@@ -10,13 +10,14 @@ import { roundTo } from "../../../../lib/functions";
 import { toast } from "react-toastify";
 
 import '../../../../styles/searchBar.css';
-import CreateTab from './CreateTab'
+import CreateTab from './Tabs/CreateTab'
 import SearchBar from "./SearchBar";
 import FoodsTable from "./FoodsTable";
+import EditFoodTab from "./Tabs/EditFoodTab";
 
 
 const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, groceries, setGroceries, dailyTargets}) => {
-    const [tab, setTab] = useState(AddFoodModalTabs[0]);
+    const [tab, setTab] = useState(AddFoodModalVisibleTabs[0]);
 
     const [foodProductsLoading, setFoodProductsLoading] = useState(false);
     const [foodProducts, setFoodProducts] = useState([]);
@@ -75,12 +76,18 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
             
 
             <div className="d-flex search-tabs mb-2">
-                {AddFoodModalTabs.map(item => {
+                {AddFoodModalVisibleTabs.map(item => {
                     return (
                     <div className={`search-tab${item == tab? ' selected-tab': ''}`} key={item} onClick={() => setTab(item)}>
                         {item}
                     </div>
                 )})}
+                {/* The edit tab ain't visible */}
+                {tab == 'Edit' &&
+                    <div className="search-tab selected-tab">
+                        Edit Food Product
+                    </div>
+                }
             </div>
 
             {tab == 'All' &&
@@ -96,6 +103,7 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
                             selectedFood={selectedFood}
                             searchResultsHeight={searchResultsHeight}
                             foodProductsLoading={foodProductsLoading}
+                            setTab={setTab}
                         />
                         {showFoodDetails &&
                             <div style={{height: foodDetailsHeight}}>
@@ -112,6 +120,7 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
                                     groceries={groceries}
                                     setGroceries={setGroceries}
                                     dailyTargets={dailyTargets}
+                                    setTab={setTab}
                                 />
                             </div>
                         }
@@ -122,6 +131,9 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
             }
             {tab == 'Create' &&
                 <CreateTab getFoodProducts={getAllFoodProducts} tab={tab} setTab={setTab}/>
+            }
+            {tab == 'Edit' &&
+                <EditFoodTab selectedFood={selectedFood} />
             }
         </Modal>
     )

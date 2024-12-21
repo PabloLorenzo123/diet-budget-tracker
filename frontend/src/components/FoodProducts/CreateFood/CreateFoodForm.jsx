@@ -11,7 +11,7 @@ import { roundTo, isObjEmpty } from "../../../lib/functions";
 import "../../../styles/foodProducts/createFoodProduct.css";
 
 
-const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, selectedFood, setSelectedFood, afterSubmitFunc}) => {
+const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, selectedFood, setSelectedFood, afterSubmitFunc, showHeader=true}) => {
   const [foodData, setFoodData] = useState(defaultFoodData);
   const [nutritionData, setNutritionData] = useState(nutrientState);
 
@@ -29,7 +29,6 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
           }
         )
         // Update states.
-        console.log(selectedFood.foodData)
         setFoodData({
           ...selectedFood.foodData,
           measurement: {
@@ -61,18 +60,24 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
   
   return (
       <div id="create-food-container">
-        <h2 className="fw-bold">Create Food Product</h2>
-        <p className="text-body-secondary">Create a new food product.</p>
+        {showHeader &&
+          <>
+            <h2 className="fw-bold">Create Food Product</h2>
+            <p className="text-body-secondary">Create a new food product.</p>
+          </>
+        }
 
         {setShowIndex && // If set showIndex is not null, it means there's an index.
-        <button type="button" className="back-to-index-btn" onClick={backToIndex}>
-          <span className="material-symbols-outlined">
-            arrow_back
-          </span>
-          BACK TO FOOD PRODUCTS LIST
-        </button>}
+          <button type="button" className="back-to-index-btn" onClick={backToIndex}>
+            <span className="material-symbols-outlined">
+              arrow_back
+            </span>
+            BACK TO FOOD PRODUCTS LIST
+          </button>
+        }
         
-        <hr className="border border-primary border-3 opacity-75" />
+        {showHeader && <hr className="border border-primary border-3 opacity-75" />}
+        
         <DetailsForm
           foodData={foodData}
           setFoodData={setFoodData}

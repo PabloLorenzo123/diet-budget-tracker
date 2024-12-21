@@ -92,7 +92,7 @@ const GroceryHaul = ({groceries}) => {
         </p>
         <p>
             <span className="fw-bold">Diet Plan Total Cost: </span>
-            {totalDietPlanCost}
+            ${totalDietPlanCost}
         </p>
 
         {showModal && 

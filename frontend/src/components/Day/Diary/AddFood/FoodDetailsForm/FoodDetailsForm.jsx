@@ -4,9 +4,10 @@ import { titleCase, isObjEmpty, validateDecimalNumberInput } from "../../../../.
 import { massUnits } from "../../../../../constants";
 import AddToDiaryBtn from "../AddToDiaryBtn";
 import FoodDetailsTargets from "./FoodDetailsTargets";
+import FoodOptions from "./FoodOptions";
 
 const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood, meals,
-     setMeals, currentDay, groceries, setGroceries, dailyTargets}) => {
+     setMeals, currentDay, groceries, setGroceries, dailyTargets, setTab}) => {
 
     const [addToDiaryForm, setAddToDairyForm] = useState({
         diaryGroup: 0, // A.K.A What meal object.
@@ -18,14 +19,18 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
     useEffect(() => {
         // Each time the selectedFood changes, add its serving measures to the form options.
         if (!isObjEmpty(selectedFood)){
-            const newServingMeasures = [{
+            const selectedFoodSM = {
                 unit: selectedFood.foodData.measure,
                 valueInGrams: selectedFood.foodData.gramWeight
-            }, ...massUnits];
+            }
+            const newServingMeasures = [
+                selectedFoodSM, // Plus the serving meausre of this foodproduct.
+                ...massUnits, // The default serving measures.
+            ];
 
             setAddToDairyForm(prev => ({
                 ...prev,
-                servingMeasure: newServingMeasures[0],
+                servingMeasure: selectedFoodSM,
                 servingMeasures: newServingMeasures
             }))
         }
@@ -55,20 +60,12 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
         <div className="container-fluid py-2 mt-2">
             {/* Header product name */}
             <div className="mb-1 fw-bold d-flex align-items-center justify-content-center">
-                {selectedFood.foodData.productName}
-                {/* Open link in new tab button */}
-                <button className="bg-transparent border-0 p-0 m-0 d-flex align-items-center">
-                    <span className="material-symbols-outlined">
-                        {selectedFood.foodData.productLink?
-                            <a href={selectedFood.foodData.productLink} target="_blank" className="text-decoration-none text-body">
-                                open_in_new
-                            </a>
-                            :
-                            'open_in_new'
-                        }
-                    </span>
-                </button>
-                
+                <span className="me-2">{selectedFood.foodData.productName}</span>
+                {/* Options */}
+                <FoodOptions 
+                    selectedFood={selectedFood}
+                    setTab={setTab}
+                />
             </div>
             {/* Blocks */}
             <div className="row mb-2 d-flex justify-content-around">

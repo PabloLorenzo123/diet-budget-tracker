@@ -3,7 +3,7 @@ export const REFRESH_TOKEN = "refreshToken";
 export const ACCESS_TOKEN = "accessToken";
 
 // Index (Diet) constants
-export const AddFoodModalTabs = ['All', 'Create'];
+export const AddFoodModalVisibleTabs = ['All', 'Create'];
 export const diaryGroups = ['uncategorized', 'breakfast', 'lunch', 'dinner', 'snacks'];
 export const defaultDiaryGroupObject = {name: '', foods: [], show: false, hideFromDiary: false}; // Or day object.
 export const defaultMealObject = {foods: [], show: false, hideFromDiary: false};

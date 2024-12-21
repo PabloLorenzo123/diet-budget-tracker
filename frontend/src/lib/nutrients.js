@@ -102,10 +102,9 @@ export const nutrientsTable = {
 
 export const nutrientState = {};
 Object.keys(nutrientsInformation).forEach(n => {
-    const keyName = n
     nutrientState[n] = {
         amount: 0,
-        dv: nutrientsInformation[n].dv == null? null: 0
+        dv: !nutrientsInformation[n].dv? undefined: 0
     }
 })
 
