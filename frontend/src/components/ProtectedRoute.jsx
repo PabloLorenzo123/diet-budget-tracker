@@ -59,10 +59,10 @@ const ProtectedRoute = ({authorized, setAuthorized, children, currentPath, setCu
         <>
             <NavBar currentPath={currentPath} setCurrentPath={setCurrentPath}/>
             <div id='app'>
-            {!loading?
-                children:
-                <LoadingSpinner />
-            }
+                {!loading?
+                    children:
+                    <LoadingSpinner />
+                }
             </div>
         </>
     )

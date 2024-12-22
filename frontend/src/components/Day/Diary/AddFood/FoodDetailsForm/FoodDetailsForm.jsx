@@ -7,7 +7,7 @@ import FoodDetailsTargets from "./FoodDetailsTargets";
 import FoodOptions from "./FoodOptions";
 
 const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood, meals,
-     setMeals, currentDay, groceries, setGroceries, dailyTargets, setTab}) => {
+     setMeals, currentDay, groceries, setGroceries, dailyTargets, setTab, foodProducts, setFoodProducts, unselectFoodP}) => {
 
     const [addToDiaryForm, setAddToDairyForm] = useState({
         diaryGroup: 0, // A.K.A What meal object.
@@ -65,6 +65,14 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
                 <FoodOptions 
                     selectedFood={selectedFood}
                     setTab={setTab}
+                    foodProducts={foodProducts}
+                    setFoodProducts={setFoodProducts}
+                    setSelectedFood={setSelectedFood}
+                    meals={meals}
+                    setMeals={setMeals}
+                    groceries={groceries}
+                    setGroceries={setGroceries}
+                    unselectFoodP={unselectFoodP}
                 />
             </div>
             {/* Blocks */}

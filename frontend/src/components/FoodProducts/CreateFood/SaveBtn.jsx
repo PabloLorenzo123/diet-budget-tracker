@@ -3,10 +3,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import api from "../../../api";
-import { isObjEmpty } from "../../../lib/functions";
+import { isObjEmpty, flattenNutritionData } from "../../../lib/functions";
 
 const SaveBtn = ({foodData, setFoodData, nutritionData, setNutritionData, selectedFood, setSelectedFood, setShowIndex, setShowCreate, afterSubmitFunc}) => {
-    
+
+
     const submit = async () => {
         
         // Check that not optional fields are not empty.
@@ -20,11 +21,7 @@ const SaveBtn = ({foodData, setFoodData, nutritionData, setNutritionData, select
             return;
         }
 
-        const flatNutritionData = {...nutritionData}
-        Object.keys(flatNutritionData).forEach(nutrient => {
-            flatNutritionData[nutrient] = nutritionData[nutrient].amount;
-        })
-        // console.log(flatNutritionData);
+        const flatNutritionData = flattenNutritionData(nutritionData);
 
         try{
             if (!selectedFood || isObjEmpty(selectedFood)){
@@ -38,7 +35,7 @@ const SaveBtn = ({foodData, setFoodData, nutritionData, setNutritionData, select
                     afterSubmitFunc();
                 }
             } else {
-                // Edit the selected food product.
+                // Make the request.
                 const res = await api.put("/diet/save_food/", {
                     ...foodData,
                     ...flatNutritionData,
@@ -46,10 +43,21 @@ const SaveBtn = ({foodData, setFoodData, nutritionData, setNutritionData, select
                 });
                 if (res.status == 201){
                     toast.success("Food product updated succesfully.");
+                    // Edit the selected food product.
+                    selectedFood.foodData = {
+                        productName: foodData.productName,
+                        productLink: foodData.productLink,
+                        servings: foodData.servings,
+                        measure: foodData.measure,
+                        gramWeight: foodData.gramWeight,
+                        productPrice: foodData.productPrice
+                    }
+                    selectedFood.nutritionData = flatNutritionData;
                     afterSubmitFunc();
                 }
             }            
         } catch (error) {
+            console.log(error);
             toast.error(`There was a problem saving this food product ${error}.`);
         }
         

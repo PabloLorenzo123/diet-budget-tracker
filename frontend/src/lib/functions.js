@@ -142,3 +142,11 @@ export const areObjectsEqual = (obj1, obj2) => {
 
   return true;  // Objects are equal
 }
+
+export const flattenNutritionData = (nutritionData) => {
+  const flatNutritionData = {...nutritionData}
+  Object.keys(flatNutritionData).forEach(nutrient => {
+      flatNutritionData[nutrient] = nutritionData[nutrient].amount;
+  })
+  return flatNutritionData;
+}

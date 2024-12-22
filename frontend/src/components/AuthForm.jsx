@@ -48,12 +48,10 @@ const AuthForm = ({action, title, btnText, setAuthorized}) => {
 
     return (
         <>
-            <div className="d-flex bg-dark p-3 mb-5">
-                <a href="/" className="text-decoration-none"><h1 className="text-white">DietBudgeter</h1></a>
-            </div>
+            
 
-            <div id="content">
-                <div id="form" className="mx-auto p-5 border border-2 shadow" style={{maxWidth: '500px'}}>
+            <div id="content" className="d-flex justify-content-center align-items-center" style={{width: '100%', height: '100%'}}>
+                <div id="form" className="p-5 border border-2 shadow" style={{width: '500px'}}>
                     <h2 className="font-weight-bold text-center mb-3">{title}</h2>
                     {errors.length > 0 && 
                         errors.map((err, idx) => {

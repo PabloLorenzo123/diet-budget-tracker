@@ -39,10 +39,14 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
         }
     }
 
+    const unselectFoodP = () => {
+        setShowFoodDetails(false);
+        setSelectedFood({});
+    }
+
     const selectFood = (food) => {
         if (food == selectedFood){
-            setShowFoodDetails(false);
-            setSelectedFood({});
+            unselectFoodP();
         } else {
             setSelectedFood(food);
             setShowFoodDetails(true);
@@ -52,9 +56,14 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
     useEffect(() => {
         // When first mounted return all the food products created by the user.
         const getAllFP = async () => {
-            setFoodProductsLoading(true);
-            await getAllFoodProducts();
-            setFoodProductsLoading(false);
+            try {
+                setFoodProductsLoading(true);
+                getAllFoodProducts();
+            } catch (err) {
+                console.log(err);
+            } finally {
+                setFoodProductsLoading(false);
+            }
         }
         getAllFP();
     }, [])
@@ -121,6 +130,9 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
                                     setGroceries={setGroceries}
                                     dailyTargets={dailyTargets}
                                     setTab={setTab}
+                                    foodProducts={foodProducts}
+                                    setFoodProducts={setFoodProducts}
+                                    unselectFoodP={unselectFoodP}
                                 />
                             </div>
                         }
@@ -133,7 +145,16 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
                 <CreateTab getFoodProducts={getAllFoodProducts} tab={tab} setTab={setTab}/>
             }
             {tab == 'Edit' &&
-                <EditFoodTab selectedFood={selectedFood} />
+                <EditFoodTab
+                    selectedFood={selectedFood}
+                    meals={meals}
+                    setMeals={setMeals}
+                    groceries={groceries}
+                    setGroceries={setGroceries}
+                    foodProducts={foodProducts}
+                    setFoodProducts={setFoodProducts}
+                    setTab={setTab}
+                />
             }
         </Modal>
     )

@@ -1,3 +1,4 @@
+
 import { useState, useEffect, Fragment } from "react";
 import { roundTo } from "../../../lib/functions";
 import { groceryHaulMaxHeight } from "../../../constants";
@@ -6,11 +7,19 @@ import ProductsList from "./ProductsList";
 
 const GroceryHaul = ({groceries}) => {
     // How the grocery works.
-    // There's a grocery state which is an object where each key is the id of a product. and the value is {name: '', foods: []}
-    // When a product is added to the diary via AddFoodBtn.jsx the product is added to the foods ^ array, and inside that food object.
-    // it has a diaryData property which has a groceriesIdx property that indicates the index of this food product in the grocery foods array.
-    // This food object is also added to the meals table, such that when the servings, serving size is updated the grocery state can be updated as well.
-    // When the food object is deleted from the meals state its index in the groceries foods array is set to undefined, instead of removing.
+    // There's a grocery state which is an object where each key 
+    // is the id of a product. and the value is {foodData: {productName, productLink, measure, productPrice, servings}, foods: []}
+    // When a product is added to the diary via AddFoodBtn.jsx 
+    // the product is added to the foods ^ array, and inside 
+    // that food object.
+    // it has a diaryData property which has a groceriesIdx property 
+    // that indicates the index of this food product in the grocery foods array.
+    // This food object is also added to the meals table, 
+    // such that when the servings, serving size is updated 
+    // the grocery state can be updated as well.
+    // When the food object is deleted from the meals state its 
+    // index in the groceries foods array is set to undefined, 
+    // instead of removing.
     // the element from the array.
 
     // Show the products which have food items in the diary, otherwise don't show.
@@ -26,6 +35,7 @@ const GroceryHaul = ({groceries}) => {
         let newReceipt = [];
         let groceriesTotalCost = 0;
         let dietPlanTotalCost = 0;
+        console.log(groceries);
 
         // Get the products objects, which in their list of 'foods' (times they appear in the diet plan) there is a least a product objet.
         // Which is not null.

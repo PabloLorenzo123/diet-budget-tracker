@@ -40,10 +40,12 @@ export const defaultFoodData = {
   productLink: "", // The link to buy that product.
   servings: 1, // How many servings are in the product.
   measure: "serving", // It could be a serving, a tbspoon, an egg.
+
   measurement: {
     unit: massUnits[defaultMassUnitIdx], // Oz, Grams, Lbs, etc.
     amount: undefined, // How many grams is a serving, this is optional. n/a for eggs for instance, slices etc.
   },
+  
   gramWeight: undefined, 
   productPrice: 0
 }

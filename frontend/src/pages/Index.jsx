@@ -72,7 +72,8 @@ const Index = () => {
      *           sodium: number,                     // Sodium in mg
      *           zinc: number                        // Zinc in mg
      *         },
-     *         nutritionalContribution: { // Same structure as nutritionData; provides contribution values
+     *         nutritionalContribution: {
+     *           // Same structure as nutritionData; provides contribution values
      *           // See nutritionData fields
      *         },
      *         diaryData: {            // Additional data for diary entries
