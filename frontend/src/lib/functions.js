@@ -150,3 +150,15 @@ export const flattenNutritionData = (nutritionData) => {
   })
   return flatNutritionData;
 }
+
+// Used in AddToDiaryBtn.jsx, .
+export const foodTotalCost = (selectedFood, smValueInGrams, servings) => {
+  // If this food product has a serving size.
+  if (selectedFood.foodData.gramWeight){
+    const pricePerGram = selectedFood.foodData.productPrice / (selectedFood.foodData.gramWeight * selectedFood.foodData.servings);
+    return roundTo(pricePerGram * (smValueInGrams * servings), 2);
+  } 
+  // In case the amount of grams in the food servings is n/a.
+  const pricePerServing = selectedFood.foodData.productPrice / selectedFood.foodData.servings;
+  return roundTo(pricePerServing * servings);
+}

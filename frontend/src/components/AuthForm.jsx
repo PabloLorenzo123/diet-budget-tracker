@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
+import { REFRESH_TOKEN, ACCESS_TOKEN, USER } from "../constants";
 import api from "../api";
 
 const AuthForm = ({action, title, btnText, setAuthorized}) => {
@@ -17,8 +17,11 @@ const AuthForm = ({action, title, btnText, setAuthorized}) => {
         try {
             const res = await api.post(`/auth/${action}/`, {username, password});
             if (res.status == 200 || res.status == 201){
-                localStorage.setItem(REFRESH_TOKEN, res.data.refreshToken);
-                localStorage.setItem(ACCESS_TOKEN, res.data.accessToken)
+                localStorage.setItem(USER, JSON.stringify({
+                    [ACCESS_TOKEN]: res.data.accessToken,
+                    [REFRESH_TOKEN]: res.data.refreshToken,
+                    username: res.data.username
+                }))
                 await setAuthorized(true);
                 navigate("/");
             }

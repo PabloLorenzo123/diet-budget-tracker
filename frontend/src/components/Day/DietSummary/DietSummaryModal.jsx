@@ -1,6 +1,6 @@
 import {useState, useEffect, Fragment} from 'react';
 
-import { roundTo, getTotalNutrientsInMeal } from '../../../lib/functions';
+import { roundTo, getTotalNutrientsInMeal, titleCase } from '../../../lib/functions';
 
 import Modal from '../../Modal';
 
@@ -38,7 +38,7 @@ const DietSummaryModal = ({meals, setShowModal}) => {
                                 <table className='table'>
                                     <thead>
                                         <tr className='table-secondary'>
-                                            <th colSpan={'7'}>{meal.name}</th>
+                                            <th colSpan={'7'}>{titleCase(meal.name)}</th>
                                         </tr>
                                     </thead>
                                     <tbody className='table-group-divider'>

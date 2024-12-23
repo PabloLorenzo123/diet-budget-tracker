@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { USER } from "../constants";
 
 const NavBar = ({currentPath, setCurrentPath}) => {
    
@@ -11,7 +12,7 @@ const NavBar = ({currentPath, setCurrentPath}) => {
     }
 
     const isCurrentPath = (path) => path == currentPath;
-
+    const username = JSON.parse(localStorage.getItem(USER)).username
     return(
     <>
         <nav className="navbar navbar-expand-sm bg-dark border-bottom border-body fixed-top" data-bs-theme="dark" role="navigation">
@@ -37,6 +38,9 @@ const NavBar = ({currentPath, setCurrentPath}) => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="nav navbar-nav ms-auto">
                         <li className="nav-item">
+                            <span className="nav-link">Logged in as {username}</span>
+                        </li>
+                        <li className="nav-item">
                             <button
                                 className={`nav-link d-flex align-items-center ${isCurrentPath('/dietplans')? 'active': ''}`}
                                 onClick={() => goTo('/dietplans')}
@@ -46,13 +50,14 @@ const NavBar = ({currentPath, setCurrentPath}) => {
                         </li>
                         <li className="nav-item">
                             <button
-                                className={`nav-link d-flex align-items-center ${isCurrentPath('/create-food-product')? 'active': ''}`}
-                                onClick={() => goTo('/create-food-product')}
+                                className={`nav-link d-flex align-items-center ${isCurrentPath('/food-products')? 'active': ''}`}
+                                onClick={() => goTo('/food-products')}
                             >
                                 <span className="material-symbols-outlined">menu_book</span>
                                 <span className="ms-2">Your Food Products</span>
                             </button>
                         </li>
+      
                         <li className="nav-item">
                             <button
                                 className={`nav-link ${isCurrentPath('/logout')? 'active': ''}`}

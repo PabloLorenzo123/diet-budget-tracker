@@ -1,6 +1,7 @@
 // Tokens.
 export const REFRESH_TOKEN = "refreshToken";
 export const ACCESS_TOKEN = "accessToken";
+export const USER = 'user';
 
 // Index (Diet) constants
 export const AddFoodModalVisibleTabs = ['All', 'Create'];

@@ -70,11 +70,11 @@ def login(request):
         refresh = RefreshToken.for_user(user)
         
         return JsonResponse({
+            'username': user.username,
             'refreshToken': str(refresh),
             'accessToken': str(refresh.access_token)
         }, status=status.HTTP_200_OK)
     else:
-        print(user)
         return JsonResponse({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 

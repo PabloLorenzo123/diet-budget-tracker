@@ -1,14 +1,15 @@
-import { ACCESS_TOKEN, REFRESH_TOKEN} from '../constants';
+import { ACCESS_TOKEN, REFRESH_TOKEN, USER} from '../constants';
 import { jwtDecode } from 'jwt-decode';
 
 export const isAuthorized = async () => {
-    const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-    const accessToken = localStorage.getItem(ACCESS_TOKEN);
-
-    // If no access token exists, authorization is not possible
-    if (!accessToken) return false;
-
     try {
+        const storedUser = JSON.parse(localStorage.getItem(USER));
+        const accessToken = storedUser[ACCESS_TOKEN];
+        const refreshToken = storedUser[REFRESH_TOKEN];
+
+        // If no access token exists, authorization is not possible
+        if (!accessToken) return false;
+
         const decoded = jwtDecode(accessToken);
         const tokenExpiration = decoded.exp;
         const now = Date.now() / 1000;

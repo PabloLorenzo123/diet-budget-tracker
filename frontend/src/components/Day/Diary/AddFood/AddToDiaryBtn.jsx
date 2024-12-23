@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
-import { roundTo, calculateNutritionalContribution } from "../../../../lib/functions";
+import { roundTo, calculateNutritionalContribution, foodTotalCost } from "../../../../lib/functions";
 
 const AddToDiaryBtn = ({meals, setMeals, currentDay, groceries, setGroceries,
     showModal, setShowModal, selectedFood, setSelectedFood, addToDiaryForm, setAddToDiaryForm}) => {
     
     const addToDiary = async () => {
         const mealIdx = addToDiaryForm.diaryGroup; // The meal this food product will be added to.
+        
         const groceriesIdx = groceries[selectedFood.id]?.foods.length > 0 ? 
         groceries[selectedFood.id].foods.length: 0;
 
         const servings = parseFloat(addToDiaryForm.servings);
         const servingMeasure = addToDiaryForm.servingMeasure; // {unit, valueInGrams}.
-        const portionSize = servings * servingMeasure.valueInGrams;
-        const totalCost = roundTo((selectedFood.foodData.productPrice / selectedFood.foodData.servings) * servings, 2);
+        const portionSize = servings * servingMeasure.valueInGrams || undefined; // Undefined in case this food product doesnt have a serving size.
+
+        const totalCost = foodTotalCost(selectedFood, addToDiaryForm.servingMeasure.valueInGrams, servings);
 
         const nutritionalContribution = calculateNutritionalContribution(selectedFood, portionSize);
 

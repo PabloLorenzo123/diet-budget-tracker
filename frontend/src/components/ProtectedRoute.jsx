@@ -1,68 +1,91 @@
 import {Navigate, useNavigate} from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
 import api from '../api'
-import { REFRESH_TOKEN, ACCESS_TOKEN } from '../constants';
+import { REFRESH_TOKEN, ACCESS_TOKEN, USER } from '../constants';
 import { useState, useEffect } from 'react';
 import NavBar from './NavBar';
 import LoadingSpinner from './LoadingSpinner';
 
-const ProtectedRoute = ({authorized, setAuthorized, children, currentPath, setCurrentPath}) => {
-    const [loading, setLoading] = useState(null);
+import { toast } from 'react-toastify';
+import { use } from 'react';
 
-    useEffect(() => {
-        auth().catch(() => setAuthorized(false));
-    }, [])
+const ProtectedRoute = ({authorized, setAuthorized, children, currentPath, setCurrentPath}) => {
+    const [loading, setLoading] = useState(true);
+
+    const navigate = useNavigate();
 
     // When a user clicks a link in the navbar the currentPath changes, then auth() is run again.
+    // currentPath changes when the user clicks a link in the navbar.
     useEffect(() => {
         auth().catch(() => setAuthorized(false));
     }, [currentPath])
     
-    const refreshToken = async () => {
-        const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+    const logout = () => {
+        localStorage.removeItem(USER);
+        setAuthorized(false); // This will make the '/' default route be equal to the homepage.
+        toast.info("Your session expired, you need to log in again.");
+        navigate('/');
+    }
+
+    const refreshToken = async (user) => {
+        const refreshToken = user[REFRESH_TOKEN];
         try {
             const res = await api.post("/auth/token/refresh/", {
                 refresh: refreshToken
             });
             if (res.status == 200){
-                localStorage.setItem(ACCESS_TOKEN, res.data.access);
+                localStorage.setItem(USER, {
+                    ...USER,
+                    [ACCESS_TOKEN]: res.data.access
+                });
                 setAuthorized(true);
             } else {
-                setAuthorized(false);
+                logout();
             }
         } catch (error) {
             console.log(error);
-            setAuthorized(false);
+            logout();
         }
     }
 
     const auth = async () => {
-        setLoading(true);
-        const token = localStorage.getItem(ACCESS_TOKEN);
-        if (!token){
+        console.log('auth is running')
+        try {
+            setLoading(true);
+            const user = JSON.parse(localStorage.getItem(USER));
+            if (!user) {
+                logout();
+                return;
+            }
+            const token = user[ACCESS_TOKEN];
+            if (!token){
+                setAuthorized(false);
+                logout();
+                return;
+            }
+            const decoded = jwtDecode(token);
+            const tokenExpiration = decoded.exp;
+            const now = Date.now() / 1000
+            
+            if (tokenExpiration < now){
+                await refreshToken(user);
+            } else {
+                setAuthorized(true);
+            }
+
+        } catch {
             setAuthorized(false);
-            return;
+        } finally {
+            setLoading(false);
         }
-        const decoded = jwtDecode(token);
-        const tokenExpiration = decoded.exp;
-        const now = Date.now() / 1000
-        
-        if (tokenExpiration < now){
-            await refreshToken();
-        } else {
-            setAuthorized(true);
-        }
-        setLoading(false);
     }
 
     return (
         <>
             <NavBar currentPath={currentPath} setCurrentPath={setCurrentPath}/>
+            
             <div id='app'>
-                {!loading?
-                    children:
-                    <LoadingSpinner />
-                }
+               {!loading && authorized ? children: <LoadingSpinner />}
             </div>
         </>
     )

@@ -21,7 +21,8 @@ function App() {
 
   const [authorized, setAuthorized] = useState(null);
   const [currentPath, setCurrentPath] = useState(null); // URL current path.
-
+  
+ 
   useEffect(() => {
     const checkAuth = async () => {
       const result = await isAuthorized();
@@ -53,12 +54,14 @@ function App() {
             :
             <Route path="/" element={<Home />}/>
           }
+
           {/* Auth Routes */}
           <Route path="/login" element={<Login setAuthorized={setAuthorized}/>}/>
           <Route path="/logout" element={<Logout setAuthorized={setAuthorized}/>}/>
           <Route path="/signup" element={<Signup setAuthorized={setAuthorized}/>}/>
+          
           {/* App Routes */}
-          <Route path="/create-food-product" element={
+          <Route path="/food-products" element={
             <ProtectedRoute authorized={authorized} setAuthorized={setAuthorized} currentPath={currentPath} setCurrentPath={setCurrentPath}>
               <CreateFood />
             </ProtectedRoute>}
@@ -84,7 +87,8 @@ function App() {
       <ToastContainer
         position='top-center'
         hideProgressBar={true}
-      />  
+      />
+
     </>
   )
 }
