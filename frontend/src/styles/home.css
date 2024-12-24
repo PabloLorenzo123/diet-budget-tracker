@@ -3,33 +3,52 @@
 }
 
 :root {
-    --nav-item-color: #262a3b;
+    --nav-height: 80px;
 }
 
 body {
     margin: 0;
     font-family: sans-serif !important;
+    
+}
+
+#home-page {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--dark-raisin);
+    color: white;
 }
 
 /* Navigation */
 .main-nav {
     display: flex;
     justify-content: space-between;
-    height: 120px;
-    width: 85%;
+    height: var(--nav-height);
+    width: 100%;
+    padding: 0px;
+    font-size: 20px;
+    position: fixed;
+    background-color: var(--dark-raisin);
+    color: white;
+}
+
+.main-nav button {
+    color: white;
+}
+
+.main-nav .content {
+    display: flex;
+    width: 90%;
     margin: 0 auto;
 }
 
-.main-nav .main-nav-left, .main-nav-right {
+.main-nav-left, .main-nav-right {
     width: 50%;
     display: flex;
     align-items: center;
     padding: 10px;
 }
 
-.main-nav {
-    border-bottom: 2px solid black;
-}
 
 .main-nav-right nav{
     width: 100%;
@@ -42,7 +61,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 20px;
+    gap: 40px;
 }
 
 .main-nav-right li {
@@ -52,14 +71,16 @@ body {
 .main-nav a {
     text-decoration: none;
     font-size: 18px;
-    color: var(--nav-item-color);
+    color: white;
 }
 
 .nav-button {
-    border: 2px solid;
-    color: black;
-    padding: 10px 30px;
-    border-radius: 10px;
+    border: 1px solid;
+    border-radius: 15px;
+    width: 125px;
+    color: white;
+    padding: 5px 10px;
+    background-color: transparent;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -70,27 +91,18 @@ body {
 /* Hero section */
 #hero {
     width: 85%;
+    height: 100%;
     margin: 0 auto;
-    text-align: center;
     padding: 20px 0px;
+    padding-top: var(--nav-height);
 }
 
-#hero h1 {
-    font-size: 50px;
-    margin-bottom: 20px;
-}
 
-#hero h5 {
-    font-size: 18px;
-    font-weight: normal;
-    margin-bottom: 20px;
-}
-
-#hero button {
+#hero #signup-btn {
     width: 200px;
     height: 50px;
     font-size: 18px;
-    border-radius: 5px;
+    border-radius: 20px;
     font-weight: bold;
     background-color: darkturquoise;
 }

@@ -3,9 +3,10 @@ import { jwtDecode } from 'jwt-decode';
 
 export const isAuthorized = async () => {
     try {
+
         const storedUser = JSON.parse(localStorage.getItem(USER));
-        const accessToken = storedUser[ACCESS_TOKEN];
-        const refreshToken = storedUser[REFRESH_TOKEN];
+        const accessToken = storedUser?.[ACCESS_TOKEN];
+        const refreshToken = storedUser?.[REFRESH_TOKEN];
 
         // If no access token exists, authorization is not possible
         if (!accessToken) return false;

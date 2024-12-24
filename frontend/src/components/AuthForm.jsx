@@ -51,34 +51,46 @@ const AuthForm = ({action, title, btnText, setAuthorized}) => {
 
     return (
         <>
-            
-
-            <div id="content" className="d-flex justify-content-center align-items-center" style={{width: '100%', height: '100%'}}>
-                <div id="form" className="p-5 border border-2 shadow" style={{width: '500px'}}>
-                    <h2 className="font-weight-bold text-center mb-3">{title}</h2>
-                    {errors.length > 0 && 
-                        errors.map((err, idx) => {
-                            return (
-                            <div className="alert alert-danger" role="alert" key={idx}>
-                                {err}
-                            </div>)
-                        })
-                    }
-                    <form onSubmit={handleSubmit} method="POST">
-                        <label htmlFor="username" className="form-label font-weight-bold">Username</label>
-                        <input id="username" type="text" className="form-control mb-3" value={username} onChange={e => setUsername(e.target.value)} placeholder="Username"></input>
-                        <label htmlFor="password" className="form-label font-weight-bold">Password</label>
-                        <input id="password" type="password" className="form-control mb-5" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password"></input>
-                        <button className="btn d-block btn-primary mx-auto" style={{width: "80%"}} type="submit">
-                            {loading?
-                                <div className="spinner-border" role="status">
-                                    <span className="visually-hidden">Loading...</span>
-                                </div>
-                                :
-                                `${btnText}`
-                            }
+            <nav className="main-nav">
+                <div className='content'>
+                    <div className="main-nav-left">
+                        <button className='bg-transparent m-0 p-0 border-0' onClick={() => navigate('/')}>
+                            <h1 className='fw-bold'>
+                                Dietbudget
+                            </h1>
                         </button>
-                    </form>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="hero">
+                <div id="content" className="d-flex justify-content-center align-items-center" style={{width: '100%', height: '100%'}}>
+                    <div id="form" className="p-5 border border-2 shadow" style={{width: '500px'}}>
+                        <h2 className="font-weight-bold text-center mb-3">{title}</h2>
+                        {errors.length > 0 && 
+                            errors.map((err, idx) => {
+                                return (
+                                <div className="alert alert-danger" role="alert" key={idx}>
+                                    {err}
+                                </div>)
+                            })
+                        }
+                        <form onSubmit={handleSubmit} method="POST">
+                            <label htmlFor="username" className="form-label font-weight-bold">Username</label>
+                            <input id="username" type="text" className="form-control mb-3" value={username} onChange={e => setUsername(e.target.value)} placeholder="Username"></input>
+                            <label htmlFor="password" className="form-label font-weight-bold">Password</label>
+                            <input id="password" type="password" className="form-control mb-5" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password"></input>
+                            <button className="btn d-block btn-primary mx-auto" style={{width: "80%"}} type="submit">
+                                {loading?
+                                    <div className="spinner-border" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </div>
+                                    :
+                                    `${btnText}`
+                                }
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </>
