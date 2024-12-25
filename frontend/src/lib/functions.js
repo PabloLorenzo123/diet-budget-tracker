@@ -160,5 +160,5 @@ export const foodTotalCost = (selectedFood, smValueInGrams, servings) => {
   } 
   // In case the amount of grams in the food servings is n/a.
   const pricePerServing = selectedFood.foodData.productPrice / selectedFood.foodData.servings;
-  return roundTo(pricePerServing * servings);
+  return roundTo(pricePerServing * servings, 2);
 }

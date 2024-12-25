@@ -72,7 +72,7 @@ const SaveBtn = ({foodData, setFoodData, nutritionData, setNutritionData, select
             style={{minWidth: '100px'}}
             onClick={submit}
             >
-            {selectedFood && isObjEmpty(selectedFood)? 'Save': 'Save Changes'}
+                {!selectedFood? 'Save': 'Save Changes'}
             </button>
             
         </div>

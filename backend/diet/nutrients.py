@@ -5,6 +5,7 @@ NUTRIENTS = {
   "1004": "totalFat",
   # "1062": "energy", #kj.
   "1008": "energy", #kcal.
+  "2047": "energy", # Energy calculate Atwater general factors.
   "1005": "netCarbs",
   "1165": "B1",
   "1178": "B12",

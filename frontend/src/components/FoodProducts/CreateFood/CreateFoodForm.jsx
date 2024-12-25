@@ -9,6 +9,7 @@ import { nutrientState, nutrientsInformation } from "../../../lib/nutrients";
 import { roundTo, isObjEmpty } from "../../../lib/functions";
 
 import "../../../styles/foodProducts/createFoodProduct.css";
+import { ToastContainer } from "react-toastify";
 
 
 const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, selectedFood, setSelectedFood, afterSubmitFunc, showHeader=true}) => {
@@ -62,8 +63,8 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
       <div id="create-food-container">
         {showHeader &&
           <>
-            <h2 className="fw-bold">Create Food Product</h2>
-            <p className="text-body-secondary">Create a new food product.</p>
+            <h2 className="fw-bold">Create A Food Product</h2>
+            <p className="text-body-secondary">Create a new food product using information from a groceries store.</p>
           </>
         }
 
@@ -102,7 +103,12 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
           setShowIndex={setShowIndex}
           setShowCreate={setShowCreate}
           afterSubmitFunc={afterSubmitFunc}
-        /> 
+        />
+
+      <ToastContainer
+        position='top-center'
+        hideProgressBar={true}
+      />
     </div>
   );
 };

@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { USER } from "../constants";
+
+import favicon from '../assets/favicon-32x32.png';
+
+import { appName, USER } from "../constants";
 
 const NavBar = ({currentPath, setCurrentPath}) => {
    
@@ -17,13 +20,16 @@ const NavBar = ({currentPath, setCurrentPath}) => {
     <>
         <nav className="navbar navbar-expand-sm bg-dark border-bottom border-body fixed-top" data-bs-theme="dark" role="navigation">
             <div className="container-fluid">
+
                 <button
-                    className={`nav-link navbar-brand ${isCurrentPath('/')? 'active': ''}`}
-                    href=""
+                    className={`nav-link navbar-brand d-flex align-items-end ${isCurrentPath('/')? 'active': ''}`}
                     onClick={() => goTo('/')}
                 >
-                    DietBudgeter
+                    <img src={favicon} className="me-2" alt="logo"/>
+                    {appName}
+                    
                 </button>
+
                 <button
                     className="navbar-toggler"
                     type="button"

@@ -218,7 +218,7 @@ const FoodsSubTable = ({meals, setMeals, currentDay, groceries, setGroceries,
                                                 <td>{f.nutritionalContribution.protein}g</td>
                                                 <td>{f.nutritionalContribution.netCarbs}g</td>
                                                 <td>{f.nutritionalContribution.totalFat}g</td>
-                                                <td>${f.diaryData.totalCost}</td>
+                                                <td>${roundTo(f.diaryData.totalCost, 2)}</td>
                                                 {/* Remove button */}
                                                 <td>
                                                     {selectedFoodObj == f?

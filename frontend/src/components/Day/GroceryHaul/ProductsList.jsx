@@ -1,7 +1,9 @@
 import { useState, useEffect, Fragment } from "react";
 import { roundTo } from "../../../lib/functions";
 
-const ProductsList = ({receipt, groceriesTotalCost, expanded=false}) => {
+const ProductsList = ({receipt, groceriesTotalCost, expanded=false, nItems}) => {
+
+    const items = nItems? receipt.slice(0, nItems): receipt;
 
     return (
         <table className={`table ${expanded? 'table-striped table-bordered table-hover': ''}`}>
@@ -15,7 +17,7 @@ const ProductsList = ({receipt, groceriesTotalCost, expanded=false}) => {
         
         <tbody>
             {/* All products in the shopping cart*/}
-            {receipt.map((product, idx) => {
+            {items.map((product, idx) => {
                 return (
                     <Fragment key={idx}>
                     {(() => {

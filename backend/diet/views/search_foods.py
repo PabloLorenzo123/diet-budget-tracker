@@ -62,7 +62,7 @@ def search_foods(request):
         for nutrient in food.get('foodNutrients', []):
             id = str(nutrient['nutrientId'])
             value = nutrient.get('value', 0)
-            if id in NUTRIENTS:
+            if id in NUTRIENTS and NUTRIENTS[id] not in f["foodNutrients"]: # The second condition is for 'energy'.
                 f["foodNutrients"][NUTRIENTS[id]] = value
         res.append(f)
     return JsonResponse({

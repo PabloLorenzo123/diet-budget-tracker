@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { REFRESH_TOKEN, ACCESS_TOKEN, USER } from "../constants";
+import { REFRESH_TOKEN, ACCESS_TOKEN, USER, appName } from "../constants";
+
+import favicon from '../assets/favicon-100x100.png';
+
 import api from "../api";
 
 const AuthForm = ({action, title, btnText, setAuthorized}) => {
@@ -54,9 +57,10 @@ const AuthForm = ({action, title, btnText, setAuthorized}) => {
             <nav className="main-nav">
                 <div className='content'>
                     <div className="main-nav-left">
-                        <button className='bg-transparent m-0 p-0 border-0' onClick={() => navigate('/')}>
+                        <button className='bg-transparent m-0 p-0 border-0 d-flex align-items-end' onClick={() => navigate('/')}>
+                            <img src={favicon} width={85} height={85} className='me-1'/>
                             <h1 className='fw-bold'>
-                                Dietbudget
+                                {appName}
                             </h1>
                         </button>
                     </div>
@@ -64,7 +68,7 @@ const AuthForm = ({action, title, btnText, setAuthorized}) => {
             </nav>
 
             <div id="hero">
-                <div id="content" className="d-flex justify-content-center align-items-center" style={{width: '100%', height: '100%'}}>
+                <div id="content" className="d-flex justify-content-center mt-5">
                     <div id="form" className="p-5 border border-2 shadow" style={{width: '500px'}}>
                         <h2 className="font-weight-bold text-center mb-3">{title}</h2>
                         {errors.length > 0 && 

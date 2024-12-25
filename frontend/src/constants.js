@@ -1,3 +1,5 @@
+
+export const appName = "Dietbudget";
 // Tokens.
 export const REFRESH_TOKEN = "refreshToken";
 export const ACCESS_TOKEN = "accessToken";
@@ -19,7 +21,7 @@ export const defaultDiaryGroups = [
 export const maxNumberOfMeals = 8;
 export const maxNumberOfDays = 7;
 
-export const groceryHaulMaxHeight = '450px';
+export const groceryHaulMaxHeight = '250px';
 
 // Modal.
 export const defaultModalWidth = '70%';

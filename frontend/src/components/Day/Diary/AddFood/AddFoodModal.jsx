@@ -142,7 +142,14 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
                 </div>
             }
             {tab == 'Create' &&
-                <CreateTab getFoodProducts={getAllFoodProducts} tab={tab} setTab={setTab}/>
+                <CreateTab
+                    getFoodProducts={getAllFoodProducts}
+                    tab={tab}
+                    setTab={setTab}
+                    selectedFood={selectFood}
+                    setSelectedFood={setSelectedFood}
+                    setShowFoodDetails={setShowFoodDetails}
+                />
             }
             {tab == 'Edit' &&
                 <EditFoodTab

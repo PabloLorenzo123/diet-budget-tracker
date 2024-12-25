@@ -1,4 +1,3 @@
-
 :root {
     --crono-orange: #FF6733;
     --dark-raisin: #262A3B;
@@ -94,24 +93,34 @@
     --raised-container-bg-dark: #272A3A;
 }
 
-#root {
-    width: 100%;
-    height: 80vh;
-}
-
 * {
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+}
+
 body {
+    height: 100%;
+}
+
+#root {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+#app-wrapper { 
+    padding-top: 75px; /* Because of the nav bar */
+    width: 100%;
+    min-height: 100%;
     background-color: var(--grey-1);
 }
 
 #app {
     width: 95%;
-    height: 70%;
     margin: auto;
-    margin-top: 80px;
     padding: 5px;
 }
 

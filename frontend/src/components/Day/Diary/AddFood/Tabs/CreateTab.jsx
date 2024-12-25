@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import CreateFoodForm from "../../../../FoodProducts/CreateFood/CreateFoodForm";
 
-const CreateTab = ({getFoodProducts, tab, setTab}) => {
+const CreateTab = ({getFoodProducts, tab, setTab, selectedFood, setSelectedFood}) => {
 
     const afterSubmitFnc = async () => {
         await getFoodProducts(); // Load the food products.
+        setSelectedFood(null);
         setTab('All'); // Get back to the 'All' tabs.
     }
 

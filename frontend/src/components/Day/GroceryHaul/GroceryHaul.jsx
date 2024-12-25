@@ -35,7 +35,7 @@ const GroceryHaul = ({groceries}) => {
         let newReceipt = [];
         let groceriesTotalCost = 0;
         let dietPlanTotalCost = 0;
-        console.log(groceries);
+        // console.log(groceries);
 
         // Get the products objects, which in their list of 'foods' (times they appear in the diet plan) there is a least a product objet.
         // Which is not null.
@@ -93,8 +93,11 @@ const GroceryHaul = ({groceries}) => {
         </div>
         
         <div style={style}>
-            <ProductsList receipt={receipt}/>
+            <ProductsList
+                receipt={receipt}
+            />
         </div>
+        
         <hr/>
 
         <p className="text-end me-4">

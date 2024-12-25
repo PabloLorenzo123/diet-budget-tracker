@@ -51,7 +51,7 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
 
                 {/* General Info Form */}
                 <div className="row mb-3">
-                    <label htmlFor="productName" className="col-sm-2 col-form-label">Product Full Name</label>
+                    <label htmlFor="productName" className="col-sm-2 col-form-label">Full Name</label>
                     <div className="col-sm-8">
                         <input type="text" id="productName" placeholder="Full product name" onChange={handleChange}
                         className="form-control" name="productName" value={foodData.productName}/>
@@ -59,7 +59,7 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                 </div>
 
                 <div className="row mb-3">
-                    <label htmlFor="productLink" className="col-sm-2 col-form-label">Product Link</label>
+                    <label htmlFor="productLink" className="col-sm-2 col-form-label">Link</label>
                     <div className="col-sm-8">
                         <input type="urls" id="productLink" placeholder="Product Link" onChange={handleChange}
                         className="form-control" name="productLink" value={foodData.productLink}/>
@@ -138,7 +138,7 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                 </div>
 
                 <div className="row mb-3">
-                    <label htmlFor="productPrice" className="col-sm-2 col-form-label">Product Price</label>
+                    <label htmlFor="productPrice" className="col-sm-2 col-form-label">Price in your currency</label>
                     <div className="col-sm-2">
                         <input
                         type="text"

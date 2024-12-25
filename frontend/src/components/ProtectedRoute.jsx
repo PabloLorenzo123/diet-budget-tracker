@@ -81,11 +81,12 @@ const ProtectedRoute = ({authorized, setAuthorized, children, currentPath, setCu
     }
 
     return (
-        <>
-            <NavBar currentPath={currentPath} setCurrentPath={setCurrentPath}/>
-            
-            <div id='app'>
-               {!loading && authorized ? children: <LoadingSpinner />}
+        <>  
+            <div id="app-wrapper">
+                <NavBar currentPath={currentPath} setCurrentPath={setCurrentPath}/>
+                <div id='app'>
+                    {!loading && authorized ? children: <LoadingSpinner />}
+                </div>
             </div>
         </>
     )
