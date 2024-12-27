@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import favicon from '../assets/favicon-32x32.png';
 
-import { appName, USER } from "../constants";
+import { appName, navbarZIndex, USER } from "../constants";
 
 const NavBar = ({currentPath, setCurrentPath}) => {
    
@@ -18,7 +18,12 @@ const NavBar = ({currentPath, setCurrentPath}) => {
     const username = JSON.parse(localStorage.getItem(USER)).username
     return(
     <>
-        <nav className="navbar navbar-expand-sm bg-dark border-bottom border-body fixed-top" data-bs-theme="dark" role="navigation">
+        <nav
+            className="navbar navbar-expand-sm bg-dark border-bottom border-body fixed-top"
+            data-bs-theme="dark"
+            role="navigation"
+            style={{zIndex: navbarZIndex}
+        }>
             <div className="container-fluid">
 
                 <button
@@ -42,10 +47,7 @@ const NavBar = ({currentPath, setCurrentPath}) => {
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul className="nav navbar-nav ms-auto">
-                        <li className="nav-item">
-                            <span className="nav-link">Logged in as {username}</span>
-                        </li>
+                    <ul className="nav navbar-nav ms-auto me-1">
                         <li className="nav-item">
                             <button
                                 className={`nav-link d-flex align-items-center ${isCurrentPath('/dietplans')? 'active': ''}`}
@@ -63,16 +65,23 @@ const NavBar = ({currentPath, setCurrentPath}) => {
                                 <span className="ms-2">Your Food Products</span>
                             </button>
                         </li>
-      
-                        <li className="nav-item">
-                            <button
-                                className={`nav-link ${isCurrentPath('/logout')? 'active': ''}`}
-                                href=""
-                                onClick={() => goTo('/logout')}
-                            >
-                                Logout
+
+                        <li className="nav-item dropdown">
+                            <button className="nav-link dropdown-toggle"role="button" data-bs-toggle="dropdown" aria-expanded="false">                                
+                                <span>{username}</span>
                             </button>
+                            <ul className="dropdown-menu">
+                                <li>
+                                    <button
+                                        className='nav-link dropdown-item'
+                                        onClick={() => goTo('/logout')}
+                                    >
+                                        Logout
+                                    </button>
+                                </li>
+                            </ul>
                         </li>
+
                     </ul>
                 </div>
             </div>

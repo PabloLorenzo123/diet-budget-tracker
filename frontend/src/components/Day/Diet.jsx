@@ -7,7 +7,7 @@ import FoodSummary from "./Summary/FoodSummary";
 import '../../styles/diary/day.css';
 import NutrientTargets from "./NutrientTargets/NutrientTargets";
 
-import { defaultDiaryGroupObject, defaultDiaryGroups, maxNumberOfMeals } from "../../constants";
+import { defaultDiaryGroupObject, defaultDiaryGroups, maxNumberOfMeals, navbarZIndex } from "../../constants";
 
 import api from "../../api";
 import DaySwitcher from "./DaySwitcher";
@@ -20,6 +20,18 @@ const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGro
     const [currentDay, setCurrentDay] = useState(0);
     const [selectedMealIdx, setSelectedMealIdx] = useState(null);
     const [selectedFoodObj, setSelectedFoodObj] = useState(null);
+
+    const [rightColumZIndex, setRightColumnIndex] = useState(1);
+
+    const showOrHideRightColumn = (showModal) => {
+        // Because the right column has a position of 'sticky'.
+        // The stacking context is different here and the modal will appear beneath the navbar.
+        // Because of the position of sticky a zIndex value is mandatory, and this one should be higher.
+        // Than the navbars zIndex when a modal inside the right column appears.
+        // In the other hand the zIndex of the right column should be lower thant the navbars when a modal is not shown.
+        // In the right column.
+        showModal? setRightColumnIndex(navbarZIndex + 1): setRightColumnIndex(1);
+    }
 
     return (
         <>
@@ -71,7 +83,7 @@ const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGro
 
                 {/* Right side when in large screen */}
                 <div className="col-sm-3">
-                    <div className="position-sticky" style={{top: '70px', zIndex: 2000}}>
+                    <div className="position-sticky" style={{top: '70px', zIndex: rightColumZIndex}}>
                         <div className="app-container mb-2">
                             <DaySwitcher
                                 meals={meals}
@@ -84,6 +96,7 @@ const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGro
                         <div className="app-container mb-2">
                             <GroceryHaul
                                 groceries={groceries}
+                                showOrHideRightColumn={showOrHideRightColumn}
                             />
                         </div>
 
@@ -94,6 +107,7 @@ const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGro
                                 dietPlanName={dietPlanName}
                                 setDietPlanName={setDietPlanName}
                                 dietPlanId={dietPlanId}
+                                showOrHideRightColumn={showOrHideRightColumn}
                             />
                         </div>
                     </div>

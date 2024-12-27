@@ -1,5 +1,6 @@
 
 export const appName = "Dietbudget";
+
 // Tokens.
 export const REFRESH_TOKEN = "refreshToken";
 export const ACCESS_TOKEN = "accessToken";
@@ -10,6 +11,7 @@ export const AddFoodModalVisibleTabs = ['All', 'Create'];
 export const diaryGroups = ['uncategorized', 'breakfast', 'lunch', 'dinner', 'snacks'];
 export const defaultDiaryGroupObject = {name: '', foods: [], show: false, hideFromDiary: false}; // Or day object.
 export const defaultMealObject = {foods: [], show: false, hideFromDiary: false};
+export const navbarZIndex = 1030;
 
 export const defaultDiaryGroups = [
     {name: 'breakfast', foods: [], show: false, hideFromDiary: false, order: 0}, // May consider adding a field named 'order'.

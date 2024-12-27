@@ -5,7 +5,7 @@ import { groceryHaulMaxHeight } from "../../../constants";
 import GroceryHaulModal from "./GroceryHaulModal";
 import ProductsList from "./ProductsList";
 
-const GroceryHaul = ({groceries}) => {
+const GroceryHaul = ({groceries, showOrHideRightColumn}) => {
     // How the grocery works.
     // There's a grocery state which is an object where each key 
     // is the id of a product. and the value is {foodData: {productName, productLink, measure, productPrice, servings}, foods: []}
@@ -29,7 +29,10 @@ const GroceryHaul = ({groceries}) => {
     const [totalDietPlanCost, setTotalDietPlanCost] = useState(0);
 
     const [showModal, setShowModal] = useState(false);
-    
+
+    useEffect(() => {
+        showOrHideRightColumn(showModal);
+    }, [showModal]);
 
     useEffect(() => {
         let newReceipt = [];
@@ -72,27 +75,30 @@ const GroceryHaul = ({groceries}) => {
 
         setReceipt(newReceipt);
         setTotalGroceriesCost(groceriesTotalCost);
-        setTotalDietPlanCost(dietPlanTotalCost);
-
+        setTotalDietPlanCost(roundTo(dietPlanTotalCost, 2));
     }, [groceries])
 
-    const style = {
-        maxHeight: groceryHaulMaxHeight,
-        overflowY: 'scroll',
-    }
 
     return (
     <>
         <div className="d-flex justify-content-between align-items-center">
             <h5>Groceries</h5>
-            <button className="bg-transparent p-0 m-0 border-0" onClick={() => setShowModal(true)}>
+            <button
+                className="bg-transparent p-0 m-0 border-0"
+                disabled={receipt.length == 0}
+                onClick={() => setShowModal(true)}
+            >
                 <span className="material-symbols-outlined">
                     expand_content
                 </span>
             </button>
         </div>
         
-        <div style={style}>
+        <div 
+            style={
+                {maxHeight: groceryHaulMaxHeight, 
+                overflowY: receipt.length >= 3? 'scroll': 'auto' 
+            }}>
             <ProductsList
                 receipt={receipt}
             />
