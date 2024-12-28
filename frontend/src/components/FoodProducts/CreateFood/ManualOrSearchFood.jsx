@@ -177,8 +177,13 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
                             placeholder="Search for nutritional information (e.g., beef, sardines, eggs)"
                             value={searchInput.query}
                             onChange={(e) =>
-                            setSearchInput((prev) => ({ ...prev, query: e.target.value }))
-                        }
+                            setSearchInput((prev) => ({ ...prev, query: e.target.value }))}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    searchFoodInDB();
+                                }
+                            }}
+                        
                         />
                     </div>
                 </div>

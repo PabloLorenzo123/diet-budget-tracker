@@ -23,7 +23,7 @@ export const defaultDiaryGroups = [
 export const maxNumberOfMeals = 8;
 export const maxNumberOfDays = 7;
 
-export const groceryHaulMaxHeight = '250px';
+export const groceryHaulMaxHeight = '190px';
 
 // Modal.
 export const defaultModalWidth = '70%';
@@ -44,13 +44,19 @@ export const defaultFoodData = {
   productName: "", // The name of the food product.
   productLink: "", // The link to buy that product.
   servings: 1, // How many servings are in the product.
-  measure: "serving", // It could be a serving, a tbspoon, an egg.
 
+  // netContent: {
+  //   unit: massUnits[defaultMassUnitIdx],
+  //   amount: undefined,
+  // },
+
+  // Servings stuff.
+  measure: "serving", // It could be a serving, a tbspoon, an egg.
   measurement: {
     unit: massUnits[defaultMassUnitIdx], // Oz, Grams, Lbs, etc.
     amount: undefined, // How many grams is a serving, this is optional. n/a for eggs for instance, slices etc.
   },
-  
-  gramWeight: undefined, 
+  gramWeight: undefined,
+
   productPrice: 0
 }

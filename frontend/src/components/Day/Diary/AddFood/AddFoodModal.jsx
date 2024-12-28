@@ -115,7 +115,7 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
                             setTab={setTab}
                         />
                         {showFoodDetails &&
-                            <div style={{height: foodDetailsHeight}}>
+                            <div style={{height: foodDetailsHeight, overflowY: 'scroll'}}>
                                 <FoodDetailsForm
                                     showFoodDetails={showFoodDetails}
                                     setShowFoodDetails={setShowFoodDetails}

@@ -12,6 +12,7 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
         }));
     };
 
+    // foodData.measurement.
     const handleMeasureUnitChange = (e) => {
         const measureUnitIdx = e.target.value;
         const measureUnit = massUnits[measureUnitIdx];
@@ -44,12 +45,16 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
         }))
     }
 
+
+
     return (
         <>
         <div className="create-food-form">
                 <p className="fw-bold h4">Info</p>
 
                 {/* General Info Form */}
+
+                {/* Product Name */}
                 <div className="row mb-3">
                     <label htmlFor="productName" className="col-sm-2 col-form-label">Full Name</label>
                     <div className="col-sm-8">
@@ -58,6 +63,7 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                     </div>
                 </div>
 
+                {/* Product Link */}
                 <div className="row mb-3">
                     <label htmlFor="productLink" className="col-sm-2 col-form-label">Link</label>
                     <div className="col-sm-8">
@@ -65,6 +71,35 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                         className="form-control" name="productLink" value={foodData.productLink}/>
                     </div>
                 </div>
+
+                {/* Product net content */}
+                {/* <div className="row mb-3">
+                    <label htmlFor="produtNetContent" className="col-sm-2 col-form-label">Net Content</label>
+                    <div className="col-sm-1">
+                        <input
+                            type="text"
+                            inputMode="decimal"
+                            className="form-control"
+                            name="netContent"
+                            value={foodData.netContent.amount}
+                        />
+                    </div>
+                    <div className="col-sm-1">
+                        <select
+                            className="form-control"
+                            onChange={handleNetContentUnitChange}
+                            value={massUnits.findIndex(mu => mu.unit == foodData.netContent.unit.unit)}
+                        >
+                            {massUnits.map((sm, idx) => {
+                                return (
+                                    <option key={idx} value={idx}>
+                                        {titleCase(sm.name)}
+                                    </option>
+                                )
+                            })}
+                        </select>
+                    </div>
+                </div> */}
 
                 {/* Serving And Measurements Form */}
                 <div className="row mb-3">

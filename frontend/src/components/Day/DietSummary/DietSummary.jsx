@@ -11,6 +11,10 @@ const DietSummary = ({meals, dailyTargets, dietPlanName, setDietPlanName, dietPl
 
     const handleOnChange = (e) => setDietPlanName(e.target.value);
 
+    const isDietPlanEmpty = () => {
+        return !meals.some(day => day.some(m => m.foods.some(f => f)));
+    }
+
     return (
         <>
             <div className="row g-3 align-items-center">
@@ -35,7 +39,15 @@ const DietSummary = ({meals, dailyTargets, dietPlanName, setDietPlanName, dietPl
             </div>
                 
             <div className="d-grid gap-2">
-                <button className="btn btn-secondary" type="button" onClick={() => setShowModal(true)}>Summary</button>
+                <button
+                    className="btn btn-secondary"
+                    type="button"
+                    disabled={isDietPlanEmpty()}
+                    onClick={() => setShowModal(true)}
+                >
+                    Summary
+                </button>
+
                 <SaveDietBtn
                     dietPlanName={dietPlanName}
                     meals={meals}
