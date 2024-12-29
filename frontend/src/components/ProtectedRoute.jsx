@@ -1,4 +1,4 @@
-import {Navigate, useNavigate} from 'react-router-dom';
+import {json, Navigate, useNavigate} from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
 import api from '../api'
 import { REFRESH_TOKEN, ACCESS_TOKEN, USER } from '../constants';
@@ -17,7 +17,10 @@ const ProtectedRoute = ({authorized, setAuthorized, children, currentPath, setCu
     // When a user clicks a link in the navbar the currentPath changes, then auth() is run again.
     // currentPath changes when the user clicks a link in the navbar.
     useEffect(() => {
-        auth().catch(() => setAuthorized(false));
+        auth().catch(() => {
+            setAuthorized(false);
+            navigate('/');
+        });
     }, [currentPath])
     
     const logout = () => {
@@ -34,10 +37,10 @@ const ProtectedRoute = ({authorized, setAuthorized, children, currentPath, setCu
                 refresh: refreshToken
             });
             if (res.status == 200){
-                localStorage.setItem(USER, {
-                    ...USER,
+                localStorage.setItem(USER, json.stringify({
+                    ...user,
                     [ACCESS_TOKEN]: res.data.access
-                });
+                }));
                 setAuthorized(true);
             } else {
                 logout();
@@ -83,7 +86,7 @@ const ProtectedRoute = ({authorized, setAuthorized, children, currentPath, setCu
     return (
         <>  
             <div id="app-wrapper">
-                <NavBar currentPath={currentPath} setCurrentPath={setCurrentPath}/>
+                {authorized && <NavBar currentPath={currentPath} setCurrentPath={setCurrentPath}/>}
                 <div id='app'>
                     {!loading && authorized ? children: <LoadingSpinner />}
                 </div>

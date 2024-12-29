@@ -4,7 +4,7 @@ import SettingsModal from "./SettingsModal";
 const MealsSettingsBtn = ({meals, setMeals, currentDay}) => {
     const [showModal, setShowModal] = useState(false);
 
-    const determineSettings = () => meals[currentDay].map(m => m?.name); // Function that creates the criteria of the current value of the settings.
+    const determineSettings = () => meals[currentDay].map(m => [m?.name, m?.hideFromDiary]); // Function that creates the criteria of the current value of the settings.
 
     const [prevSettings, setPrevSettings] = useState(() => {
         return determineSettings(); // Returns a list of the meal names if the object has a meal attribute.

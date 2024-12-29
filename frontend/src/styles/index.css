@@ -115,7 +115,8 @@ body {
     padding-top: 75px; /* Because of the nav bar */
     width: 100%;
     min-height: 100%;
-    background-color: var(--grey-1);
+    background-color: var(--grey-8);
+    color: white;
 }
 
 #app {

@@ -103,7 +103,7 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
                 <div>
                 {(() => {
                     const searchResultsHeight = showFoodDetails? '200px': '400px';
-                    const foodDetailsHeight = '250px';
+                    const foodDetailsHeight = '300px';
                     return (
                         <>
                         <FoodsTable

@@ -4,7 +4,7 @@ import GoalSetter from "./GoalSetter/GoalSetter";
 import Diary from "./Diary/Diary";
 import FoodSummary from "./Summary/FoodSummary";
 
-import '../../styles/diary/day.css';
+import '../../styles/day.css';
 import NutrientTargets from "./NutrientTargets/NutrientTargets";
 
 import { defaultDiaryGroupObject, defaultDiaryGroups, maxNumberOfMeals, navbarZIndex } from "../../constants";

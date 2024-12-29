@@ -4,6 +4,9 @@
     border-radius: 10px;
     border: 1px solid white;
     padding: 10px;
+    color: black;
+    border: 2px solid var(--grey-7);
+    border-radius: 10px;
 }
 
 /* DAY */

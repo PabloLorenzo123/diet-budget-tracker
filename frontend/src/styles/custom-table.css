@@ -1,0 +1,21 @@
+.custom-table-wrapper {
+    height: 500px;
+    overflow-y: scroll;
+    background-color: white;
+}
+
+.custom-table thead {
+    position: sticky;
+    top: 0;
+}
+
+.custom-table tbody tr:nth-of-type(even) td {
+    background-color: var(--grey-1);
+}
+
+.custom-table .delete-btn {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: transparent;
+}

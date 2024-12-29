@@ -17,6 +17,9 @@ import { ToastContainer } from 'react-toastify';
 import LoadingSpinner from './components/LoadingSpinner';
 import DietPlan from './pages/DietPlan';
 
+// Styles.
+import './styles/custom-table.css';
+
 function App() {
 
   const [authorized, setAuthorized] = useState(null);

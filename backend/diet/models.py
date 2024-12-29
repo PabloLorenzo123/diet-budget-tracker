@@ -166,7 +166,7 @@ class FoodProduct(models.Model):
     price = models.FloatField(default=0) # In USD.
     servings = models.FloatField(default=1)
     serving_measure = models.CharField(max_length=20, default="serving") # Serving, an egg, a tablespoon, etc.
-    serving_size = models.DecimalField(max_digits=5, decimal_places=2, null=True) # Serving size is always in grams.
+    serving_size = models.FloatField(null=True) # Serving size is always in grams.
     
     nutrition_data = models.OneToOneField(NutritionData, on_delete=models.CASCADE, related_name='food_product', null=False)
     

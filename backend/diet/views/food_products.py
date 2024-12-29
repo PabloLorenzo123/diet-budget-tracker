@@ -93,7 +93,7 @@ def save_food_product(request):
                 return JsonResponse({'error': 'Food product not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         print(e)
-        print(json.dumps(food_product_data, indent=2))
+        # print(json.dumps(food_product_data, indent=2))
         return Response({"error": f"An unexpectederror occurred. {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 

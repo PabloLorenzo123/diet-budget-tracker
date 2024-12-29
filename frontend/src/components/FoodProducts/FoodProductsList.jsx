@@ -55,7 +55,7 @@ const FoodProductsList = ({showIndex, showCreateForm, setShowIndex, showCreate, 
         <>
         <h2 className="fw-bold">Food Products</h2>
             <p className="lead">Browse through your food products.</p>
-                <div className="mt-2 border border-black rounded-3 food-products-container">
+                <div className="mt-2 border border-black rounded-3 food-products-container" style={{color: 'black'}}>
                     <button type="button" className="add-food-btn" onClick={showCreateForm}>
                         <span className="material-symbols-outlined">
                             add
@@ -64,41 +64,44 @@ const FoodProductsList = ({showIndex, showCreateForm, setShowIndex, showCreate, 
                     </button>
                     <p className="lead">Create a new food product from the information of a local supermarket. </p>
                     <hr className="mt-4"/>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th>Servings</th>
-                                <th>Calories</th>
-                                <th>Protein</th>
-                                <th>Carbs</th>
-                                <th>Fat</th>
-                                <th>Price</th>
-                                <th></th>
-                            </tr>  
-                        </thead>
-                        <tbody>
-                            {foodProducts.map(f => {
-                                return (
-                                    <tr key={f.id} onClick={() => editFood(f)}>
-                                        <td>{f.foodData.productName}</td>
-                                        <td>{f.foodData.servings}</td>
-                                        <td>{f.nutritionData.energy}kcal</td>
-                                        <td>{f.nutritionData.protein}g</td>
-                                        <td>{f.nutritionData.netCarbs}g</td>
-                                        <td>{f.nutritionData.totalFat}g</td>
-                                        <td>${f.foodData.productPrice}</td>
-                                        <td>
-                                            <button type="button" className="delete-btn" onClick={e => deleteFood(e, f)}>
-                                                <span className="material-symbols-outlined">
-                                                    delete_forever
-                                                </span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                            )})}
-                        </tbody>
-                    </table>
+
+                    <div className="custom-table-wrapper">
+                        <table className="table custom-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Servings</th>
+                                    <th scope="col">Calories</th>
+                                    <th scope="col">Protein</th>
+                                    <th scope="col">Carbs</th>
+                                    <th scope="col">Fat</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col"></th>
+                                </tr>  
+                            </thead>
+                            <tbody className="cursor-pointer">
+                                {foodProducts.map(f => {
+                                    return (
+                                        <tr key={f.id} onClick={() => editFood(f)}>
+                                            <td>{f.foodData.productName}</td>
+                                            <td>{f.foodData.servings}</td>
+                                            <td>{f.nutritionData.energy}kcal</td>
+                                            <td>{f.nutritionData.protein}g</td>
+                                            <td>{f.nutritionData.netCarbs}g</td>
+                                            <td>{f.nutritionData.totalFat}g</td>
+                                            <td>${f.foodData.productPrice}</td>
+                                            <td>
+                                                <button type="button" className="delete-btn" onClick={e => deleteFood(e, f)}>
+                                                    <span className="material-symbols-outlined">
+                                                        delete_forever
+                                                    </span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                )})}
+                            </tbody>
+                        </table>
+                    </div>
             </div>
         </>
     )

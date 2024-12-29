@@ -87,6 +87,18 @@ const SettingsModal = ({setShow, width, height, meals, setMeals, currentDay, pre
         })
     }
 
+    const saveBtnDisabled = () => {
+        // prevSettings and currentSettings are arrays of arrays [[mealName. mealHideFromDiary]...].
+        const currentSettings = determineSettings();
+        return currentSettings.every((value, idx) => {
+            const currentMealName = value[0];
+            const currentMealHide = value[1];
+            const prevMealName = prevSettings[idx][0];
+            const prevMealHide = prevSettings[idx][1];
+            return currentMealName == prevMealName && currentMealHide == prevMealHide;
+        });
+    }
+
     const numberOfColumns = 2;
     const itemsPerColumn = 4;
 
@@ -136,7 +148,7 @@ const SettingsModal = ({setShow, width, height, meals, setMeals, currentDay, pre
                     onClick={saveMealsSettings}
                     isResLoading={isResLoading}
                     isResSuccesful={isResSuccesful}
-                    disabled={arraysAreEqual(prevSettings, determineSettings())}
+                    disabled={saveBtnDisabled()}
                     btnText={'Set as default'}
                 />
             </div>
