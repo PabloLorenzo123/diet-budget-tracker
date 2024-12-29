@@ -2,8 +2,6 @@ import { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import favicon from '../assets/favicon-100x100.png';
-
 import '../styles/index.css';
 import '../styles/home.css';
 
@@ -13,7 +11,8 @@ import c3 from '../assets/carousel/3.jpg';
 import c4 from '../assets/carousel/4.jpg';
 
 
-import { appName } from '../constants';
+
+import UnproctectedNav from './components/UnprotectedNav';
 
 const Home = () => {
 
@@ -39,32 +38,8 @@ const Home = () => {
     return(
         <div id="home-page">
             
-            <nav className="main-nav">
-                <div className='content'>
-                    <div className="main-nav-left">
-                        <button className='bg-transparent m-0 p-0 border-0 d-flex align-items-end' onClick={() => navigate('/')}>
-                            <img src={favicon} width={85} height={85} className='me-1'/>
-                            <h1 className='fw-bold'>
-                                {appName}
-                            </h1>
-                        </button>
-                    </div>
-                    <div className="main-nav-right">
-                        <nav>
-                            <ul>
-                                <button className='bg-transparent m-0 p-0 border-0' onClick={() => navigate('/login')}>
-                                    <li>
-                                        Log In
-                                    </li>
-                                </button>
-                                <button className="nav-button" onClick={() => navigate('/signup')}>
-                                    Sign Up
-                                </button>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </nav>
+            <UnproctectedNav />
+
 
             <div id="hero">
                 <div className='container row h-100'>
@@ -81,7 +56,7 @@ const Home = () => {
                                 </p>
                             </div>
                             <div className='d-flex justify-content-center'>
-                                <button id="signup-btn" onClick={() => navigate('/signup')}>
+                                <button id="signup-btn" className='shadow-sm' onClick={() => navigate('/signup')}>
                                     Sign Up
                                 </button>
 
@@ -95,8 +70,8 @@ const Home = () => {
                             <div className="carousel-inner">
                                 {carouselImgs.map((i, idx) => {
                                     return (
-                                        <div className={`carousel-item ${idx == 0? 'active': ''}`}>
-                                            <img src={i} className="d-block w-100" alt="carousel img"/>
+                                        <div key={idx} className={`carousel-item ${idx == 0? 'active': ''}`}>
+                                            <img src={i} className="d-block w-100 shadow-sm" alt="carousel img"/>
                                         </div>
                                     )
                                 })}

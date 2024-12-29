@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { REFRESH_TOKEN, ACCESS_TOKEN, USER, appName } from "../constants";
+import { REFRESH_TOKEN, ACCESS_TOKEN, USER, appName } from "../../constants";
 
-import favicon from '../assets/favicon-100x100.png';
-
-import api from "../api";
+import api from "../../api";
+import UnproctectedNav from "./UnprotectedNav";
 
 const AuthForm = ({action, title, btnText, setAuthorized}) => {
     const [username, setUsername] = useState("");
@@ -54,22 +53,11 @@ const AuthForm = ({action, title, btnText, setAuthorized}) => {
 
     return (
         <>
-            <nav className="main-nav">
-                <div className='content'>
-                    <div className="main-nav-left">
-                        <button className='bg-transparent m-0 p-0 border-0 d-flex align-items-end' onClick={() => navigate('/')}>
-                            <img src={favicon} width={85} height={85} className='me-1'/>
-                            <h1 className='fw-bold'>
-                                {appName}
-                            </h1>
-                        </button>
-                    </div>
-                </div>
-            </nav>
+            <UnproctectedNav />
 
             <div id="hero">
-                <div id="content" className="d-flex justify-content-center mt-5">
-                    <div id="form" className="p-5 border border-2 shadow" style={{width: '500px'}}>
+                <div className="d-flex justify-content-center h-100 p-sm-5 p-2">
+                    <div  className="p-5 border border-2 shadow" style={{width: '500px', height: '400px'}}>
                         <h2 className="font-weight-bold text-center mb-3">{title}</h2>
                         {errors.length > 0 && 
                             errors.map((err, idx) => {

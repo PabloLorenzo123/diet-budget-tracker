@@ -60,7 +60,7 @@ const CreateFoodForm = ({showIndex, setShowIndex, showCreate, setShowCreate, sel
 
   
   return (
-      <div id="create-food-container">
+      <div id="create-food-container" className="p-3">
         {showHeader &&
           <>
             <h2 className="fw-bold">Create A Food Product</h2>

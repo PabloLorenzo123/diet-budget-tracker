@@ -170,9 +170,9 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
             </div>
             {/* More button */}
             <button
-            className="more-btn d-flex align-items-center bg-transparent border-0 p-0 m-0 me-2"
-            type="button"
-            onClick={() => setShowModal(true)}
+                className="more-btn d-flex justify-content-center align-items-center bg-transparent border-0 p-0 m-0 me-2"
+                type="button"
+                onClick={() => setShowModal(true)}
             >
                 <span className="material-symbols-outlined">
                     more_horiz
@@ -180,10 +180,10 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
             </button>
             {/* Save button */}
             <button 
-            type="button"
-            className="save-btn d-flex align-items-center bg-transparent border-0 p-0 m-0 me-2"
-            onClick={saveDailyTargets}
-            disabled={isSaveBtnDisabled}
+                type="button"
+                className="save-btn d-flex justify-content-center align-items-center bg-transparent border-0 p-0 m-0 me-2"
+                onClick={saveDailyTargets}
+                disabled={isSaveBtnDisabled}
             >
                 {isLoading? 
                     <div className="spinner-border spinner-border-sm" role="status">

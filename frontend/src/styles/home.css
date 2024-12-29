@@ -2,11 +2,7 @@
     --nav-height: 100px;
 }
 
-body {
-    margin: 0;
-    font-family: sans-serif !important;
-    height: 100%;
-}
+
 
 #home-page {
     width: 100%;
@@ -16,10 +12,20 @@ body {
 }
 
 /* Navigation */
-.main-nav {
+.custom-nav {
+    padding: 20px 40px;
+    font-size: 20px;
+    background-color: var(--dark-raisin);
+}
+
+/* .main-nav {
     display: flex;
+    flex-direction: row;
+    flex: 200px;
+    flex-wrap: wrap;
+
     justify-content: space-between;
-    height: var(--nav-height);
+    min-height: var(--nav-height);
     width: 100%;
     padding: 20px;
     padding-top: 40px;
@@ -33,11 +39,7 @@ body {
     color: white;
 }
 
-.main-nav .content {
-    display: flex;
-    width: 90%;
-    margin: 0 auto;
-}
+
 
 .main-nav-left, .main-nav-right {
     width: 50%;
@@ -82,7 +84,7 @@ body {
     justify-content: center;
     align-items: center;
     font-weight: bold;
-}
+} */
 
 /* Hero section */
 #hero {
@@ -90,6 +92,13 @@ body {
     height: 100%;
     margin: 0 auto;
     padding-top: var(--nav-height);
+}
+
+@media screen and (max-width: 768px) {
+    #hero {
+        padding-top: 170px;
+    }
+    
 }
 
 

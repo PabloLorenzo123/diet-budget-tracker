@@ -117,7 +117,7 @@ const DetailsForm = ({foodData, setFoodData, nutritionData, setNutritionData}) =
                                     <th>Measure</th>
                                     <th>
                                         <select
-                                            className="form-control"
+                                            className="form-select"
                                             onChange={handleMeasureUnitChange}
                                             value={massUnits.findIndex(mu => mu.unit == foodData.measurement.unit.unit)}
                                         >

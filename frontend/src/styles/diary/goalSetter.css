@@ -1,11 +1,5 @@
-
-.goal-setter-container .more-btn {
-    border: 5px solid transparent !important;
-}
-
-.goal-setter-container .more-btn:hover{
-    background-color: var(--grey-3) !important;
-    border-radius: 100%;
+.goal-setter-container {
+    width: 100%;
 }
 
 .goal-setter-container .save-btn:hover {
@@ -15,3 +9,38 @@
 .goal-setter-container .form-control {
     width: 100px;
 }
+
+@media screen and (min-width: 768px) {
+    .goal-setter-container .more-btn {
+        border: 5px solid transparent !important;
+    }
+    
+    .goal-setter-container .more-btn:hover{
+        background-color: var(--grey-3) !important;
+        border-radius: 100%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+
+    .goal-setter-container div[class^="d-flex"] {
+        width: 100%;
+    }
+
+    .goal-setter-container .more-btn, .goal-setter-container .save-btn {
+        width: 100%;
+        margin-top: 4px !important;
+        border-radius: 10px !important;
+        background-color: var(--grey-2) !important;
+        color: black !important;
+    }
+    
+    .d-flex label {
+        width: 25%;
+    }
+
+    .d-flex .form-control {
+        width: 75%;
+    }
+}
+

@@ -191,7 +191,7 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
                 <div className="row mb-3">
                     
                     <p className="form-text">
-                        Is this an unbranded minimally processed food (e.g., eggs, vegbles) or a
+                        Is this an unbranded minimally processed food (e.g., eggs, vegetables) or a
                         processed an labeled item?
                     </p>
                     <div className="col d-flex align-items-center">
@@ -224,7 +224,7 @@ const ManualOrSearchFood = ({foodData, setFoodData, nutritionData, setNutritionD
                     Search
                 </button>
 
-                <div className="cf-search-results">
+                <div className="cf-search-results mt-2">
                     <h6 className="fw-bold">Search Results</h6>
 
                     <div className="results">

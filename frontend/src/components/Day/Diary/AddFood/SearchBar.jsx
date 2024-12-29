@@ -38,25 +38,24 @@ const SearchBar = ({setFoodProducts, tab, setTab, showFoodDetails, setShowFoodDe
 
     return (
         <>
-        <div className="search-bar-container mb-2">
-                <div className="search-bar">
-                    <span className="material-symbols-outlined search-icon">
-                        search
-                    </span>
-                    <input
-                    type="search"
-                    placeholder="Search food"
-                    value={searchInput}
-                    onChange={e => setSearchInput(e.target.value)}
-                    onKeyDown={e => {
-                        if (e.key === 'Enter') {
-                            searchFoodProducts();
-                        }
-                    }}
-                    autoFocus
-                    />
-                </div>
-                <button type="button" className="btn btn-primary" onClick={searchFoodProducts}>Search</button>
+        <div className="search-bar-container">
+            <div className="search-bar">
+                <span className="material-symbols-outlined search-icon">
+                    search
+                </span>
+                <input
+                type="search"
+                placeholder="Search food"
+                value={searchInput}
+                onChange={e => setSearchInput(e.target.value)}
+                onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                        searchFoodProducts();
+                    }
+                }}
+                />
+            </div>
+            <button type="button" className="btn btn-primary" onClick={searchFoodProducts}>Search</button>
         </div>
         </>
     )

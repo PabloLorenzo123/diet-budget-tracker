@@ -35,7 +35,7 @@ const DietSummaryModal = ({meals, setShowModal}) => {
                             return (
                                 <>
 
-                                <table className='table'>
+                                <table className='table' key={idx}>
                                     <thead>
                                         <tr className='table-secondary'>
                                             <th colSpan={'7'}>{titleCase(meal.name)}</th>

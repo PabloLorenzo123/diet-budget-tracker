@@ -7,7 +7,7 @@ import FoodDetailsTargets from "./FoodDetailsTargets";
 import FoodOptions from "./FoodOptions";
 
 const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood, meals,
-     setMeals, currentDay, groceries, setGroceries, dailyTargets, setTab, foodProducts, setFoodProducts, unselectFoodP}) => {
+     setMeals, currentDay, groceries, setGroceries, dailyTargets, setTab, foodProducts, setFoodProducts, unselectFoodP, isOnMobile, setShowFoodDetails}) => {
 
     const [addToDiaryForm, setAddToDairyForm] = useState({
         diaryGroup: 0, // A.K.A What meal object.
@@ -53,11 +53,24 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
             servingMeasure: sm 
         }))
     }
+    
+    const exit = () => {
+        setShowFoodDetails(false);
+        setSelectedFood({});
+        
+    }
 
     
     return (
         <>
         <div className="container-fluid py-2 mt-2">
+            {isOnMobile &&
+                <button className="bg-transparent p-0 border-0 m-0" onClick={exit}>
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </button>
+            }
             {/* Header product name */}
             <div className="mb-1 fw-bold d-flex align-items-center justify-content-center">
                 <span className="me-2">{selectedFood.foodData.productName}</span>
@@ -95,7 +108,7 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
                                 {/* Select meal */}
                                 <select
                                     id="diaryGroup"
-                                    className="form-control"
+                                    className="form-select"
                                     onChange={handleChange}
                                     name="diaryGroup"
                                     value={addToDiaryForm.diaryGroup}
@@ -113,21 +126,21 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
                             <div className="col-sm-2">
                                 {/* Number of servings */}
                                 <input
-                                type="text"
-                                className="form-control"
-                                inputMode="decimal" // Enables numeric keypad on mobile  
-                                onChange={handleChange}
-                                onInput={e => validateDecimalNumberInput(e, 0)}
-                                name="servings"
-                                value={addToDiaryForm.servings}
+                                    type="text"
+                                    className="form-control"
+                                    inputMode="decimal" // Enables numeric keypad on mobile  
+                                    onChange={handleChange}
+                                    onInput={e => validateDecimalNumberInput(e, 0)}
+                                    name="servings"
+                                    value={addToDiaryForm.servings}
                                 />
                             </div>
                             <div className="col-sm-6">
                                 {/* Serving measures */}
                                 <select
-                                className="form-control"
-                                value={addToDiaryForm.servingMeasure.unit}
-                                onChange={handleChangeSM}>
+                                    className="form-select"
+                                    value={addToDiaryForm.servingMeasure.unit}
+                                    onChange={handleChangeSM}>
                                     {addToDiaryForm.servingMeasures.map(sm => {
                                         return (
                                             <option key={sm.unit} value={sm.unit}>

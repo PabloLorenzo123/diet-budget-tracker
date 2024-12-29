@@ -1,6 +1,7 @@
 .custom-modal-backdrop {
     width: 100vw;
     height: 100vh;
+    margin: 0;
     background-color: rgba(0, 0, 0, 0.7);
     position: fixed;
     top: 0;
@@ -16,8 +17,8 @@
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 10px;
-    padding: 20px;
-    z-index: 10000000000;
+    padding: 20px 10px 10px 10px;
+    z-index: 1;
 }
 
 .custom-modal-header {
@@ -25,10 +26,3 @@
     font-size: 12px;
 }
 
-/* When the screen is small make the modal bigger */
-@media (min-width: 0px) and (max-width: 800px) {
-    .custom-modal {
-        width: 95%;
-        overflow: scroll;
-    }
-}

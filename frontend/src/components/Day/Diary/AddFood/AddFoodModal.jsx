@@ -26,6 +26,31 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
     // => {id, nutritionData, foodData: {gramWeight, measure, productLink, productName, productPrice, servings}}
     const [showFoodDetails, setShowFoodDetails] = useState(false);
 
+    const [isOnMobile, setIsOnMobile] = useState(false);
+
+    useEffect(() => {
+        // When first mounted return all the food products created by the user.
+        const getAllFP = async () => {
+            try {
+                setFoodProductsLoading(true);
+                getAllFoodProducts();
+            } catch (err) {
+                console.log(err);
+            } finally {
+                setFoodProductsLoading(false);
+            }
+        }
+        const resize = () => {
+            setIsOnMobile(window.innerWidth < 760);
+        }
+        getAllFP();
+
+        resize(); // Check on mount.
+        window.addEventListener('resize', resize);
+        return () => window.removeEventListener('resize', resize);
+        
+    }, [])
+
     const getAllFoodProducts = async () => {
         try {
             const res = await api.get('diet/food_products/');
@@ -53,25 +78,13 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
         } 
     }
 
-    useEffect(() => {
-        // When first mounted return all the food products created by the user.
-        const getAllFP = async () => {
-            try {
-                setFoodProductsLoading(true);
-                getAllFoodProducts();
-            } catch (err) {
-                console.log(err);
-            } finally {
-                setFoodProductsLoading(false);
-            }
-        }
-        getAllFP();
-    }, [])
+    
 
     return (
         <Modal setShow={setShowModal} header={'Add Food to Diary'}>
 
-            <div>
+            {/* Search bar */}
+            <div className="d-flex align-items-center" style={{height: '5%'}}>
                 <SearchBar
                     setFoodProducts={setFoodProducts}
                     tab={tab}
@@ -82,8 +95,8 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
                     setFoodProductsLoading={setFoodProductsLoading}
                 />
             </div>
-            
 
+            {/* Tabs */}
             <div className="d-flex search-tabs mb-2">
                 {AddFoodModalVisibleTabs.map(item => {
                     return (
@@ -100,45 +113,47 @@ const AddFoodModal = ({showModal, setShowModal, meals, setMeals, currentDay, gro
             </div>
 
             {tab == 'All' &&
-                <div>
-                {(() => {
-                    const searchResultsHeight = showFoodDetails? '200px': '400px';
-                    const foodDetailsHeight = '300px';
-                    return (
-                        <>
-                        <FoodsTable
-                            foodProducts={foodProducts}
-                            selectFood={selectFood}
-                            selectedFood={selectedFood}
-                            searchResultsHeight={searchResultsHeight}
-                            foodProductsLoading={foodProductsLoading}
-                            setTab={setTab}
-                        />
-                        {showFoodDetails &&
-                            <div style={{height: foodDetailsHeight, overflowY: 'scroll'}}>
-                                <FoodDetailsForm
-                                    showFoodDetails={showFoodDetails}
-                                    setShowFoodDetails={setShowFoodDetails}
-                                    showModal={showModal}
-                                    setShowModal={setShowModal}
-                                    selectedFood={selectedFood}
-                                    setSelectedFood={setSelectedFood}
-                                    meals={meals}
-                                    setMeals={setMeals}
-                                    currentDay={currentDay}
-                                    groceries={groceries}
-                                    setGroceries={setGroceries}
-                                    dailyTargets={dailyTargets}
-                                    setTab={setTab}
+                <div style={{height: '80%'}}>
+                    {(() => {
+                        const searchResultsHeight = showFoodDetails? (isOnMobile? '0%': '45%'): '95%';
+                        const foodDetailsHeight = isOnMobile? '100%': '55%';
+                        return (
+                            <>
+                                <FoodsTable
                                     foodProducts={foodProducts}
-                                    setFoodProducts={setFoodProducts}
-                                    unselectFoodP={unselectFoodP}
+                                    selectFood={selectFood}
+                                    selectedFood={selectedFood}
+                                    searchResultsHeight={searchResultsHeight}
+                                    foodProductsLoading={foodProductsLoading}
+                                    setTab={setTab}
+                                    isOnMobile={isOnMobile}
                                 />
-                            </div>
-                        }
-                    </>
-                    ) 
-                })()}
+                                {showFoodDetails &&
+                                    <div style={{height: foodDetailsHeight, overflowY: isOnMobile? 'scroll': ''}}>
+                                        <FoodDetailsForm
+                                            showFoodDetails={showFoodDetails}
+                                            setShowFoodDetails={setShowFoodDetails}
+                                            showModal={showModal}
+                                            setShowModal={setShowModal}
+                                            selectedFood={selectedFood}
+                                            setSelectedFood={setSelectedFood}
+                                            meals={meals}
+                                            setMeals={setMeals}
+                                            currentDay={currentDay}
+                                            groceries={groceries}
+                                            setGroceries={setGroceries}
+                                            dailyTargets={dailyTargets}
+                                            setTab={setTab}
+                                            foodProducts={foodProducts}
+                                            setFoodProducts={setFoodProducts}
+                                            unselectFoodP={unselectFoodP}
+                                            isOnMobile={isOnMobile}
+                                        />
+                                    </div>
+                                }
+                            </>
+                        ) 
+                    })()}
                 </div>
             }
             {tab == 'Create' &&
