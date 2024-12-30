@@ -17,7 +17,7 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
 
     const [showModal, setShowModal] = useState(false);
 
-    const handleBudgetChange = (e) => setDailyTargets(prev => ({...prev, budget: e.target.value}));
+    const handleBudgetChange = (e) => setDailyTargets(prev => ({...prev, budget: Number.parseFloat(e.target.value)}));
 
     useEffect(() => {
         setPrevDailyTargets({...dailyTargets})
@@ -38,12 +38,13 @@ const GoalSetter = ({dailyTargets, setDailyTargets}) => {
 
     const saveDailyTargets = async () => {
         if (prevDailyTargets == dailyTargets) return;
+        console.log( dailyTargets);
         setIsLoading(true);
         try {
             const body = {...dailyTargets}
             Object.keys(body).forEach(n => {
                 if (nutrientsInformation[n]) {
-                    body[n] = dailyTargets[n].amount;
+                    body[n] = Number.parseFloat(dailyTargets[n].amount);
                 }
             });
             const res = await api.post('auth/diary_settings/daily_targets/', body);

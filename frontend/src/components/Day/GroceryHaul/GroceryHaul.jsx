@@ -59,7 +59,6 @@ const GroceryHaul = ({groceries, showOrHideRightColumn}) => {
             
             const totalBruteCost = nItemsToBuy * foodData.productPrice;
 
-            console.log(totalGrams, productNetContent, foodData.productPrice)
             const totalNetCost = roundTo(totalGrams * (foodData.productPrice / productNetContent), 2);
             
             // Update total cost.

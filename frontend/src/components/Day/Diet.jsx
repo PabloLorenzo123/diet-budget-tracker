@@ -13,6 +13,7 @@ import api from "../../api";
 import DaySwitcher from "./DaySwitcher";
 import GroceryHaul from "./GroceryHaul/GroceryHaul";
 import DietSummary from "./DietSummary/DietSummary";
+import { use } from "react";
 
 
 const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGroceries, dietPlanName, setDietPlanName, dietPlanId}) => {
@@ -22,6 +23,17 @@ const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGro
     const [selectedFoodObj, setSelectedFoodObj] = useState(null);
 
     const [rightColumZIndex, setRightColumnIndex] = useState(1);
+
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+        }
+        handleResize(); // Check on mount.
+        window.addEventListener('resize', handleResize);
+        return () => { window.removeEventListener('resize', handleResize); };
+    }, []);
 
     const showOrHideRightColumn = (showModal) => {
         // Because the right column has a position of 'sticky'.
@@ -37,14 +49,15 @@ const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGro
         <>
             <div className="main-container row">
                 {/* Left side when in a large screen. */}
-                <div className="col-sm-9">
+                <div className="col-md-9">
                     <div className="app-container mb-2">
                         <GoalSetter
                             dailyTargets={dailyTargets}
                             setDailyTargets={setDailyTargets}
                         />
                     </div>
-                    <div className="day-container app-container mb-4">
+
+                    <div className={`day-container app-container mb-4 ${isMobile? 'overflow-scroll': ''}`}>
                         <Diary
                             meals={meals}
                             setMeals={setMeals}
@@ -60,7 +73,7 @@ const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGro
                     </div>
 
                     
-                    <div className="food-summary-container app-container mb-4">
+                    <div className={`food-summary-container app-container mb-4`}>
                         <FoodSummary
                             meals={meals}
                             currentDay={currentDay}
@@ -82,7 +95,7 @@ const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGro
                 </div>
 
                 {/* Right side when in large screen */}
-                <div className="col-sm-3">
+                <div className="col-md-3">
                     <div className="position-sticky" style={{top: '70px', zIndex: rightColumZIndex}}>
                         <div className="app-container mb-2">
                             <DaySwitcher

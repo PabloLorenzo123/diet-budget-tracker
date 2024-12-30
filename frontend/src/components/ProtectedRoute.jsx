@@ -52,7 +52,6 @@ const ProtectedRoute = ({authorized, setAuthorized, children, currentPath, setCu
     }
 
     const auth = async () => {
-        console.log('auth is running')
         try {
             setLoading(true);
             const user = JSON.parse(localStorage.getItem(USER));

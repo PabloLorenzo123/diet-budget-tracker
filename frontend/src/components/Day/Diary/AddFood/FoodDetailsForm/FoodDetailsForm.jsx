@@ -66,7 +66,7 @@ const FoodDetailsForm = ({showModal, setShowModal, selectedFood, setSelectedFood
         <div className="container-fluid py-2 mt-2">
             {isOnMobile &&
                 <button className="bg-transparent p-0 border-0 m-0" onClick={exit}>
-                    <span class="material-symbols-outlined">
+                    <span className="material-symbols-outlined">
                         close
                     </span>
                 </button>

@@ -21,7 +21,6 @@ const ProductsList = ({receipt, groceriesTotalCost, expanded=false, nItems}) => 
                 return (
                     <Fragment key={idx}>
                     {(() => {
-                            console.log(receipt)
                             const productName = product.product.foodData.productName;
                             const foodData = product.product.foodData;
                             const nItemsToBuy = product.nItemsToBuy;

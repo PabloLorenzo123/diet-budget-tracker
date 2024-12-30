@@ -24,13 +24,13 @@ const Modal = ({setShow, scroll=false, width=defaultModalWidth, height=defaultMo
       };
   }, []);
 
-  console.log(isMobile)
+  
   return(
       <>
         
           <div className="custom-modal-backdrop" onClick={() => setShow(false)}>
               <div
-                className={`custom-modal ${scroll? 'overflow-y-scroll': 'overflow-y-hidden'}`}
+                className={`custom-modal ${scroll? 'overflow-y-scroll': ''} ${isMobile? 'overflow-scroll': ''}`}
                 style={!isMobile? {width, height}: {width: '95vw', height: '90vh'}}
                 onClick={e => e.stopPropagation()}
               >

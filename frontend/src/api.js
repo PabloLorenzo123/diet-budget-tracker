@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ACCESS_TOKEN, USER } from './constants';
 
 const api = axios.create({
-    baseURL: 'http://192.168.4.128:8000/api/' //import.meta.env.VITE_API_URL
+    baseURL: import.meta.env.VITE_API_URL // 'http://192.168.4.128:8000/api/' //
 })
 
 api.interceptors.request.use(

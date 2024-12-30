@@ -149,8 +149,9 @@ def user_nutrition_goals(request):
             if hasattr(user_nutrient_targets, field):
                 setattr(user_nutrient_targets, field, value)
         
+        user.diary_settings.save()
         user_nutrient_targets.save()
-        user.save()
+        
         return Response({"success": "User daily targets have been saved."}, status=status.HTTP_200_OK)
     
     # GET request.

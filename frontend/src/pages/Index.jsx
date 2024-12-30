@@ -122,7 +122,10 @@ const Index = () => {
             try {
                 const res = await api.get('auth/diary_settings/daily_targets/');
                 if (res.status == 200){
-                    setDailyTargets(transformDailyTargets(res.data.dailyTargets));
+                    setDailyTargets(() => ({
+                        budget: res.data.dailyTargets.budget,
+                        ...transformDailyTargets(res.data.dailyTargets)
+                    }));
                 }
             } catch (error) {
                 console.log(`Could not retrieve user's daily targets. ${error}`);

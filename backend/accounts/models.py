@@ -28,14 +28,13 @@ class User(AbstractUser):
             )
             user_diary_settings.save()
         finally:
-            return self.diary_settings
-    
+            return self.diary_settings  
     
 
 class DiarySettings(models.Model):
     """Sets the default dairy settings of an user."""
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="diary_settings", null=True)
-    budget = models.DecimalField(max_digits=8, decimal_places=2, default=0, null=True) # Daily.
+    budget = models.FloatField(default=0.0) # Daily.
     nutrient_targets = models.OneToOneField('diet.NutritionData', on_delete=models.CASCADE, related_name="user", null=True, blank=True) # Daily.
     # Meals.
     # Nutrient targets.
