@@ -27,6 +27,7 @@ function App() {
   const [currentPath, setCurrentPath] = useState(null); // URL current path.
   
   const handleLogout = () => {
+    setCurrentPath(null);
     localStorage.clear();
     setAuthorized(false);
   }

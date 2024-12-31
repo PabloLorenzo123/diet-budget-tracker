@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/index.css';
 import '../styles/home.css';
 
-import c1 from '../assets/carousel/1.jpeg';
-import c2 from '../assets/carousel/2.jpeg';
-import c3 from '../assets/carousel/3.jpg';
-import c4 from '../assets/carousel/4.jpg';
+import c1 from '../assets/carousel/sc1.png';
+import c2 from '../assets/carousel/sc2.png';
+import c3 from '../assets/carousel/sc3.png';
+import c4 from '../assets/carousel/sc4.png';
+import c5 from '../assets/carousel/sc5.png';
 
 
 
@@ -31,7 +32,7 @@ const Home = () => {
         initializeCarousel();
     }, []);
 
-    const carouselImgs = [c1, c2, c3, c4]
+    const carouselImgs = [c1, c2, c3, c4, c5]
 
     const navigate = useNavigate();
 
@@ -43,7 +44,7 @@ const Home = () => {
 
             <div id="hero">
                 <div className='container row h-100'>
-                    <div className='col d-flex align-items-center'>
+                    <div className='col-md-6 d-flex align-items-center'>
                         <div className='p-5'> 
                             <div className='mb-4'>
                                 <h1 className='fw-bold mb-4'>
@@ -64,7 +65,7 @@ const Home = () => {
                         </div>
                         
                     </div>
-                    <div className='col d-flex justify-content-center align-items-center'>
+                    <div className='col-md-6 d-flex justify-content-center align-items-center'>
                         
                         <div id="carouselex" className="carousel slide w-100" data-bs-ride="carousel" >
                             <div className="carousel-inner">
