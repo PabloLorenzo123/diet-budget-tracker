@@ -14,6 +14,10 @@ const NavBar = ({currentPath, setCurrentPath}) => {
         navigate(path);
     }
 
+    const logout = () => {
+        navigate('/logout');
+    }
+
     const isCurrentPath = (path) => path == currentPath;
     const username = JSON.parse(localStorage.getItem(USER)).username
     return(
@@ -74,7 +78,7 @@ const NavBar = ({currentPath, setCurrentPath}) => {
                                 <li>
                                     <button
                                         className='nav-link dropdown-item'
-                                        onClick={() => goTo('/logout')}
+                                        onClick={logout}
                                     >
                                         Logout
                                     </button>

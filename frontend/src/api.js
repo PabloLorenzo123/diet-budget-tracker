@@ -17,7 +17,7 @@ api.interceptors.request.use(
                 config.headers.Authorization = `Bearer ${token}`;
             }
         } catch (error) {
-             console.error("Error parsing user data:", error);
+             // console.error("Error parsing user data:", error);
         }
         return config;
     },

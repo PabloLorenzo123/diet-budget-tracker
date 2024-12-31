@@ -27,10 +27,8 @@ export const validateDecimalNumberInput = (e, min=0) => {
   }
   // If it is not a number or it's empty then set its value to the minimum. This way the input is never left undefined.
   if (isNaN(e.target.value) || !e.target.value && !min){
-    console.log("is not a number.")
     e.target.value = min;
   }
-  // console.log(e.target.value);
 }
 
 export const roundTo = (num, decimalPlaces) => {
@@ -68,8 +66,6 @@ export const getTotalNutrients = (nutrient, meals, dailyTargets, selectedMealIdx
 }
 
 export const arraysAreEqual = (arr1, arr2) => {
-  console.log(arr1);
-  console.log(arr2);
   if (arr1.length !== arr2.length) return false;
   return arr1.every((value, index) => value === arr2[index]);
 }
@@ -107,16 +103,6 @@ export const transformDailyTargets = (dt) => {
   })
   return dailyTargets;
 }
-
-
-export const areArraysEqual = (arr1, arr2) => {
-  if (arr1.length !== arr2.length) return false;
-
-  return arr1.every((obj1, index) => {
-      const obj2 = arr2[index];
-      return JSON.stringify(obj1) === JSON.stringify(obj2);
-  });
-};
 
 
 export const areObjectsEqual = (obj1, obj2) => {

@@ -23,17 +23,21 @@ const DietPlanView = ({dietPlanId}) => {
 
         const transFormFoods = (foods, mealIdx) => {
             return foods.map(f => {
-                let smUnit = ''; // Serving Measure Unit
+                let servingMeasure; // Serving Measure Unit
                 if (f.foodData.gramWeight == f.servingMeasureInGrams){
                     // If the food product serving in grams is equal to the
                     // serving measure in grams, then the unit is the one in the food product.
-                    smUnit = f.foodData.measure
+                    servingMeasure = {
+                        unit: f.foodData.measure,
+                        valueInGrams: f.servingMeasureInGrams,
+                    }
                 } else {
                     // Find the unit from the default ones if it's not the one in the food product.
-                    smUnit = massUnits.find(el => el.valueInGrams == f.servingMeasureInGrams);
+                    servingMeasure = massUnits.find(el => el.valueInGrams == f.servingMeasureInGrams);
                 }
+                const productNetContent = f.foodData.gramWeight * f.foodData.servings;
                 const portionSize = f.servings * f.servingMeasureInGrams;
-                const totalCost = portionSize * f.foodData.productPrice / f.foodData.gramWeight;
+                const totalCost = portionSize * (f.foodData.productPrice / productNetContent);
                 
                 const groceriesIdx = groceries[f.id]?.foods.length > 0 ? 
                 groceries[f.id].foods.length: 0;
@@ -43,10 +47,7 @@ const DietPlanView = ({dietPlanId}) => {
                     nutritionalContribution: calculateNutritionalContribution(f, portionSize),
                     diaryData: {
                         servings: f.servings,
-                        servingMeasure: {
-                            unit: smUnit.unit || smUnit,
-                            valueInGrams: f.servingMeasureInGrams,
-                        },
+                        servingMeasure,
                         portionSize,
                         totalCost,
                         mealIdx,

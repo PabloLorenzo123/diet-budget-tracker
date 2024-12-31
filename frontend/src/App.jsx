@@ -26,6 +26,10 @@ function App() {
   const [authorized, setAuthorized] = useState(null);
   const [currentPath, setCurrentPath] = useState(null); // URL current path.
   
+  const handleLogout = () => {
+    localStorage.clear();
+    setAuthorized(false);
+  }
  
   useEffect(() => {
     const checkAuth = async () => {
@@ -61,7 +65,7 @@ function App() {
 
           {/* Auth Routes */}
           <Route path="/login" element={<Login setAuthorized={setAuthorized}/>}/>
-          <Route path="/logout" element={<Logout setAuthorized={setAuthorized}/>}/>
+          <Route path="/logout" element={<Logout setAuthorized={setAuthorized} logout={handleLogout}/>}/>
           <Route path="/signup" element={<Signup setAuthorized={setAuthorized}/>}/>
           
           {/* App Routes */}

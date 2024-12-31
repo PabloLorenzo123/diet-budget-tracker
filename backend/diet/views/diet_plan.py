@@ -44,7 +44,7 @@ def get_diet_plan(request, id):
 def get_diet_plans(request):
     """Returns all the diet plans a user has"""
     user = request.user
-    res = [diet.get_diet_plan_as_json() for diet in user.diets.all()]
+    res = [diet.get_diet_plan_as_json() for diet in sorted(user.diets.all(), key=lambda d: d.updated_at, reverse=True)]
     return Response({
         'dietPlans': res
     }, status=status.HTTP_200_OK)
@@ -54,7 +54,6 @@ def get_diet_plans(request):
 @permission_classes([IsAuthenticated])
 def delete_diet_plan(request, id):
     """Deletes a diet plan"""
-    user = request.user
     diet_plan = get_object_or_404(DietPlan, id=id, creator=request.user)
     diet_plan.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)

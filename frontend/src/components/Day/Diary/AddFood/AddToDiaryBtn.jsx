@@ -60,7 +60,6 @@ const AddToDiaryBtn = ({meals, setMeals, currentDay, groceries, setGroceries,
                 }
             }
         })
-        console.log(food);
         setShowModal(false);
     }
 

@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
-const Logout = ({setAuthorized}) => {
-    localStorage.clear();
+const Logout = ({setAuthorized, logout}) => {
 
-    setAuthorized(false);
+    useEffect(() => {
+        logout();
+    }, [])
     
     return <Navigate to="/" />
 }

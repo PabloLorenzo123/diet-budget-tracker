@@ -1,19 +1,30 @@
 import {useState, useEffect} from 'react';
 import api from '../../../api';
-import {areArraysEqual, areObjectsEqual } from '../../../lib/functions';
+import { areObjectsEqual } from '../../../lib/functions';
 
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { json, useNavigate } from 'react-router-dom';
 
 const SaveDietBtn = ({dietPlanName, meals, dailyTargets, dietPlanId}) => {
-    
-    const navigate = useNavigate();
 
-    const [prev, setPrev] = useState({
-        meals: [...meals],
+    const [prev, setPrev] = useState(() => ({
+        meals: JSON.stringify(meals),
         dailyTargets: {...dailyTargets},
-        dietPlanName,
-    }) // This state is used to determine if the user can save changes.
+        dietPlanName: dietPlanName,
+    })); // This state is used to determine if the user can save changes.
+
+    const [saveChangesDisabled, setSaveChangesDisabled] = useState(true);
+
+    useEffect(() => {
+      
+        if (prev.dietPlanName !== dietPlanName || prev.meals != JSON.stringify(meals) || !areObjectsEqual(prev.dailyTargets, dailyTargets)) {
+            setSaveChangesDisabled(false);
+        } else {
+            setSaveChangesDisabled(true);
+        }
+    }, [dietPlanName, meals, dailyTargets]);
+
+    const navigate = useNavigate();
 
     // Save changes btn states.
     const [saveChangesLoading, setSaveChangesLoading] = useState(false);
@@ -101,12 +112,6 @@ const SaveDietBtn = ({dietPlanName, meals, dailyTargets, dietPlanId}) => {
         })
     }
 
-    const saveChangesDisabled = () => {
-        return areArraysEqual(prev.meals, meals)
-        && prev.dietPlanName == dietPlanName
-        && areObjectsEqual(prev.dailyTargets, dailyTargets);
-    }
-
     const saveDietPlanDisabled = !(dietPlanName && isDietPlanNotEmpty());
 
     // If dietPlanId is not null, it means the user is seeing an already created dietplan.
@@ -117,7 +122,7 @@ const SaveDietBtn = ({dietPlanName, meals, dailyTargets, dietPlanId}) => {
             <button
                 className='btn btn-primary'
                 type="button"
-                disabled={saveChangesDisabled()}
+                disabled={saveChangesDisabled}
                 onClick={saveDietPlanChanges}
             >
                 {saveChangesLoading?
@@ -135,11 +140,11 @@ const SaveDietBtn = ({dietPlanName, meals, dailyTargets, dietPlanId}) => {
             disabled={saveDietPlanDisabled}
         >
             {
-            saveDietPlanLoading?
-            <div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </div>:
-            dietPlanId? 'Save As a New Diet Plan': 'Save Diet Plan'
+                saveDietPlanLoading?
+                <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>:
+                dietPlanId? 'Save As a New Diet Plan': 'Save Diet Plan'
             }
         </button>
     </>

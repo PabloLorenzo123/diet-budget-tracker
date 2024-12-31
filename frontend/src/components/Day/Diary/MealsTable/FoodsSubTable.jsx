@@ -182,6 +182,7 @@ const FoodsSubTable = ({meals, setMeals, currentDay, groceries, setGroceries,
                                                         `${f.diaryData.servings}`
                                                     }
                                                 </td>
+                                                {/* Serving measure */}
                                                 <td>
                                                     {selectedFoodObj == f?
                                                         <>
