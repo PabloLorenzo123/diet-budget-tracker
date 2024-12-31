@@ -121,6 +121,7 @@ const Diet = ({dailyTargets, setDailyTargets, meals, setMeals, groceries, setGro
                                 setDietPlanName={setDietPlanName}
                                 dietPlanId={dietPlanId}
                                 showOrHideRightColumn={showOrHideRightColumn}
+                                isMobile={isMobile}
                             />
                         </div>
                     </div>

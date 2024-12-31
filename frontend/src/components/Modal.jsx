@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import '../styles/modal.css';
 import { defaultModalHeight, defaultModalWidth } from "../constants";
 
-import { ToastContainer } from "react-toastify";
-
 const Modal = ({setShow, scroll=false, width=defaultModalWidth, height=defaultModalHeight, header, children, showHr=false}) => {
 
   const [isMobile, setIsMobile] = useState(false);

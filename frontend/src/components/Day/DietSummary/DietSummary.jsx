@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import DietSummaryModal from "./DietSummaryModal";
 import SaveDietBtn from "./SaveDietBtn";
 
-const DietSummary = ({meals, dailyTargets, dietPlanName, setDietPlanName, dietPlanId, showOrHideRightColumn}) => {
+const DietSummary = ({meals, dailyTargets, dietPlanName, setDietPlanName, dietPlanId, showOrHideRightColumn, isMobile}) => {
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
@@ -61,6 +61,7 @@ const DietSummary = ({meals, dailyTargets, dietPlanName, setDietPlanName, dietPl
                 <DietSummaryModal
                     meals={meals}
                     setShowModal={setShowModal}
+                    isMobile={isMobile}
                 />
             }
         </>

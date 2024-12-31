@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 import api from "../../../api";
 import { isObjEmpty, flattenNutritionData } from "../../../lib/functions";
@@ -31,7 +30,7 @@ const SaveBtn = ({foodData, setFoodData, nutritionData, setNutritionData, select
                     ...flatNutritionData
                 });
                 if (res.status == 201){
-                    toast.success("Food product saved succesfully.");
+                    toast.success("Food product saved successfully.");
                     afterSubmitFunc();
                 }
             } else {

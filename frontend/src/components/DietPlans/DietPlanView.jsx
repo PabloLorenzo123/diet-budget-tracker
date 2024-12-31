@@ -30,7 +30,7 @@ const DietPlanView = ({dietPlanId}) => {
                     smUnit = f.foodData.measure
                 } else {
                     // Find the unit from the default ones if it's not the one in the food product.
-                    smUnit = massUnits.find(el => el.valueInGrams == f.servingMeasureInGrams)
+                    smUnit = massUnits.find(el => el.valueInGrams == f.servingMeasureInGrams);
                 }
                 const portionSize = f.servings * f.servingMeasureInGrams;
                 const totalCost = portionSize * f.foodData.productPrice / f.foodData.gramWeight;
@@ -44,7 +44,7 @@ const DietPlanView = ({dietPlanId}) => {
                     diaryData: {
                         servings: f.servings,
                         servingMeasure: {
-                            unit: smUnit,
+                            unit: smUnit.unit || smUnit,
                             valueInGrams: f.servingMeasureInGrams,
                         },
                         portionSize,

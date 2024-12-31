@@ -35,6 +35,7 @@ class AdminDietPlan(admin.ModelAdmin):
 
 # Register models
 admin.site.register(models.FoodProduct)
+admin.site.register(models.NutritionData)
 admin.site.register(models.DietPlan, AdminDietPlan)
 admin.site.register(models.DietDay)
 admin.site.register(models.DietDayMeal)

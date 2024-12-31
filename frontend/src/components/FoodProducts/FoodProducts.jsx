@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import CreateFoodForm from "./CreateFood/CreateFoodForm";
-import FoodProductsList from "./foodProductsList";
-
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import FoodProductsList from "./FoodProductsList";
 
 import '../../styles/foodProducts/foodProducts.css'
 
@@ -20,37 +17,38 @@ const FoodProducts = () => {
     }
 
     const afterSubmitFunc = () => {
-        // Function executed after pressing the submit button, and the request beinf succesful.
+        // Function executed after pressing the submit button, and the request being successful.
         setShowCreate(false);
         setShowIndex(true);
         window.scrollTo(0, 0); 
     }
 
-    if (showIndex) {
-        return (
-            <FoodProductsList
-                showIndex={showIndex}
-                showCreateForm={showCreateForm}
-                setShowIndex={setShowIndex}
-                showCreate={showCreate}
-                setShowCreate={setShowCreate}
-                selectedFood={selectedFood}
-                setSelectedFood={setSelectedFood}
-            />
-        )
-    } else if (showCreate) {
-        return (
-            <CreateFoodForm
-                showIndex={showIndex}
-                setShowIndex={setShowIndex}
-                showCreate={showCreate}
-                setShowCreate={setShowCreate}
-                selectedFood={selectedFood}
-                setSelectedFood={setSelectedFood}
-                afterSubmitFunc={afterSubmitFunc}
-            />
-        )
-    }
+    return (
+        <>
+            {showIndex && (
+                <FoodProductsList
+                    showIndex={showIndex}
+                    showCreateForm={showCreateForm}
+                    setShowIndex={setShowIndex}
+                    showCreate={showCreate}
+                    setShowCreate={setShowCreate}
+                    selectedFood={selectedFood}
+                    setSelectedFood={setSelectedFood}
+                />
+            )}
+            {showCreate && (
+                <CreateFoodForm
+                    showIndex={showIndex}
+                    setShowIndex={setShowIndex}
+                    showCreate={showCreate}
+                    setShowCreate={setShowCreate}
+                    selectedFood={selectedFood}
+                    setSelectedFood={setSelectedFood}
+                    afterSubmitFunc={afterSubmitFunc}
+                />
+            )}
+        </>
+    )
 }
 
 export default FoodProducts;

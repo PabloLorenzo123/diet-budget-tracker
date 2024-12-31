@@ -3,9 +3,12 @@ import api from '../../../api';
 import {areArraysEqual, areObjectsEqual } from '../../../lib/functions';
 
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const SaveDietBtn = ({dietPlanName, meals, dailyTargets, dietPlanId}) => {
     
+    const navigate = useNavigate();
+
     const [prev, setPrev] = useState({
         meals: [...meals],
         dailyTargets: {...dailyTargets},
@@ -55,6 +58,7 @@ const SaveDietBtn = ({dietPlanName, meals, dailyTargets, dietPlanId}) => {
             const res = await api.post('diet/diet-plan/', requestBody)
             if (res.status == 201) {
                 toast.success(`${dietPlanName} saved.`);
+                navigate(`/dietplans/${res.data.id}`);
             }
         } catch (err) {
             console.log(err);
@@ -77,6 +81,11 @@ const SaveDietBtn = ({dietPlanName, meals, dailyTargets, dietPlanId}) => {
             const res = await api.put('diet/diet-plan/', requestBody);
             if (res.status == 201){
                 toast.success(`${dietPlanName} changes saved.`);
+                setPrev(() => ({
+                    meals: [...meals],
+                    dailyTargets: {...dailyTargets},
+                    dietPlanName,
+                }))
             }
         } catch (err) {
             console.log(err);

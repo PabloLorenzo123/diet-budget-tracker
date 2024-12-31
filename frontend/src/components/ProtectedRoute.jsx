@@ -7,7 +7,6 @@ import NavBar from './NavBar';
 import LoadingSpinner from './LoadingSpinner';
 
 import { toast } from 'react-toastify';
-import { use } from 'react';
 
 const ProtectedRoute = ({authorized, setAuthorized, children, currentPath, setCurrentPath}) => {
     const [loading, setLoading] = useState(true);

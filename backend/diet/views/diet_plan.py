@@ -182,4 +182,7 @@ def save_diet_plan(request):
     DietDayMeal.objects.bulk_create(meals_to_create)
     DietDayMealFood.objects.bulk_create(foods_to_create)
 
-    return Response({'success': 'Diet plan saved successfully.'}, status=status.HTTP_201_CREATED)
+    return Response({
+        'success': 'Diet plan saved successfully.',
+        'id': diet.id
+    }, status=status.HTTP_201_CREATED)

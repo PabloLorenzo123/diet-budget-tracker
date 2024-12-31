@@ -29,7 +29,7 @@ const Charts = ({dailyTargets, mealsArr, selectedMealIdx, selectedFoodObj}) => {
                 const mealSelected = selectedMealIdx != null;
                 const labels = mealSelected? meal.foods.map(f => f.foodData.productName): mealLabels;
                 const mealsOrMealCosts = mealSelected? meal.foods.map(f => f.diaryData.totalCost): mealsCostsArr;
-                const moneySpent = mealSelected? meal.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0): totalMoneySpent;
+                const moneySpent = roundTo(mealSelected? meal.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0): totalMoneySpent, 2);
 
                 return (
                     <div className="col-sm-6" style={{opacity: selectedFoodObj? 0.5: 1, pointerEvents: selectedFoodObj? 'none': 'auto'}}>

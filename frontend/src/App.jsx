@@ -18,6 +18,7 @@ import LoadingSpinner from './components/LoadingSpinner';
 import DietPlan from './pages/DietPlan';
 
 // Styles.
+import 'react-toastify/dist/ReactToastify.css';
 import './styles/custom-table.css';
 
 function App() {
@@ -89,7 +90,6 @@ function App() {
 
       <ToastContainer
         position='top-center'
-        hideProgressBar={true}
       />
 
     </>

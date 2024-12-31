@@ -4,8 +4,9 @@ import { roundTo, getTotalNutrientsInMeal, titleCase } from '../../../lib/functi
 
 import Modal from '../../Modal';
 
-const DietSummaryModal = ({meals, setShowModal}) => {
+const DietSummaryModal = ({meals, setShowModal, isMobile}) => {
     const notEmptyDays = meals.filter(d => d.filter(m => !m.hideFromDiary).some(m => m.foods.length > 0));
+    
     return (
         <>
 
@@ -33,71 +34,67 @@ const DietSummaryModal = ({meals, setShowModal}) => {
                             const totalCost = roundTo(meal.foods.reduce((acc, f) => acc + f.diaryData.totalCost, 0), 2);
 
                             return (
-                                <>
-
-                                <table className='table' key={idx}>
+                                <table className='table' key={`meal-${idx}`}>
                                     <thead>
                                         <tr className='table-secondary'>
-                                            <th colSpan={'7'}>{titleCase(meal.name)}</th>
+                                            <th colSpan={isMobile ? '2' : '7'}>
+                                                {titleCase(meal.name)}
+                                                {isMobile && (
+                                                    <div>
+                                                        <span style={{color: 'red'}}>{totalEnergy}kcal</span>, 
+                                                        <span style={{color: 'green'}}>{totalProtein} g Protein</span>, 
+                                                        <span style={{color: 'blue'}}>{totalNetCarbs} g Carbs</span>, 
+                                                        <span style={{color: 'orange'}}>{totalFat} g Fat</span>
+                                                        <span>${totalCost}</span>
+                                                    </div>
+                                                )}
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody className='table-group-divider'>
                                         {meal.foods.map((food, idx) => {
-                                            console.log(food);
                                             return (
                                                 <tr key={idx}>
                                                     <td>{food.foodData.productName}</td>
-                                                    <td>{`${food.diaryData.servings} ${food.diaryData.servingMeasure.unit}`}</td>
-                                                    <td>
-                                                        {food.nutritionalContribution.energy}kcal
-                                                    </td>
-                                                    <td>
-                                                        {food.nutritionalContribution.protein}g
-                                                    </td>
-                                                    <td>
-                                                        {food.nutritionalContribution.netCarbs}g
-                                                    </td>
-                                                    <td>
-                                                        {food.nutritionalContribution.totalFat}g
-                                                    </td>
-                                                    <td>
-                                                        ${food.diaryData.totalCost}
-                                                    </td>
-
+                                                    {isMobile ? (
+                                                        <td>
+                                                            <div style={{color: 'red'}}>{food.nutritionalContribution.energy}kcal</div>
+                                                            <div style={{color: 'green'}}>{food.nutritionalContribution.protein}g</div>
+                                                            <div style={{color: 'blue'}}>{food.nutritionalContribution.netCarbs}g</div>
+                                                            <div style={{color: 'orange'}}>{food.nutritionalContribution.totalFat}g</div>
+                                                            <div>${roundTo(food.diaryData.totalCost, 2)}</div>
+                                                        </td>
+                                                    ) : (
+                                                        <>
+                                                            <td>{`${food.diaryData.servings} ${food.diaryData.servingMeasure.unit}`}</td>
+                                                            <td>{food.nutritionalContribution.energy}kcal</td>
+                                                            <td>{food.nutritionalContribution.protein}g</td>
+                                                            <td>{food.nutritionalContribution.netCarbs}g</td>
+                                                            <td>{food.nutritionalContribution.totalFat}g</td>
+                                                            <td>${roundTo(food.diaryData.totalCost, 2)}</td>
+                                                        </>
+                                                    )}
                                                 </tr>
                                             )
                                         })}
                                         {/* Total */}
-                                        <tr>
-                                            <td colSpan={2}>
-                                                <span className='fw-bold'>Total</span>
-                                            </td>
-                                            <td className='fw-bold'>
-                                                {totalEnergy}kcal
-                                            </td>
-                                            <td className='fw-bold'>
-                                                {totalProtein}g
-                                            </td>
-                                            <td className='fw-bold'>
-                                                {totalNetCarbs}g
-                                            </td>
-                                            <td className='fw-bold'>
-                                                {totalFat}g
-                                            </td>
-                                            <td className='fw-bold'>
-                                                ${totalCost}
-                                            </td>
-                                        </tr>
+                                        {!isMobile && (
+                                            <tr>
+                                                <td colSpan={2}>
+                                                    <span className='fw-bold'>Total</span>
+                                                </td>
+                                                <td className='fw-bold'>{totalEnergy}kcal</td>
+                                                <td className='fw-bold'>{totalProtein}g</td>
+                                                <td className='fw-bold'>{totalNetCarbs}g</td>
+                                                <td className='fw-bold'>{totalFat}g</td>
+                                                <td className='fw-bold'>${totalCost}</td>
+                                            </tr>
+                                        )}
                                     </tbody>
                                 </table>
-                                    
-
-                                </>
                             )
                         })}
-                              
-                        
-                    </ Fragment>
+                    </Fragment>
                 )
                 
             })}
