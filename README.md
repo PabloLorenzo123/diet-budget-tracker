@@ -5,7 +5,7 @@ DietBudget is an app that helps users plan their diet, track nutritional goals, 
 set daily calorie and nutrient targets, and create diet plans for efficient meal planning.
 
 ## Demo
-[Watch the Demo on YouTube](https://youtu.be/xTnHeQROd5I)
+[Watch the Demo on YouTube](https://youtu.be/H-SSeoF1R4E)
 
 ## Features
 
