@@ -71,6 +71,30 @@ The **constants.js** file in **/src** defines various constants that are used th
 #### /src/lib
 The **/src/lib** folder contains utility functions and variables that are used throughout the project. These helper functions are designed to streamline common tasks and make the codebase more modular and maintainable.
 
+## Screenshots
+
+### Index Page
+On this page users can create and customize their diet plans.
+![Index Page](assets/sc1.png)
+
+### Add Food to Diary Modal.
+On this modal there are two tabs.
+1. **All**: The user's food products are displayed, these can be added to the diary, edited or deleted.
+2. **Create**: Here the user can create a food product and save it to their food products private list.
+![Add Food to Diary Modal](assets/sc2.png)
+
+### Nutritional Targets displayed at the bottom of the Index Page.
+[Nutritional Targets displayed at the bottom of the Index Page.](assets/sc3.png)
+
+### Groceries list.
+The groceries list shows the food products we need to buy and the quantities required, along with the total cost.
+This total cost includes leftovers, so it differs from the diet plan’s total cost, which only accounts for the cost of what’s actually consumed.
+[Groceries List](assets/sc4.png)
+
+### Diet Plan Summary.
+A summary of the entire diet plan. Detailing each day and its corresponding meals.
+[Diet Plan Summary](assets/sc5.png)
+
 
 ## Installation
 
