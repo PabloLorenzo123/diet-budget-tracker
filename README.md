@@ -13,7 +13,7 @@ set daily calorie and nutrient targets, and create diet plans for efficient meal
 - **Food Product Management**: Add, edit, delete, and search for food products.
 - **Nutritional Tracking**: Automatically retrieve nutritional information from the USDA Food API or manually input data in order to create food products to be used in your diet plan.
 - **Meal Planning**: Create and customize meals for each day of your diet plan.
-- **Budget Tracking**: Set and track food budgets, view the cost of each food serving, meal, day and entire diet plan.
+- **Budget Tracking**: Set and track food budgets, view the cost of each food serving, meal, day and the entire diet plan.
 - **Groceries List and Groceries total cost**: Each diet plan has an automatically created groceries list, this list indicates how many items of each food product found in the diet plan need to be bought. The groceries list total cost includes the leftovers, which is different from the diet plan total cost which only amounts to the food consumed.
 - **Diet plan summary**: You can get a summary of a diet plan detailing the meals and its food servings on each day.
 
@@ -22,17 +22,17 @@ set daily calorie and nutrient targets, and create diet plans for efficient meal
 - **Backend**: Django (Rest Framework)
 - **Frontend**: React
 - **Database**: SQLite
-- USDA Food API [link](https://www.ers.usda.gov/developer/data-apis/)
+- [USDA Food API](https://www.ers.usda.gov/developer/data-apis/)
 
 ### Backend
 The backend is built on Django and the Django Rest Framework, this backend provides the application main API, this API manages:
 - User authorization and authentication based on **JWT Tokens**.
 - Diet plans CRUD operations.
 - Food products CRUD operations.
-- Food nutritional information search function: The USDA Food API is utilized here to fetch multiple foods and their nutritional information registered in the USDA Food database.
+- **Food nutritional information search functionality**: The USDA Food API is utilized here to fetch multiple foods and their nutritional information registered in the USDA Food database.
 
 ### Frontend
-The frontend provides an intuitive and complete UI, on this UI help users create their diet plans, you can see screenshots of this UI in the [screenshots](#screenshots) sections.
+The frontend provides an intuitive and complete UI, which help users create their diet plans, you can see screenshots of this UI in the [screenshots](#screenshots) section.
 
 ## Distinctiveness and Complexity
 This app is distinctive from other meal tracking apps by incorporating both nutritional tracking and budget management. I believe diets should not
@@ -45,7 +45,7 @@ multiple states, hooks and api fetches. Also i needed to create my own css files
 
 On the other hand the backend was a bit easier, but still complicated, specially integrating the USDA Food API to the project was a challenge, because it required to clean and format the response data. 
 Also, the diet plan saving function was complicated to integrate, these required 5 different models in order to create and update a single diet plan. The view to send the diet plan
-to the frontend required a lot of cleaning and formatting by both ends. Finally there are multiple API endpoints and views in the /diet app, which handle food product CRUD operations (these food products are related
+to the frontend required a lot of cleaning and formatting by both ends. Finally there are multiple API endpoints and views in the `/diet` app, which handle food product CRUD operations (these food products are related
 to an unique identifier in the USDA database also this food products are related to another model which holds their nutritional information), food search functionality,
 and diet plan CRUD operations (which require 5 models in order to create a single diet plan, these diet plans have a relationship with the food products model).
 
@@ -96,7 +96,8 @@ On this modal there are two tabs.
 2. **Create**: Here the user can create a food product and save it to their food products private list.
 ![Add Food to Diary Modal](assets/sc2.png)
 
-### Nutritional Targets displayed at the bottom of the Index Page.
+### Nutritional Targets.
+Displayed at the bottom of the index page, it shows the total nutrients on each day when there's not selected food or meal. When a food serving is selected it shows only the nutritional contributions of that food serving, when a meal is selected it shows the nutritional contribution of that meal.
 ![Nutritional Targets displayed at the bottom of the Index Page.](assets/sc3.png)
 
 ### Groceries list.
