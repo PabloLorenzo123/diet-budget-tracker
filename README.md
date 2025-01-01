@@ -84,16 +84,16 @@ On this modal there are two tabs.
 ![Add Food to Diary Modal](assets/sc2.png)
 
 ### Nutritional Targets displayed at the bottom of the Index Page.
-[Nutritional Targets displayed at the bottom of the Index Page.](assets/sc3.png)
+![Nutritional Targets displayed at the bottom of the Index Page.](assets/sc3.png)
 
 ### Groceries list.
 The groceries list shows the food products we need to buy and the quantities required, along with the total cost.
 This total cost includes leftovers, so it differs from the diet plan’s total cost, which only accounts for the cost of what’s actually consumed.
-[Groceries List](assets/sc4.png)
+![Groceries List](assets/sc4.png)
 
 ### Diet Plan Summary.
 A summary of the entire diet plan. Detailing each day and its corresponding meals.
-[Diet Plan Summary](assets/sc5.png)
+![Diet Plan Summary](assets/sc5.png)
 
 
 ## Installation
