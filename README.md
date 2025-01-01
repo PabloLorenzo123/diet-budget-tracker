@@ -11,35 +11,45 @@ set daily calorie and nutrient targets, and create diet plans for efficient meal
 
 - **User Accounts**: Sign up or sign in to access personalized diet plans.
 - **Food Product Management**: Add, edit, delete, and search for food products.
-- **Nutritional Tracking**: Automatically retrieve nutritional information from the USDA Food API or manually input data.
+- **Nutritional Tracking**: Automatically retrieve nutritional information from the USDA Food API or manually input data in order to create food products to be used in your diet plan.
 - **Meal Planning**: Create and customize meals for each day of your diet plan.
-- **Budget Tracking**: Set and track food budgets, view the cost of each meal, and manage leftover groceries.
-- **Responsive Design**: Fully responsive, works on both desktop and mobile devices.
+- **Budget Tracking**: Set and track food budgets, view the cost of each food serving, meal, day and entire diet plan.
+- **Groceries List and Groceries total cost**: Each diet plan has an automatically created groceries list, this list indicates how many items of each food product found in the diet plan need to be bought. The groceries list total cost includes the leftovers, which is different from the diet plan total cost which only amounts to the food consumed.
+- **Diet plan summary**: You can get a summary of a diet plan detailing the meals and its food servings on each day.
 
-## Technologies Used
+## Technologies Used and Explanation
 
 - **Backend**: Django (Rest Framework)
 - **Frontend**: React
 - **Database**: SQLite
-- **API**: USDA Food API
+- USDA Food API [link](https://www.ers.usda.gov/developer/data-apis/)
+
+### Backend
+The backend is built on Django and the Django Rest Framework, this backend provides the application main API, this API manages:
+- User authorization and authentication based on **JWT Tokens**.
+- Diet plans CRUD operations.
+- Food products CRUD operations.
+- Food nutritional information search function: The USDA Food API is utilized here to fetch multiple foods and their nutritional information registered in the USDA Food database.
+
+### Frontend
+The frontend provides an intuitive and complete UI, on this UI help users create their diet plans, you can see screenshots of this UI in the [screenshots](#screenshots) sections.
 
 ## Distinctiveness and Complexity
-This app stands out from other meal tracking applications by incorporating both nutritional tracking and budget management.
-Unlike typical diet planners that simply focus on adding foods based on their nutrient content, this app considers the user's financial constraints,
-allowing them to create diet plans that are not only nutritionally balanced but also affordable. Users can track their food expenses,
-compare different diet plans, and make informed decisions based on cost-effectiveness, ensuring they get the most value for their money.
+This app is distinctive from other meal tracking apps by incorporating both nutritional tracking and budget management. I believe diets should not
+be created based only on assigning high nutrient foods to each meal without taking in consideration the user's financial constraints. This app allows users to create their diet plans that not only gives them nutritional
+information but also financial information. This allows them to keep track of their expenses and compare different diet plans and choose what gives them more bang for their buck.
 
-The app’s architecture is complex, particularly on the frontend. Built with React, it contains over 30 components and a substantial amount of code, all working together to provide a seamless user experience.
-The frontend is designed to handle multiple API requests, manage different states, and offer an intuitive user interface where users can create and customize their diet plans.
-Achieving this required extensive use of React hooks, states, and custom CSS files to meet the complex demands of the UI.
+The app’s architecture is complex, particularly on the frontend. Built on react the frontend has more thant 30 components and multiple lines of code.
+The frontend is designed needs to manage multiple API requests, and also provide an intuitive and complete UI that allows users to create their diet plans, these require
+multiple states, hooks and api fetches. Also i needed to create my own css files because of the complexity of the UI.
 
-On the backend, while the development process was slightly more straightforward, it still posed significant challenges. One of the main hurdles was integrating the USDA Food API.
-This required cleaning and formatting large datasets to ensure the information provided was accurate and usable within the app.
-Additionally, the diet plan saving function was a sophisticated process, involving the creation and management of five different models.
-These models interact closely to allow users to save, modify, and retrieve their diet plans.
-The process of sending data from the backend to the frontend involved extensive data formatting and cleaning to ensure smooth communication between the two.
-The most complex aspect of this project, however, was bringing this unique concept to life.
-Given that budget-conscious meal planning is not commonly seen in existing apps, the design and functionality needed to be carefully considered and planned.
+On the other hand the backend was a bit easier, but still complicated, specially integrating the USDA Food API to the project was a challenge, because it required to clean and format the response data. 
+Also, the diet plan saving function was complicated to integrate, these required 5 different models in order to create and update a single diet plan. The view to send the diet plan
+to the frontend required a lot of cleaning and formatting by both ends. Finally there are multiple API endpoints and views in the /diet app, which handle food product CRUD operations (these food products are related
+to an unique identifier in the USDA database also this food products are related to another model which holds their nutritional information), food search functionality,
+and diet plan CRUD operations (which require 5 models in order to create a single diet plan, these diet plans have a relationship with the food products model).
+
+The most complex thing was taking this unique idea into reality, i faced many design challenges because this is not a common app idea, the design and functionality needed to be carefully considered and planned.
 The app had to provide not only nutritional information but also allow for easy tracking of food expenses, all while maintaining an intuitive user experience.
 The relationship and interaction between various components had to be thoroughly analyzed to ensure they complemented each other and created a cohesive experience for the user.
 
