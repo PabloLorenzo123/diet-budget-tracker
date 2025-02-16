@@ -191,7 +191,7 @@ class FoodProduct(models.Model):
     
 class DietPlan(models.Model):
     """A diet plan has at most 7 different days."""
-    uuid = models.UUIDField(default=uuid.uuid4)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp for when the record was created
     updated_at = models.DateTimeField(auto_now=True)  # Timestamp for the last update
     

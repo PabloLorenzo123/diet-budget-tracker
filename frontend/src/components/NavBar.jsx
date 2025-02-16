@@ -23,7 +23,7 @@ const NavBar = ({currentPath, setCurrentPath}) => {
     return(
     <>
         <nav
-            className="navbar navbar-expand-sm bg-dark border-bottom border-body fixed-top"
+            className="navbar navbar-expand-sm bg-dark border-bottom border-body fixed-top px-5"
             data-bs-theme="dark"
             role="navigation"
             style={{zIndex: navbarZIndex}
