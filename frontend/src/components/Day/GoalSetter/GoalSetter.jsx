@@ -6,7 +6,7 @@ import { validateDecimalNumberInput, roundTo } from "../../../lib/functions";
 import { toast } from "react-toastify";
 import api from "../../../api";
 
-import '../../../styles/diary/GoalSetter.css';
+import '../../../styles/diary/goalSetter.css';
 import '../../../styles/nutrientTableForm.css';
 
 const GoalSetter = ({dailyTargets, setDailyTargets}) => {
