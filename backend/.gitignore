@@ -1,4 +1,6 @@
 .venv
 .env
-__pycache__
+/__pycache__
+/static_files
+/migrations
 db.sqlite3
