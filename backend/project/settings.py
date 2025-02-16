@@ -160,6 +160,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # Here will be saved the static files needed to be provided in production.
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' # Cache and compresses staticfiles.
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
