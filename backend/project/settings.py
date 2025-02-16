@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
+import dj_database_url # Needed to connect to postgresql.
 import os
 
 load_dotenv()
@@ -29,7 +30,9 @@ SECRET_KEY = 'django-insecure-$%66)d0i0n1zcb^=ai^6k%2@gv8&u+zba10nu#0z$zp)hjecw!
 USDA_API_KEY = os.environ.get('USDA_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+IN_PROD = os.environ.get('IN_PROD') == 'True'
+
+DEBUG = True if IN_PROD else False
 
 ALLOWED_HOSTS = ['*']
 
@@ -104,12 +107,20 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if IN_PROD:
+    print("Using production database.")
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('DB_URL'))
     }
-}
+else:
+    print("Using development database.")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 
 # Custom user model.
 AUTH_USER_MODEL = 'accounts.User'

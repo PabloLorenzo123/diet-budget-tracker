@@ -19,7 +19,7 @@ import json
 def get_diet_plan(request, id):
     """Returns the datastructure corresponding to a dietplan."""
     user = request.user
-    diet_plan = get_object_or_404(DietPlan, id=id, creator=user)
+    diet_plan = get_object_or_404(DietPlan, uuid=id, creator=user)
    
     days = [] # Days and meals and foods.
     for day in diet_plan.days.all():
@@ -29,7 +29,7 @@ def get_diet_plan(request, id):
         days.append(d)
         
     res = {
-        'id': diet_plan.id,
+        'id': diet_plan.uuid,
         'dietPlanName': diet_plan.name,
         'budget': diet_plan.budget,
         'days': days,
@@ -54,7 +54,7 @@ def get_diet_plans(request):
 @permission_classes([IsAuthenticated])
 def delete_diet_plan(request, id):
     """Deletes a diet plan"""
-    diet_plan = get_object_or_404(DietPlan, id=id, creator=request.user)
+    diet_plan = get_object_or_404(DietPlan, uuid=id, creator=request.user)
     diet_plan.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -128,7 +128,7 @@ def save_diet_plan(request):
         id = data.get('id')
         if not id:
             return Response({'error': 'An Id referencing to the diet plan to be updated needs to be provided as the parameter "id"'}, status=status.HTTP_400_BAD_REQUEST)
-        diet = get_object_or_404(DietPlan, id=id, creator=request.user)
+        diet = get_object_or_404(DietPlan, uuid=id, creator=request.user)
         # Delete all associated days in a single query for efficiency.
         diet.days.all().delete()
 
@@ -183,5 +183,5 @@ def save_diet_plan(request):
 
     return Response({
         'success': 'Diet plan saved successfully.',
-        'id': diet.id
+        'id': diet.uuid
     }, status=status.HTTP_201_CREATED)

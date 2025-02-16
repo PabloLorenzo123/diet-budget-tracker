@@ -191,7 +191,7 @@ class FoodProduct(models.Model):
     
 class DietPlan(models.Model):
     """A diet plan has at most 7 different days."""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    uuid = models.UUIDField(default=uuid.uuid4)
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp for when the record was created
     updated_at = models.DateTimeField(auto_now=True)  # Timestamp for the last update
     
@@ -208,7 +208,7 @@ class DietPlan(models.Model):
     
     def get_diet_plan_as_json(self) -> dict:
         return {
-            'id': self.id,
+            'id': self.uuid,
             'name': self.name,
             'protein': self.nutrient_targets.protein,
             'netCarbs': self.nutrient_targets.net_carbs,
