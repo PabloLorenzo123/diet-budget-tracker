@@ -1,7 +1,7 @@
 import { useState, useEffect, Fragment } from "react";
 import { titleCase, roundTo, getTotalNutrientsInMeal } from "../../../../lib/functions";
 
-import "../../../../styles/diary/MealsTable.css";
+import "../../../../styles/diary/mealsTable.css";
 import FoodsSubTable from "./FoodsSubTable";
 
 const MealsTable = ({meals, setMeals, currentDay, groceries, setGroceries, selectedMealIdx,
