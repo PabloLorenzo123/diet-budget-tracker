@@ -34,6 +34,7 @@ def sign_up(request):
         user.get_or_create_diary_settings()
         refresh = RefreshToken.for_user(user=user)
         return JsonResponse({
+            'username': user.username,
             'refreshToken': str(refresh),
             'accessToken': str(refresh.access_token),
         }, status=status.HTTP_201_CREATED)
