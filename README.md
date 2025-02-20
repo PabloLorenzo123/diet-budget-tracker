@@ -1,4 +1,5 @@
 # Dietbudget
+![Index Page](assets/sc1.png)
 
 DietBudget is an app that helps users plan their diet, track nutritional goals, and manage food expenses while staying within their budget.
  It allows users to create and manage personalized food products,
